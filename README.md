@@ -29,7 +29,7 @@ For a smooth collaboration process, please use [GitHub Desktop](https://desktop.
    ```
    https://github.com/SP-SDU/DeskMotion
    ```
-2. **Branch**: Switch to `main` using the branch switcher, create a new branch for your feature. Name it after the issue number and feature, e.g., `CurrentFeature#9`.
+2. **Branch**: Switch to `main` using the branch switcher, create a new branch for your feature. Name it after the issue number and feature, e.g., `CurrentFeature#`.
 3. **Commit:** Enter your commit message in the `Summary (required)` field and click `Commit`.
 4. **Push:** Click `Push origin` to upload your changes to GitHub.
 5. **Pull Request:** On GitHub, create a `New pull request` against `main`, fill in the details, and submit.
