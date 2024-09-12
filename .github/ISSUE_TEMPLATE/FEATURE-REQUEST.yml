@@ -1,0 +1,35 @@
+name: "✨ Feature Request"
+description: "Suggest a new feature or improvement"
+title: "[Feature] - "
+labels: ["Feature", "Backlog"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Describe the feature:**
+        _Briefly explain the new feature or improvement._
+  - type: textarea
+    id: motivation
+    attributes:
+      label: "Motivation"
+      description: "Why is this feature needed?"
+      placeholder: "Explain the purpose and importance."
+  - type: textarea
+    id: proposed-solution
+    attributes:
+      label: "Proposed Solution"
+      description: "How would you implement this feature?"
+      placeholder: "Brief description of the solution."
+  - type: checkboxes
+    id: acceptance-criteria
+    attributes:
+      label: "Acceptance Criteria"
+      options:
+        - label: "Feature is clearly defined"
+        - label: "Meets proposed solution"
+        - label: "Tests considered"
+  - type: input
+    id: additional-info
+    attributes:
+      label: "Additional Info"
+      placeholder: "Optional: extra context or references"

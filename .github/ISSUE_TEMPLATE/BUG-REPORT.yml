@@ -1,0 +1,35 @@
+name: "🐞 Bug Report"
+description: "Report an issue or bug"
+title: "[Bug] - "
+labels: ["Bug", "Backlog"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Describe the bug:**
+        _Briefly explain what’s wrong._
+  - type: textarea
+    id: steps-to-reproduce
+    attributes:
+      label: "Steps to Reproduce"
+      description: "List the steps to replicate the issue"
+      placeholder: "1. Step one\n2. Step two"
+  - type: textarea
+    id: expected-vs-actual
+    attributes:
+      label: "Expected vs. Actual Behavior"
+      description: "What did you expect, and what happened?"
+      placeholder: "Expected: X\nActual: Y"
+  - type: checkboxes
+    id: acceptance-criteria
+    attributes:
+      label: "Acceptance Criteria"
+      options:
+        - label: "Issue is reproducible"
+        - label: "Fix meets requirements"
+        - label: "Tests pass"
+  - type: input
+    id: additional-info
+    attributes:
+      label: "Additional Info"
+      placeholder: "Optional: screenshots or extra details"

@@ -1,8 +1,9 @@
 blank_issues_enabled: false
 contact_links:
-  - name: "Bug Report"
-    url: "/issues/new?template=bug_report.md"
-    about: "Report a bug."
-  - name: "Feature Request"
-    url: "/issues/new?template=feature_request.md"
-    about: "Request a new feature."
+  - name: "🐞 Report a Bug"
+    url: "/issues/new?template=BUG-REPORT.yml"
+    about: "Let us know about a bug or issue."
+
+  - name: "✨ Request a Feature"
+    url: "/issues/new?template=FEATURE-REQUEST.yml"
+    about: "Suggest a new feature or improvement."
