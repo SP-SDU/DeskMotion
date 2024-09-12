@@ -29,12 +29,12 @@ For a smooth collaboration process, please use [GitHub Desktop](https://desktop.
    ```
    https://github.com/SP-SDU/DeskMotion
    ```
-2. **Branch**: Switch to `main` using the branch switcher, create a new branch for your feature e.g., `CurrentFeature`.
+2. **Branch**: Switch to `main` using the branch switcher, and create a new branch named after the feature or bug you're working on, e.g., `add-login-feature` or `fix-button-bug`.
 3. **Commit:** Enter your commit message in the `Summary (required)` field and click `Commit`.
 4. **Push:** Click `Push origin` to upload your changes to GitHub.
-5. **Pull Request:** On GitHub, create a `New pull request` against `main`, fill in the details, and submit.
+5. **Pull Request:** On GitHub, create a `New pull request` against `main`. **Include the GitHub issue number in the details of your pull request** as per the PR template, and fill in the necessary information before submitting.
 6. **Request a Review:** Tag a teammate in your pull request for a review.
-7. **Stacking:** Instead of waiting for approval, continue working on another feature based on your current feature work. On your **feature branch** (not main), create a new branch `Current Branch > New Branch` for the next feature, e.g., `NextFeature`.
+7. **Stacking:** Instead of waiting for approval, continue working on another feature based on your current feature work. On your **feature branch** (not main), create a new branch `Current Branch > New Branch` for the next feature, e.g., `next-feature`.
 
 For more information check [GitHub Flow](https://githubflow.github.io/).
 
