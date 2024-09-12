@@ -1,25 +1,36 @@
 name: "🐞 Bug Report"
 description: "Report an issue or bug"
 title: "[Bug] - "
-labels: ["Bug", "Backlog"]
+labels: ["Bug", "To Do"]
 body:
-  - type: markdown
+  - type: input
+    id: description
     attributes:
-      value: |
-        **Describe the bug:**
-        _Briefly explain what’s wrong._
-  - type: textarea
+      label: "Description"
+      description: "Briefly describe the bug."
+      placeholder: "E.g., The application crashes when clicking on the save button."
+
+  - type: input
     id: steps-to-reproduce
     attributes:
       label: "Steps to Reproduce"
-      description: "List the steps to replicate the issue"
+      description: "List the steps to replicate the issue."
       placeholder: "1. Step one\n2. Step two"
-  - type: textarea
-    id: expected-vs-actual
+
+  - type: input
+    id: expected-behavior
     attributes:
-      label: "Expected vs. Actual Behavior"
-      description: "What did you expect, and what happened?"
-      placeholder: "Expected: X\nActual: Y"
+      label: "Expected Behavior"
+      description: "Describe what you expected to happen."
+      placeholder: "E.g., The application should save the data without crashing."
+
+  - type: input
+    id: actual-behavior
+    attributes:
+      label: "Actual Behavior"
+      description: "Describe what actually happens."
+      placeholder: "E.g., The application crashes with an error message."
+
   - type: checkboxes
     id: acceptance-criteria
     attributes:
@@ -28,8 +39,9 @@ body:
         - label: "Issue is reproducible"
         - label: "Fix meets requirements"
         - label: "Tests pass"
+
   - type: input
     id: additional-info
     attributes:
       label: "Additional Info"
-      placeholder: "Optional: screenshots or extra details"
+      placeholder: "Optional: Any extra context or screenshots."

@@ -1,25 +1,29 @@
 name: "✨ Feature Request"
 description: "Suggest a new feature or improvement"
 title: "[Feature] - "
-labels: ["Feature", "Backlog"]
+labels: ["Feature", "To Do"]
 body:
-  - type: markdown
+  - type: input
+    id: description
     attributes:
-      value: |
-        **Describe the feature:**
-        _Briefly explain the new feature or improvement._
-  - type: textarea
+      label: "Description"
+      description: "Briefly describe the feature or improvement."
+      placeholder: "E.g., Add a dark mode to the application."
+
+  - type: input
     id: motivation
     attributes:
       label: "Motivation"
       description: "Why is this feature needed?"
-      placeholder: "Explain the purpose and importance."
-  - type: textarea
+      placeholder: "E.g., Dark mode improves usability in low light environments."
+
+  - type: input
     id: proposed-solution
     attributes:
       label: "Proposed Solution"
-      description: "How would you implement this feature?"
-      placeholder: "Brief description of the solution."
+      description: "How do you suggest implementing this feature?"
+      placeholder: "E.g., Add a toggle option in the settings menu."
+
   - type: checkboxes
     id: acceptance-criteria
     attributes:
@@ -28,8 +32,9 @@ body:
         - label: "Feature is clearly defined"
         - label: "Meets proposed solution"
         - label: "Tests considered"
+
   - type: input
     id: additional-info
     attributes:
       label: "Additional Info"
-      placeholder: "Optional: extra context or references"
+      placeholder: "Optional: Any extra context or references."
