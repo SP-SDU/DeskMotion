@@ -1,0 +1,21 @@
+services:
+  deskmotion:
+    image: ${DOCKER_REGISTRY-}deskmotion
+    build:
+      context: .
+      dockerfile: DeskMotion/Dockerfile
+
+  deskmotion.db:
+    image: postgres:latest
+    container_name: deskmotion.db
+    environment:
+      POSTGRES_DB: deskmotion
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - deskmotion_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+volumes:
+  deskmotion_data:
