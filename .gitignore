@@ -394,6 +394,7 @@ FodyWeavers.xsd
 *.msm
 *.msp
 
+.idea
 # User specific
 **/.idea/**/workspace.xml
 **/.idea/**/tasks.xml
@@ -420,3 +421,4 @@ FodyWeavers.xsd
 
 # Ignore macOS system files
 .DS_Store
+
