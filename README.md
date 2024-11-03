@@ -22,27 +22,19 @@
 
 ## Running with Docker 🐳
 
-1. Create a `.env` file in the project root with:
+1. **Copy the `.env.example` file to `.env` in the project root:**
 
-   - **Windows**:
-     ```dotenv
-     SECRETS_PATH=${APPDATA}/Microsoft
-     HTTPS_PATH=${APPDATA}/ASP.NET
-     ```
+   ```bash
+   cp .env.example .env
+   ```
 
-   - **Linux/macOS**:
-     ```dotenv
-     SECRETS_PATH=${HOME}/.microsoft
-     HTTPS_PATH=${HOME}/.aspnet
-     ```
-
-2. Run:
+2. **Run the application:**
 
    ```bash
    docker-compose up
    ```
 
-This sets paths for user secrets and HTTPS certificates which ASP.NET requires.
+This sets up the necessary environment variables for ASP.NET Core using the provided `.env.example` file.
 
 ## Contributing 🤝
 

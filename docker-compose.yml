@@ -5,12 +5,13 @@ services:
       context: .
       dockerfile: DeskMotion/Dockerfile
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTP_PORTS=8080
-      - ASPNETCORE_HTTPS_PORTS=8081
+      - ConnectionStrings__DefaultConnection=Host=${DB_HOST};Port=${DB_PORT};Database=${DB_NAME};Username=${DB_USER};Password=${DB_PASSWORD};Include Error Detail=true
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+      - ASPNETCORE_HTTP_PORTS=${ASPNETCORE_HTTP_PORTS}
+      - ASPNETCORE_HTTPS_PORTS=${ASPNETCORE_HTTPS_PORTS}
     ports:
-      - "8080"
-      - "8081"
+      - "${ASPNETCORE_HTTP_PORTS}:8080"
+      - "${ASPNETCORE_HTTPS_PORTS}:8081"
     volumes:
       - "${SECRETS_PATH}/usersecrets:/home/app/.microsoft/usersecrets:ro"
       - "${HTTPS_PATH}/https:/home/app/.aspnet/https:ro"
@@ -19,13 +20,13 @@ services:
     image: postgres:latest
     container_name: deskmotion.db
     environment:
-      POSTGRES_DB: deskmotion
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:
       - deskmotion_data:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - "${DB_PORT}:5432"
 
 volumes:
   deskmotion_data:
