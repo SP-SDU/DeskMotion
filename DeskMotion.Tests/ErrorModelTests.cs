@@ -33,7 +33,7 @@ public class ErrorModelTests
         {
             TraceIdentifier = "TestTraceId123"
         };
-        errorModel.PageContext = new Microsoft.AspNetCore.Mvc.RazorPages.PageContext()
+        errorModel.PageContext = new PageContext()
         {
             HttpContext = httpContext
         };
