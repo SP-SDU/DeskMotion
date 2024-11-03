@@ -12,7 +12,6 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["Directory.Build.props", "."]
 COPY ["DeskMotion/DeskMotion.csproj", "DeskMotion/"]
 RUN dotnet restore "./DeskMotion/DeskMotion.csproj"
 COPY . .
