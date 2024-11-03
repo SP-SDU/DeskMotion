@@ -20,28 +20,47 @@
 1. Download the latest release from [releases](https://github.com/SP-SDU/DeskMotion/releases/).
 2. Follow the installation guide provided with the release.
 
+## Running with Docker 🐳
+
+1. Create a `.env` file in the project root with:
+
+   - **Windows**:
+     ```dotenv
+     SECRETS_PATH=${APPDATA}/Microsoft
+     HTTPS_PATH=${APPDATA}/ASP.NET
+     ```
+
+   - **Linux/macOS**:
+     ```dotenv
+     SECRETS_PATH=${HOME}/.microsoft
+     HTTPS_PATH=${HOME}/.aspnet
+     ```
+
+2. Run:
+
+   ```bash
+   docker-compose up
+   ```
+
+This sets paths for user secrets and HTTPS certificates which ASP.NET requires.
+
 ## Contributing 🤝
 
-For a smooth collaboration process, please use [GitHub Desktop](https://desktop.github.com/):
-- **Note:**  Forking is creating a personal copy of the repository. It's used when you don't have write access to the repository.
+1. **Clone** Open [GitHub Desktop](https://desktop.github.com/), go to `File > Clone Repository`, and enter:
+     ```
+     https://github.com/SP-SDU/DeskMotion
+     ```
+2. **Branch**: In GitHub Desktop, switch to `main` and create a new branch (e.g., `add-login-feature`).
+3. **Commit & Push**: Commit changes in GitHub Desktop, then click `Push origin`.
+4. **Pull Request**: Open a pull request on GitHub, choosing `main` as the base branch, and tag a teammate for review.
 
-1. **Clone:** Open GitHub Desktop, go to `File > Clone Repository`, and paste:
-   ```
-   https://github.com/SP-SDU/DeskMotion
-   ```
-2. **Branch**: Switch to `main` using the branch switcher, and create a new branch named after the feature or bug you're working on, e.g., `add-login-feature` or `fix-button-bug`.
-3. **Commit:** Enter your commit message in the `Summary (required)` field and click `Commit`.
-4. **Push:** Click `Push origin` to upload your changes to GitHub.
-5. **Pull Request:** On GitHub, create a `New pull request` against `main`. **Include the GitHub issue number in the details of your pull request** as per the PR template, and fill in the necessary information before submitting.
-6. **Request a Review:** Tag a teammate in your pull request for a review.
-7. **Stacking:** Instead of waiting for approval, continue working on another feature based on your current feature work. On your **feature branch** (not main), create a new branch `Current Branch > New Branch` for the next feature, e.g., `next-feature`.
+For more details, see [GitHub Flow](https://githubflow.github.io/).
 
-For more information check [GitHub Flow](https://githubflow.github.io/).
+## Communication 🗂️
 
-## Management 🗂️
-
-- **Communication:** Join our [Discord server](https://discord.gg/b6sdqaTbsU) for all project discussions, updates, and daily communication.
+Join the [Discord server](https://discord.gg/b6sdqaTbsU) for discussions and updates.
 
 ## License 📝
 
-This project is distributed under the Apache 2.0 License. See [LICENSE](LICENSE) for more information.
+Distributed under the Apache 2.0 License. See [LICENSE](LICENSE) for details.
+

@@ -395,9 +395,11 @@ FodyWeavers.xsd
 *.msp
 
 # JetBrains Rider
-.idea/
 *.sln.iml
+.idea/
 
 # Ignore macOS system files
 .DS_Store
 
+# Ignore secrets
+.env

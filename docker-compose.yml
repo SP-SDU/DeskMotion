@@ -4,6 +4,16 @@ services:
     build:
       context: .
       dockerfile: DeskMotion/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_HTTPS_PORTS=8081
+    ports:
+      - "8080"
+      - "8081"
+    volumes:
+      - "${SECRETS_PATH}/usersecrets:/home/app/.microsoft/usersecrets:ro"
+      - "${HTTPS_PATH}/https:/home/app/.aspnet/https:ro"
 
   deskmotion.db:
     image: postgres:latest
