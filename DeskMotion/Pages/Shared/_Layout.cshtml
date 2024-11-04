@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="dark">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,37 +7,35 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
-<body class="bg-dark text-light">
+<body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-dark bg-dark border-bottom border-secondary shadow-sm mb-3">
-            <div class="container">
-                <a class="navbar-brand text-center text-break text-light" asp-area="" asp-page="/Index">DeskMotion</a>
+        <nav class="navbar navbar-expand-lg navbar-dark">
+            <div class="container-fluid">
+                <a class="navbar-brand text-center text-break" asp-area="" asp-page="/Index">DeskMotion</a>
+
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-page="/Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-page="/Privacy">Privacy</a>
-                        </li>
+
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item"><a class="nav-link" asp-area="" asp-page="/Index">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-area="" asp-page="/Privacy">Privacy</a></li>
                     </ul>
                 </div>
             </div>
         </nav>
     </header>
     <div class="container">
-        <main role="main" class="pb-3">
+        <main role="main">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="footer border-top border-secondary mt-auto position-fixed bottom-0 w-100 bg-dark text-light">
+    <footer class="footer border-top border-secondary mt-auto position-fixed bottom-0 w-100">
         <div class="container py-2">
-            &copy; 2024 - DeskMotion - <a class="text-light" asp-area="" asp-page="/Privacy">Privacy</a>
+            &copy; 2024 - DeskMotion - <a asp-area="" asp-page="/Privacy">Privacy</a>
         </div>
     </footer>
 
