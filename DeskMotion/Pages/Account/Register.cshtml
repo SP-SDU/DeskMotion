@@ -1,0 +1,43 @@
+﻿@page
+@model RegisterModel
+@{
+    ViewData["Title"] = "Register";
+}
+
+<section class="container-fluid d-flex justify-content-center align-items-center" style="height: 75vh;">
+    <div class="card rounded-4 shadow p-5" style="max-width: 400px;">
+        <h2 class="fw-bold text-uppercase text-center">Register</h2>
+        <p class="text-center">Create a new account to get started!</p>
+
+        <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="mt-4">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3" role="alert"></div>
+
+            <div class="form-floating mb-3">
+                <input asp-for="Input.Email" class="form-control form-control-lg" placeholder="name@example.com" autocomplete="username" aria-required="true" />
+                <label asp-for="Input.Email">Email</label>
+                <span asp-validation-for="Input.Email" class="text-danger"></span>
+            </div>
+
+            <div class="form-floating mb-3">
+                <input asp-for="Input.Password" type="password" class="form-control form-control-lg" placeholder="password" autocomplete="new-password" aria-required="true" />
+                <label asp-for="Input.Password">Password</label>
+                <span asp-validation-for="Input.Password" class="text-danger"></span>
+            </div>
+
+            <div class="form-floating mb-3">
+                <input asp-for="Input.ConfirmPassword" type="password" class="form-control form-control-lg" placeholder="password" autocomplete="new-password" aria-required="true" />
+                <label asp-for="Input.ConfirmPassword">Confirm Password</label>
+                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-outline-light btn-lg w-100">Register</button>
+        </form>
+
+        <div class="text-center mt-4">
+            <p class="mb-0">
+                Already have an account?
+                <a asp-page="./Login" asp-route-returnUrl="@Model.ReturnUrl" class="fw-bold">Log In</a>
+            </p>
+        </div>
+    </div>
+</section>

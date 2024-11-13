@@ -12,11 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace DeskMotion.Models;
-
-public class Role : IdentityRole<int>
+namespace DeskMotion.Pages
 {
-    public string? Description { get; set; }
+    public class AboutModel : PageModel
+    {
+        public void OnGet()
+        {
+
+        }
+    }
 }
