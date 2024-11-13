@@ -12,16 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace DeskMotion.Models
+namespace DeskMotion.Models;
+
+public class Reservation
 {
-    public class Reservation
-    {
-        public int ReservationId { get; set; }
-        public int UserId { get; set; }
-        public int DeskId { get; set; }
-        public DateTime StartTime { get; set; }
-        public DateTime EndTime { get; set; }
-        public User? User { get; set; }
-        public Desk? Desk { get; set; }
-    }
+    public int ReservationId { get; set; }
+    public int UserId { get; set; }
+    public int DeskId { get; set; }
+    public DateTime StartTime { get; set; }
+    public DateTime EndTime { get; set; }
+    public User? User { get; set; }
+    public Desk? Desk { get; set; }
 }
