@@ -1,0 +1,46 @@
+﻿@page
+@model LoginModel
+
+@{
+    ViewData["Title"] = "Log in";
+}
+
+<section class="container-fluid d-flex justify-content-center align-items-center" style="height: 75vh;">
+    <div class="card rounded-4 shadow p-5" style="max-width: 400px;">
+        <h2 class="fw-bold text-uppercase text-center">Login</h2>
+        <p class="text-center">Please enter your login and password!</p>
+
+        <form id="account" method="post" class="mt-4">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            <div class="form-floating mb-3">
+                <input asp-for="Input.Email" class="form-control form-control-lg" placeholder="name@example.com" autocomplete="username" aria-required="true" />
+                <label asp-for="Input.Email">Email</label>
+                <span asp-validation-for="Input.Email" class="text-danger"></span>
+            </div>
+
+            <div class="form-floating mb-3">
+                <input asp-for="Input.Password" type="password" class="form-control form-control-lg" placeholder="password" autocomplete="current-password" aria-required="true" />
+                <label asp-for="Input.Password">Password</label>
+                <span asp-validation-for="Input.Password" class="text-danger"></span>
+            </div>
+
+            <div class="form-check mb-4 text-start">
+                <input asp-for="Input.RememberMe" class="form-check-input" />
+                <label asp-for="Input.RememberMe" class="form-check-label">Remember me</label>
+            </div>
+
+            <button type="submit" class="btn btn-outline-light btn-lg w-100">Log in</button>
+        </form>
+
+        <div class="text-center mt-4">
+            <a id="forgot-password" asp-page="./ForgotPassword" >Forgot password?</a>
+        </div>
+        
+        <div class="text-center mt-2">
+            <p class="mb-0">Don't have an account? 
+                <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl" class="fw-bold">Sign Up</a>
+            </p>
+        </div>
+    </div>
+</section>

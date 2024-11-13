@@ -17,9 +17,9 @@ namespace DeskMotion.Models
     public class Desk
     {
         public int Id { get; set; }
-        public string Location { get; set; }
-        public string Configuration { get; set; }
-        public string QRCodeData { get; set; }
-        public string Status { get; set; }
+        public string? Location { get; set; }
+        public string? Configuration { get; set; }
+        public string? QRCodeData { get; set; }
+        public string? Status { get; set; }
     }
 }
