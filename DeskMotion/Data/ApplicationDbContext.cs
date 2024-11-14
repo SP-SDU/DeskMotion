@@ -18,13 +18,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DeskMotion.Data;
 
-public class ApplicationDbContext : IdentityDbContext<User, Role, int>
+public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)
     {
     }
 
-    public DbSet<Desk> Desks { get; set; }
-    public DbSet<Reservation> Reservations { get; set; }
+    public DbSet<Desk> Desks => Set<Desk>();
+    public DbSet<Reservation> Reservations => Set<Reservation>();
 }

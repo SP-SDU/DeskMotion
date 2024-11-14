@@ -16,11 +16,9 @@ namespace DeskMotion.Models;
 
 public class Reservation
 {
-    public int ReservationId { get; set; }
-    public int UserId { get; set; }
-    public int DeskId { get; set; }
+    public Guid Id { get; set; } = Guid.NewGuid();
+    public Guid UserId { get; set; }    // Reserved by
+    public Guid DeskId { get; set; }    // Reserved Desk
     public DateTime StartTime { get; set; }
     public DateTime EndTime { get; set; }
-    public User? User { get; set; }
-    public Desk? Desk { get; set; }
 }

@@ -18,7 +18,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DeskMotion.Models;
 
-public class User : IdentityUser<int>
+public class User : IdentityUser<Guid>
 {
     public string? FirstName { get; set; }
     public string? LastName { get; set; }

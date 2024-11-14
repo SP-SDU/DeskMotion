@@ -16,7 +16,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace DeskMotion.Models;
 
-public class Role : IdentityRole<int>
+public class Role : IdentityRole<Guid>
 {
     public string? Description { get; set; }
 }
