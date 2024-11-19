@@ -43,6 +43,16 @@ services:
     volumes:
       - pgadmin_data:/var/lib/pgadmin
 
+  deskmotion.sim:
+    image: ${DOCKER_REGISTRY-}deskmotion.sim
+    environment:
+      - SIM_PORT=8443
+    ports:
+      - "${SIM_PORT}:8443"
+    volumes:
+      - ./DeskMotion.Sim:/app
+    command: python main.py --port ${SIM_PORT} --https --certfile cert.pem --keyfile key.pem
+
 volumes:
   deskmotion_data:
   pgadmin_data:
