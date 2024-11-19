@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeskMotion.Tests", "DeskMot
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{61B4AEF0-ABE6-47B8-B1D2-933F68792B15}"
 EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "DeskMotion.Sim", "DeskMotion.Sim\DeskMotion.Sim.pyproj", "{3A032FC9-6920-4F3F-9A58-408A1C0495E7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +39,8 @@ Global
 		{61B4AEF0-ABE6-47B8-B1D2-933F68792B15}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{61B4AEF0-ABE6-47B8-B1D2-933F68792B15}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{61B4AEF0-ABE6-47B8-B1D2-933F68792B15}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A032FC9-6920-4F3F-9A58-408A1C0495E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A032FC9-6920-4F3F-9A58-408A1C0495E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
