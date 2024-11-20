@@ -4,7 +4,7 @@ from desk_manager import DeskManager
 
 class SimpleRESTServer(BaseHTTPRequestHandler):
     VERSION = "v2"
-    API_KEYS = ["E9Y2LxT4g1hQZ7aD8nR3mWx5P0qK6pV7", "F7H1vM3kQ5rW8zT9xG2pJ6nY4dL0aZ3K"]
+    API_KEYS_FILE = "config/api_keys.json"
     
     def __init__(self, desk_manager, *args, **kwargs):
         self.desk_manager = desk_manager  # Set the DeskManager instance
@@ -12,10 +12,9 @@ class SimpleRESTServer(BaseHTTPRequestHandler):
         self.API_KEYS = self.load_api_keys()  # Load API keys from file
         super().__init__(*args, **kwargs)
 
-    @staticmethod
-    def load_api_keys():
+    def load_api_keys(self):
         try:
-            with open("api_keys.json", "r") as f:
+            with open(self.API_KEYS_FILE, "r") as f:
                 return json.load(f)
         except (FileNotFoundError, json.JSONDecodeError) as e:
             print(f"Error loading API keys: {e}")

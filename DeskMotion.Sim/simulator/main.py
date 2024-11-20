@@ -1,11 +1,26 @@
 import argparse
 import ssl
+import random
 from http.server import HTTPServer
+from users import UserType
 from desk_manager import DeskManager
 from simple_rest_server import SimpleRESTServer
 
-def run(server_class=HTTPServer, handler_class=SimpleRESTServer, port=8000, use_https=False, cert_file=None, key_file=None):
+def generate_desk_id():
+    return ":".join(f"{random.randint(0, 255):02x}" for _ in range(6))
+
+def generate_desk_name():
+    return f"DESK {random.randint(1000, 9999)}"
+
+def run(server_class=HTTPServer, handler_class=SimpleRESTServer, port=8000, use_https=False, cert_file=None, key_file=None, desks=2):
     desk_manager = DeskManager()
+    desk_manager.add_desk("cd:fb:1a:53:fb:e6", "DESK 4486", "Linak A/S", UserType.ACTIVE)
+    desk_manager.add_desk("ee:62:5b:b8:73:1d", "DESK 6743", "Linak A/S", UserType.STANDING)
+    
+    if len(desk_manager.get_desk_ids()) < desks:
+        for i in range(desks - len(desk_manager.get_desk_ids())):
+            desk_manager.add_desk(generate_desk_id(), generate_desk_name(), "Linak A/S", UserType.ACTIVE)
+    
     desk_manager.start_updates()
 
     def handler(*args, **kwargs):
@@ -49,6 +64,7 @@ if __name__ == "__main__":
     parser.add_argument("--https", action="store_true", help="Enable HTTPS")
     parser.add_argument("--certfile", type=str, help="Path to the SSL certificate file")
     parser.add_argument("--keyfile", type=str, help="Path to the SSL key file")
+    parser.add_argument("--desks", type=int, default=2, help="Minimum number of desks to simulate (default: 2)")
 
     args = parser.parse_args()
 
@@ -56,5 +72,6 @@ if __name__ == "__main__":
         port=args.port,
         use_https=args.https,
         cert_file=args.certfile,
-        key_file=args.keyfile
+        key_file=args.keyfile,
+        desks=args.desks
     )

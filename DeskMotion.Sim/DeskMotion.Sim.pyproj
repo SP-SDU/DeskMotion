@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>272579ed-cf26-4f0d-9462-b222c6337a32</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>main.py</StartupFile>
+    <StartupFile>simulator/main.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -12,7 +12,7 @@
     <Name>DeskMotion.Sim</Name>
     <RootNamespace>DeskMotion.Sim</RootNamespace>
     <LaunchProvider>Standard Python launcher</LaunchProvider>
-    <CommandLineArguments>--port 8443 --https --certfile cert.pem --keyfile key.pem</CommandLineArguments>
+    <CommandLineArguments>--port 8443 --https --certfile config/cert.pem --keyfile config/key.pem</CommandLineArguments>
     <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
     <OutputType>None</OutputType>
     <AssemblyName>DeskMotion.Sim</AssemblyName>
@@ -26,19 +26,29 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="api_keys.json" />
-    <Content Include="cert.pem" />
-    <Content Include="desks_state.json" />
+    <Content Include="config\api_keys.json" />
+    <Content Include="config\cert.pem" />
+    <Content Include="config\key.pem" />
+    <Content Include="data\desks_state.json" />
     <Content Include="Dockerfile" />
-    <Content Include="key.pem" />
-    <Content Include="openapi.json" />
+    <Content Include="docs\openapi.json" />
+    <Content Include="LICENSE" />
     <Content Include="README.md" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="desk.py" />
-    <Compile Include="desk_manager.py" />
-    <Compile Include="main.py" />
-    <Compile Include="simple_rest_server.py" />
+    <Folder Include="config\" />
+    <Folder Include="data\" />
+    <Folder Include="docs\" />
+    <Folder Include="simulator\" />
+    <Folder Include="tests\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="simulator\desk.py" />
+    <Compile Include="simulator\desk_manager.py" />
+    <Compile Include="simulator\main.py" />
+    <Compile Include="simulator\simple_rest_server.py" />
+    <Compile Include="simulator\users.py" />
+    <Compile Include="tests\simple_api_test.py" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

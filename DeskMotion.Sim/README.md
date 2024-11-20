@@ -12,7 +12,7 @@ The API server can be started in either HTTP or HTTPS mode.
 To start the server in HTTP mode on the default port (8000), run:
 
 ```bash
-python main.py --port 8000
+python simulator/main.py --port 8000
 ```
 
 - Options:
@@ -22,7 +22,7 @@ python main.py --port 8000
 To enable HTTPS, you need to provide paths to the SSL certificate and key files. Here’s an example of starting the server on port 8443 in HTTPS mode:
 
 ```bash
-python main.py --port 8443 --https --certfile path/to/cert.pem --keyfile path/to/key.pem
+python simulator/main.py --port 8443 --https --certfile config/cert.pem --keyfile config/key.pem
 ```
 
 - Options:
@@ -31,9 +31,18 @@ python main.py --port 8443 --https --certfile path/to/cert.pem --keyfile path/to
    - __--keyfile__: Path to the SSL private key file (required for HTTPS)
    - __--port__: (Optional) Specify the port to use for the server. The default is 8000
 
+#### 3. **Other Options**:
+To generate the minimum required amount of desks:
+
+```bash
+python simulator/main.py --desks 100
+```
+- Options:
+   - __--desks__: Minimum number of desks to simulate (default: 2)
+
 ## Data Persistence
 
-The server automatically loads the desk data on startup and saves it upon shutdown. Desk data, including configurations, state (position, speed, etc.), usage counters, and any errors, are saved to a JSON file named `desks_state.json`.
+The server automatically loads the desk data on startup and saves it upon shutdown. Desk data, including configurations, state (position, speed, etc.), usage counters, and any errors, are saved to a JSON file named `desks_state.json` in `data` folder.
 
 - **Loading Data**:
   When the server starts, it checks if `desks_state.json` exists. If found, it loads the saved data to restore each desk's previous state. If no file is found or if the file is invalid, the server starts with default desk settings.
