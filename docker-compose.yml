@@ -46,14 +46,14 @@ services:
   deskmotion.sim:
     image: ${DOCKER_REGISTRY-}deskmotion.sim
     build:
-      context: DeskMotion.Sim
+      context: .
+      dockerfile: DeskMotion.Sim/Dockerfile
     environment:
-      - PYTHONBUFFERED=0
+      - args=--port ${SIM_PORT} --https --certfile cert.pem --keyfile key.pem
     ports:
       - "${SIM_PORT}:8443"
     volumes:
       - ./DeskMotion.Sim:/app
-    command: python -u main.py --port ${SIM_PORT} --https --certfile cert.pem --keyfile key.pem
 
 volumes:
   deskmotion_data:
