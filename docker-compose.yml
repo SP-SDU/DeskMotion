@@ -45,6 +45,9 @@ services:
 
   deskmotion.sim:
     image: ${DOCKER_REGISTRY-}deskmotion.sim
+    build:
+      context: .
+      dockerfile: DeskMotion.Sim/Dockerfile
     environment:
       - SIM_PORT=8443
     ports:
