@@ -12,7 +12,8 @@
     <Name>DeskMotion.Sim</Name>
     <RootNamespace>DeskMotion.Sim</RootNamespace>
     <LaunchProvider>Standard Python launcher</LaunchProvider>
-    <CommandLineArguments>--port 8443 --https --certfile config/cert.pem --keyfile config/key.pem</CommandLineArguments>
+    <CommandLineArguments>
+    </CommandLineArguments>
     <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
     <OutputType>None</OutputType>
     <AssemblyName>DeskMotion.Sim</AssemblyName>

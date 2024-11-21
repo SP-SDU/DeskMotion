@@ -12,21 +12,21 @@ def generate_desk_id():
 def generate_desk_name():
     return f"DESK {random.randint(1000, 9999)}"
 
-def run(server_class=HTTPServer, handler_class=SimpleRESTServer, port=8000, use_https=False, cert_file=None, key_file=None, desks=2):
+def run(server_class=HTTPServer, handler_class=SimpleRESTServer, host="localhost", port=8000, use_https=False, cert_file=None, key_file=None, desks=2):
     desk_manager = DeskManager()
     desk_manager.add_desk("cd:fb:1a:53:fb:e6", "DESK 4486", "Linak A/S", UserType.ACTIVE)
     desk_manager.add_desk("ee:62:5b:b8:73:1d", "DESK 6743", "Linak A/S", UserType.STANDING)
-    
+
     if len(desk_manager.get_desk_ids()) < desks:
         for i in range(desks - len(desk_manager.get_desk_ids())):
             desk_manager.add_desk(generate_desk_id(), generate_desk_name(), "Linak A/S", UserType.ACTIVE)
-    
+
     desk_manager.start_updates()
 
     def handler(*args, **kwargs):
         handler_class(desk_manager, *args, **kwargs)
 
-    server_address = ("localhost", port)
+    server_address = (host, port)
     httpd = server_class(server_address, handler)
 
     if use_https:
@@ -34,14 +34,14 @@ def run(server_class=HTTPServer, handler_class=SimpleRESTServer, port=8000, use_
             raise ValueError("Both certificate and key files must be provided for HTTPS.")
         context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
         context.load_cert_chain(certfile=cert_file, keyfile=key_file)
-        
+
         httpd.socket = context.wrap_socket(httpd.socket, server_side=True)
         protocol = "HTTPS"
     else:
         protocol = "HTTP"
 
     print(f"Starting {protocol} server on port {port}...")
-    
+
     try:
         httpd.serve_forever()
     except KeyboardInterrupt:
@@ -60,6 +60,7 @@ def run(server_class=HTTPServer, handler_class=SimpleRESTServer, port=8000, use_
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Start a simple REST API server.")
+    parser.add_argument("--host", type=str, default="localhost", help="Host/IP to bind the server to (default: localhost)")
     parser.add_argument("--port", type=int, default=8000, help="Port to run the server on (default: 8000)")
     parser.add_argument("--https", action="store_true", help="Enable HTTPS")
     parser.add_argument("--certfile", type=str, help="Path to the SSL certificate file")
@@ -69,6 +70,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     run(
+        host=args.host,
         port=args.port,
         use_https=args.https,
         cert_file=args.certfile,

@@ -49,9 +49,9 @@ services:
       context: .
       dockerfile: DeskMotion.Sim/Dockerfile
     environment:
-      - args=--port ${SIM_PORT} --https --certfile config/cert.pem --keyfile config/key.pem --desks ${DESK_AMOUNT}
+      - args=--host 0.0.0.0 --desks ${DESK_AMOUNT}
     ports:
-      - "${SIM_PORT}:8443"
+      - "${SIM_PORT}:8000"
     volumes:
       - ./DeskMotion.Sim:/app
 
