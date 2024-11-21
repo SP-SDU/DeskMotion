@@ -40,7 +40,8 @@ def run(server_class=HTTPServer, handler_class=SimpleRESTServer, host="localhost
     else:
         protocol = "HTTP"
 
-    print(f"Starting {protocol} server on port {port}...")
+    print(f"Now listening on: {protocol.lower()}://{host}:{port}")
+    print("Application started. Press Ctrl+C to shut down.")
 
     try:
         httpd.serve_forever()
