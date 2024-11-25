@@ -17,6 +17,7 @@
     <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
     <OutputType>None</OutputType>
     <AssemblyName>DeskMotion.Sim</AssemblyName>
+    <SuppressConfigureTestFrameworkPrompt>true</SuppressConfigureTestFrameworkPrompt>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>

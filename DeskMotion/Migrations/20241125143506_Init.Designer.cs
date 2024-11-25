@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DeskMotion.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241114214750_Init")]
+    [Migration("20241125143506_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -31,16 +31,16 @@ namespace DeskMotion.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<string>("Configuration")
+                    b.Property<string>("Location")
+                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("Location")
+                    b.Property<string>("MacAddress")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("QRCodeData")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Status")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -82,6 +82,7 @@ namespace DeskMotion.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
@@ -125,9 +126,11 @@ namespace DeskMotion.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<string>("FirstName")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("LastName")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<bool>("LockoutEnabled")
@@ -280,6 +283,120 @@ namespace DeskMotion.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("DeskMotion.Models.Desk", b =>
+                {
+                    b.OwnsOne("DeskMotion.Models.Config", "Config", b1 =>
+                        {
+                            b1.Property<Guid>("DeskId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("Manufacturer")
+                                .IsRequired()
+                                .HasColumnType("text");
+
+                            b1.Property<string>("Name")
+                                .IsRequired()
+                                .HasColumnType("text");
+
+                            b1.HasKey("DeskId");
+
+                            b1.ToTable("Desks");
+
+                            b1.WithOwner()
+                                .HasForeignKey("DeskId");
+                        });
+
+                    b.OwnsMany("DeskMotion.Models.LastError", "LastErrors", b1 =>
+                        {
+                            b1.Property<Guid>("DeskId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("integer");
+
+                            NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b1.Property<int>("Id"));
+
+                            b1.Property<int>("ErrorCode")
+                                .HasColumnType("integer");
+
+                            b1.Property<int>("Time_s")
+                                .HasColumnType("integer");
+
+                            b1.HasKey("DeskId", "Id");
+
+                            b1.ToTable("LastError");
+
+                            b1.WithOwner()
+                                .HasForeignKey("DeskId");
+                        });
+
+                    b.OwnsOne("DeskMotion.Models.State", "State", b1 =>
+                        {
+                            b1.Property<Guid>("DeskId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<bool>("IsAntiCollision")
+                                .HasColumnType("boolean");
+
+                            b1.Property<bool>("IsOverloadProtectionDown")
+                                .HasColumnType("boolean");
+
+                            b1.Property<bool>("IsOverloadProtectionUp")
+                                .HasColumnType("boolean");
+
+                            b1.Property<bool>("IsPositionLost")
+                                .HasColumnType("boolean");
+
+                            b1.Property<int>("Position_mm")
+                                .HasColumnType("integer");
+
+                            b1.Property<int>("Speed_mms")
+                                .HasColumnType("integer");
+
+                            b1.Property<string>("Status")
+                                .IsRequired()
+                                .HasColumnType("text");
+
+                            b1.HasKey("DeskId");
+
+                            b1.ToTable("Desks");
+
+                            b1.WithOwner()
+                                .HasForeignKey("DeskId");
+                        });
+
+                    b.OwnsOne("DeskMotion.Models.Usage", "Usage", b1 =>
+                        {
+                            b1.Property<Guid>("DeskId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<int>("ActivationsCounter")
+                                .HasColumnType("integer");
+
+                            b1.Property<int>("SitStandCounter")
+                                .HasColumnType("integer");
+
+                            b1.HasKey("DeskId");
+
+                            b1.ToTable("Desks");
+
+                            b1.WithOwner()
+                                .HasForeignKey("DeskId");
+                        });
+
+                    b.Navigation("Config")
+                        .IsRequired();
+
+                    b.Navigation("LastErrors");
+
+                    b.Navigation("State")
+                        .IsRequired();
+
+                    b.Navigation("Usage")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>

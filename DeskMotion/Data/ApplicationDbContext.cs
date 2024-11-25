@@ -27,4 +27,16 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
 
     public DbSet<Desk> Desks => Set<Desk>();
     public DbSet<Reservation> Reservations => Set<Reservation>();
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        base.OnModelCreating(builder);
+
+        builder.Entity<Desk>(desk =>
+        {
+            desk.OwnsOne(d => d.Config);
+            desk.OwnsOne(d => d.State);
+            desk.OwnsOne(d => d.Usage);
+            desk.OwnsMany(d => d.LastErrors);
+        });
+    }
 }

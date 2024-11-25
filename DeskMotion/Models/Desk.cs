@@ -12,13 +12,27 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Text.Json.Serialization;
+
 namespace DeskMotion.Models;
 
 public class Desk
 {
+    [JsonIgnore]
     public Guid Id { get; set; } = Guid.NewGuid();
-    public string? Location { get; set; }
-    public string? Configuration { get; set; }
-    public string? QRCodeData { get; set; }
-    public string? Status { get; set; }
+
+    [JsonIgnore]
+    public string Location { get; set; } = string.Empty;
+
+    [JsonIgnore]
+    public string QRCodeData { get; set; } = string.Empty;
+
+    [JsonIgnore]
+    public string MacAddress { get; set; } = string.Empty;  // Obtained from the API
+
+    // Navigation Properties
+    public required Config Config { get; set; }
+    public required State State { get; set; }
+    public required Usage Usage { get; set; }
+    public required List<LastError> LastErrors { get; set; } = [];
 }

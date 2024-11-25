@@ -17,7 +17,7 @@ namespace DeskMotion.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: true),
+                    Description = table.Column<string>(type: "text", nullable: false),
                     Name = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     NormalizedName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     ConcurrencyStamp = table.Column<string>(type: "text", nullable: true)
@@ -32,8 +32,8 @@ namespace DeskMotion.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    FirstName = table.Column<string>(type: "text", nullable: true),
-                    LastName = table.Column<string>(type: "text", nullable: true),
+                    FirstName = table.Column<string>(type: "text", nullable: false),
+                    LastName = table.Column<string>(type: "text", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
@@ -60,10 +60,20 @@ namespace DeskMotion.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Location = table.Column<string>(type: "text", nullable: true),
-                    Configuration = table.Column<string>(type: "text", nullable: true),
-                    QRCodeData = table.Column<string>(type: "text", nullable: true),
-                    Status = table.Column<string>(type: "text", nullable: true)
+                    Location = table.Column<string>(type: "text", nullable: false),
+                    QRCodeData = table.Column<string>(type: "text", nullable: false),
+                    MacAddress = table.Column<string>(type: "text", nullable: false),
+                    Config_Name = table.Column<string>(type: "text", nullable: false),
+                    Config_Manufacturer = table.Column<string>(type: "text", nullable: false),
+                    State_Position_mm = table.Column<int>(type: "integer", nullable: false),
+                    State_Speed_mms = table.Column<int>(type: "integer", nullable: false),
+                    State_Status = table.Column<string>(type: "text", nullable: false),
+                    State_IsPositionLost = table.Column<bool>(type: "boolean", nullable: false),
+                    State_IsOverloadProtectionUp = table.Column<bool>(type: "boolean", nullable: false),
+                    State_IsOverloadProtectionDown = table.Column<bool>(type: "boolean", nullable: false),
+                    State_IsAntiCollision = table.Column<bool>(type: "boolean", nullable: false),
+                    Usage_ActivationsCounter = table.Column<int>(type: "integer", nullable: false),
+                    Usage_SitStandCounter = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -191,6 +201,27 @@ namespace DeskMotion.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "LastError",
+                columns: table => new
+                {
+                    DeskId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Time_s = table.Column<int>(type: "integer", nullable: false),
+                    ErrorCode = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LastError", x => new { x.DeskId, x.Id });
+                    table.ForeignKey(
+                        name: "FK_LastError_Desks_DeskId",
+                        column: x => x.DeskId,
+                        principalTable: "Desks",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -248,7 +279,7 @@ namespace DeskMotion.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Desks");
+                name: "LastError");
 
             migrationBuilder.DropTable(
                 name: "Reservations");
@@ -258,6 +289,9 @@ namespace DeskMotion.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Desks");
         }
     }
 }

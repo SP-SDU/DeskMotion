@@ -14,6 +14,7 @@
 
 using DeskMotion.Data;
 using DeskMotion.Models;
+using DeskMotion.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace DeskMotion;
@@ -34,6 +35,25 @@ public class Program
             .AddEntityFrameworkStores<ApplicationDbContext>();
 
         builder.Services.AddRazorPages();
+
+        var apiBaseUri = builder.Configuration["DeskApi:BaseUri"];
+
+        builder.Services.AddHttpClient("DeskApi", client =>
+        {
+            client.BaseAddress = new Uri(apiBaseUri!);
+        });
+        builder.Services.AddTransient<DeskService>(sp =>
+        {
+            var httpClient = sp.GetRequiredService<IHttpClientFactory>().CreateClient("DeskApi");
+            return new DeskService(httpClient);
+        });
+
+        builder.Services.AddHostedService<DeskDataUpdater>(sp =>
+        {
+            var deskService = sp.GetRequiredService<DeskService>();
+            var logger = sp.GetRequiredService<ILogger<DeskDataUpdater>>();
+            return new DeskDataUpdater(deskService, sp, logger);
+        });
 
         var app = builder.Build();
 

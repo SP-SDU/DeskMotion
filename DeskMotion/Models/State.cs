@@ -12,14 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
-using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace DeskMotion.Models;
 
-public class User : IdentityUser<Guid>
+[Owned]
+public class State
 {
-    public string FirstName { get; set; } = string.Empty;
-    public string LastName { get; set; } = string.Empty;
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public int Position_mm { get; set; }
+    public int Speed_mms { get; set; }
+    public required string Status { get; set; }
+    public bool IsPositionLost { get; set; }
+    public bool IsOverloadProtectionUp { get; set; }
+    public bool IsOverloadProtectionDown { get; set; }
+    public bool IsAntiCollision { get; set; }
 }
