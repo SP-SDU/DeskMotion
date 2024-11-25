@@ -1,0 +1,45 @@
+@page
+@model DeskMotion.Pages.Admin.Users.EditModel
+
+@{
+    ViewData["Title"] = "Edit User";
+}
+
+<body>
+
+    <header>
+        <h1>Edit User</h1>
+    </header>
+
+    <div class="row container">
+        <div class="col-md-4">
+            <form method="post" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="form-group">
+                    <label asp-for="IdentityUser!.UserName" class="control-label">User Name</label>
+                    <input asp-for="IdentityUser!.UserName" class="form-control" />
+                    <span asp-validation-for="IdentityUser!.UserName" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="IdentityUser!.Email" class="control-label">Email</label>
+                    <input asp-for="IdentityUser!.Email" class="form-control" />
+                    <span asp-validation-for="IdentityUser!.Email" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Password" class="control-label">Password</label>
+                    <input asp-for="Password" class="form-control" type="password" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                    <a asp-page="Index" class="btn">Back to List</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</body>

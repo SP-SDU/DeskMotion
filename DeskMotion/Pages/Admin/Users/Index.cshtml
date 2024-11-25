@@ -1,0 +1,40 @@
+@page
+@model DeskMotion.Pages.Admin.Users.IndexModel
+
+@{
+    ViewData["Title"] = "Users";
+}
+
+<body>
+    <header>
+        <h1>Users</h1>
+        <p class="text-lg-end">
+            <a asp-page="Create" class="btn">Create New</a>
+        </p>
+    </header>
+
+    <div class="container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>User Name</th>
+                    <th>Email</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.IdentityUsers!)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.UserName)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                        <td>
+                            <a asp-page="./Edit" asp-route-id="@item.Id" class="btn btn-primary btn-sm" style="background-color: #420599; color: #FFD43B;">Edit</a>
+                            <a asp-page="./Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm" style="background-color: #420599; color: #FFD43B;">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</body>
