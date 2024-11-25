@@ -34,6 +34,25 @@ public class Program
             .AddRoles<Role>()
             .AddEntityFrameworkStores<ApplicationDbContext>();
 
+        builder.Services.ConfigureApplicationCookie(options =>
+        {
+            options.LoginPath = "/Account/Login";
+            options.LogoutPath = "/Account/Logout";
+            options.AccessDeniedPath = "/Account/AccessDenied";
+        });
+
+        builder.Services.AddRazorPages()
+            .AddRazorPagesOptions(options =>
+            {
+                options.Conventions.AuthorizeFolder("/");
+                options.Conventions.AllowAnonymousToPage("/Account/Login");
+                options.Conventions.AuthorizeFolder("/Admin", "RequireAdministratorRole");
+            });
+        builder.Services.AddAuthorization(options =>
+        {
+            options.AddPolicy("RequireAdministratorRole", policy => policy.RequireRole("Administrator"));
+        });
+
         builder.Services.AddRazorPages();
 
         var apiBaseUri = builder.Configuration["DeskApi:BaseUri"];
