@@ -30,6 +30,8 @@ public class Desk
     [JsonIgnore]
     public string MacAddress { get; set; } = string.Empty;  // Obtained from the API
 
+    //public ICollection<Reservation> Reservations { get; set; } = [];
+
     // Navigation Properties
     public required Config Config { get; set; }
     public required State State { get; set; }

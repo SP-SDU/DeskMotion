@@ -48,6 +48,7 @@ public class DeskService(HttpClient httpClient)
 
     public async Task UpdateDeskPositionAsync(string deskId, int newPositionMm)
     {
+
         var content = new StringContent(
             JsonSerializer.Serialize(new { position_mm = newPositionMm }, _jsonOptions),
             Encoding.UTF8,

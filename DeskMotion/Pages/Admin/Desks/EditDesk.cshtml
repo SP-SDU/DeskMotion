@@ -1,0 +1,85 @@
+﻿@page
+@model DeskMotion.Pages.Admin.Desks.EditDeskModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Desk</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Desk.Id" />
+            <div class="form-group">
+                <label asp-for="Desk.Location" class="control-label"></label>
+                <input asp-for="Desk.Location" class="form-control" />
+                <span asp-validation-for="Desk.Location" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Desk.QRCodeData" class="control-label"></label>
+@*                 <input asp-for="Desk.QRCodeData" class="form-control" /> *@
+                <span asp-validation-for="Desk.QRCodeData" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Desk.MacAddress" class="control-label"></label>
+				<label class="form-control">@Model.Desk.MacAddress</label>
+                <span asp-validation-for="Desk.MacAddress" class="text-danger"></span>
+            </div>
+			<div>
+				<label asp-for="Desk.LastErrors" class="control-label"></label>
+				<label class="form-control">@Model.Desk.LastErrors</label>
+				<span asp-validation-for="Desk.LastErrors" class="text-danger"></span>
+			</div>
+			<div>
+				<label asp-for="Desk.State" class="control-label"></label>
+				<input asp-for="Desk.State" class="form-control" />
+				<span asp-validation-for="Desk.State" class="text-danger"></span>
+			</div>
+			<div>
+				<label asp-for="Desk.State.Position_mm" class="control-label"></label>
+				<input asp-for="Desk.State.Position_mm" class="form-control" />
+				<span asp-validation-for="Desk.State.Position_mm" class="text-danger"></span>
+			</div>
+			<div>
+				<label asp-for="Desk.State.Speed_mms" class="control-label"></label>
+				<input asp-for="Desk.State.Speed_mms" class="form-control" />
+				<span asp-validation-for="Desk.State.Speed_mms" class="text-danger"></span>
+			</div>
+			<div>
+				<label asp-for="Desk.Config.Name" class="control-label"></label>
+				<input asp-for="Desk.Config.Name" class="form-control" />
+				<span asp-validation-for="Desk.Config.Name" class="text-danger"></span>
+			</div>
+			<div>
+				<label asp-for="Desk.Config.Manufacturer" class="control-label"></label>
+				<input asp-for="Desk.Config.Manufacturer" class="form-control" />
+				<span asp-validation-for="Desk.Config.Manufacturer" class="text-danger"></span>
+			</div>
+			<div>
+				<label asp-for="Desk.Usage.ActivationsCounter" class="control-label"></label>
+				<input asp-for="Desk.Usage.ActivationsCounter" class="form-control" />
+				<span asp-validation-for="Desk.Usage.ActivationsCounter" class="text-danger"></span>
+			</div>
+			<div>
+				<label asp-for="Desk.Usage.SitStandCounter" class="control-label"></label>
+				<input asp-for="Desk.Usage.SitStandCounter" class="form-control" />
+				<span asp-validation-for="Desk.Usage.SitStandCounter" class="text-danger"></span>
+			</div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

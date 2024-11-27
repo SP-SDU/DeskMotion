@@ -21,4 +21,7 @@ public class Reservation
     public Guid DeskId { get; set; }    // Reserved Desk
     public DateTime StartTime { get; set; }
     public DateTime EndTime { get; set; }
+
+    //public Desk? Desk { get; set; }
+    //public User? User { get; set; }
 }
