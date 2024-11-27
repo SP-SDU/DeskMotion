@@ -1,0 +1,68 @@
+﻿@page
+@model DeskMotion.Pages.Admin.Desks.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Desk[0].Location)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Desk[0].QRCodeData)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Desk[0].MacAddress)
+            </th>
+			<th>
+				@Html.DisplayNameFor(model => model.Desk[0].Config.Name)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Desk[0].Config.Manufacturer)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Desk[0].State)
+			</th>
+
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Desk) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Location)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.QRCodeData)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MacAddress)
+            </td>
+			<td>
+				@Html.DisplayFor(modelItem => item.Config.Name)
+			</td>
+			<td>
+				@Html.DisplayFor(modelItem => item.Config.Manufacturer)
+			</td>
+			<td>
+				@Html.DisplayFor(modelItem => item.State)
+			</td>
+            <td>
+                <a asp-page="./EditDesk" asp-route-id="@item.Id">Edit</a> |
+                <a asp-page="./DetailsDesk" asp-route-id="@item.Id">Details</a> |
+                <a asp-page="./DeleteDesk" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
