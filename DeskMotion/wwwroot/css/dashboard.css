@@ -1,0 +1,215 @@
+/* Dashboard specific styles */
+.loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #3498db;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.card {
+    position: relative;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+}
+
+.card:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.desk-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.desk-status {
+    position: relative;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 4px;
+}
+
+.progress {
+    height: 0.5rem;
+    border-radius: 0.25rem;
+    background-color: #e9ecef;
+}
+
+.progress-bar {
+    background-color: #007bff;
+    transition: width 0.3s ease;
+}
+
+.chart-container {
+    position: relative;
+    height: 300px;
+    margin-bottom: 1rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .desk-controls {
+        flex-direction: column;
+    }
+
+    .btn-group {
+        display: flex;
+        width: 100%;
+    }
+
+    .input-group {
+        width: 100%;
+    }
+
+    .chart-container {
+        height: 250px;
+    }
+}
+
+/* Error message styling */
+.alert {
+    border-radius: 4px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.alert-danger {
+    background-color: #fff2f2;
+    color: #dc3545;
+    border-left: 4px solid #dc3545;
+}
+
+.alert-warning {
+    background-color: #fff8e6;
+    color: #ffc107;
+    border-left: 4px solid #ffc107;
+}
+
+.alert-success {
+    background-color: #f2fff2;
+    color: #28a745;
+    border-left: 4px solid #28a745;
+}
+
+/* Tooltip styling */
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltip-text {
+    visibility: hidden;
+    width: 200px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 4px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.tooltip:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Icon styles */
+.btn i {
+    display: inline-block;
+    width: 1em;
+    text-align: center;
+    font-size: 1rem;
+}
+
+.btn i + span {
+    vertical-align: middle;
+}
+
+.tooltip i {
+    font-size: 1.2rem;
+    color: #6c757d;
+}
+
+/* Ensure consistent icon sizing */
+.fa-solid {
+    line-height: 1;
+    vertical-align: -0.125em;
+}
+
+/* Button icon spacing */
+.btn:not(.btn-sm):not(.btn-lg) i {
+    margin-right: 0.5rem;
+}
+
+/* Accessibility improvements */
+.btn:focus {
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    outline: none;
+}
+
+.form-control:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+    .progress-bar {
+        background-color: #0056b3;
+    }
+
+    .btn-primary {
+        background-color: #004085;
+        border-color: #004085;
+    }
+
+    .alert {
+        border-width: 2px;
+    }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    .progress-bar {
+        transition: none;
+    }
+
+    .card {
+        transition: none;
+    }
+
+    .loading-spinner {
+        animation: none;
+    }
+}
