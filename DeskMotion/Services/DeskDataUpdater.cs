@@ -51,7 +51,6 @@ public class DeskDataUpdater(DeskService deskService, IServiceProvider servicePr
 
                     // Fetch the latest desk data
                     var deskData = await deskService.GetDeskAsync(deskId);
-                    deskData.Metadata = metadata;
 
                     // Find and set the last record to not be the latest
                     var currentLatest = await dbContext.Desks
