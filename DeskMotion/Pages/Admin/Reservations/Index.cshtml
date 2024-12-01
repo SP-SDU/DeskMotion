@@ -1,0 +1,55 @@
+﻿@page
+@model DeskMotion.Pages.Admin.Reservations.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                User
+            </th>
+            <th>
+                Desk MAC Address
+            </th>
+            <th>
+                Start Time
+            </th>
+            <th>
+                End Time
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Reservation)
+        {
+            <tr>
+                <td>
+                    @(Model.UserNames.TryGetValue(item.UserId, out var userName) ? userName : "Unknown User")
+                </td>
+                <td>
+                    @(Model.DeskMacAddresses.TryGetValue(item.DeskMetadataId, out var macAddress) ? macAddress : "Unknown Desk")
+                </td>
+                <td>
+                    @item.StartTime.ToLocalTime().ToString("yyyy-MM-dd HH:mm")
+                </td>
+                <td>
+                    @item.EndTime.ToLocalTime().ToString("yyyy-MM-dd HH:mm")
+                </td>
+                <td>
+                    <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
