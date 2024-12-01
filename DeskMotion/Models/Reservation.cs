@@ -17,11 +17,12 @@ namespace DeskMotion.Models;
 public class Reservation
 {
     public Guid Id { get; set; } = Guid.NewGuid();
-    public Guid UserId { get; set; }    // Reserved by
-    public Guid DeskId { get; set; }    // Reserved Desk
+    public Guid UserId { get; set; }            // Reserved by
+    public Guid DeskMetadataId { get; set; }    // Reserved DeskMetadata
+
     public DateTime StartTime { get; set; }
     public DateTime EndTime { get; set; }
 
-    //public Desk? Desk { get; set; }
-    //public User? User { get; set; }
+    // Navigation properties
+    public DeskMetadata DeskMetadata { get; set; } = default!;
 }
