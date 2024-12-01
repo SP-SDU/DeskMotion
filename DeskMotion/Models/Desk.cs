@@ -31,8 +31,6 @@ public class Desk
     public string MacAddress { get; set; } = string.Empty;
 
     // Navigation Properties
-    [JsonIgnore]
-    public virtual DeskMetadata Metadata { get; set; } = default!;
     public Config Config { get; set; } = default!;
     public State State { get; set; } = default!;
     public Usage Usage { get; set; } = default!;

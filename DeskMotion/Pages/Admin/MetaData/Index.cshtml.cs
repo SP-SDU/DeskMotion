@@ -12,15 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace DeskMotion.Models;
+using DeskMotion.Data;
+using DeskMotion.Models;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 
-public class DeskMetadata
+namespace DeskMotion.Pages.Admin.MetaData
 {
-    public Guid Id { get; set; } = Guid.NewGuid();
+    public class IndexModel(ApplicationDbContext context) : PageModel
+    {
+        public IList<DeskMetadata> DeskMetadata { get; set; } = default!;
 
-    public string MacAddress { get; set; } = string.Empty;
-
-    public string Location { get; set; } = string.Empty;
-
-    public string QRCodeData { get; set; } = string.Empty;
+        public async Task OnGetAsync()
+        {
+            DeskMetadata = await context.DeskMetadata.ToListAsync();
+        }
+    }
 }

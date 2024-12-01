@@ -17,7 +17,7 @@ namespace DeskMotion.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.10")
+                .HasAnnotation("ProductVersion", "8.0.11")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -35,15 +35,10 @@ namespace DeskMotion.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid>("MetadataId")
-                        .HasColumnType("uuid");
-
                     b.Property<DateTime>("RecordedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("MetadataId");
 
                     b.ToTable("Desks");
                 });
@@ -90,10 +85,6 @@ namespace DeskMotion.Migrations
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("DeskMetadataId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Reservations");
                 });
@@ -314,12 +305,6 @@ namespace DeskMotion.Migrations
 
             modelBuilder.Entity("DeskMotion.Models.Desk", b =>
                 {
-                    b.HasOne("DeskMotion.Models.DeskMetadata", "Metadata")
-                        .WithMany()
-                        .HasForeignKey("MetadataId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.OwnsOne("DeskMotion.Models.Config", "Config", b1 =>
                         {
                             b1.Property<Guid>("DeskId")
@@ -425,30 +410,11 @@ namespace DeskMotion.Migrations
 
                     b.Navigation("LastErrors");
 
-                    b.Navigation("Metadata");
-
                     b.Navigation("State")
                         .IsRequired();
 
                     b.Navigation("Usage")
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("DeskMotion.Models.Reservation", b =>
-                {
-                    b.HasOne("DeskMotion.Models.DeskMetadata", "DeskMetadata")
-                        .WithMany("Reservations")
-                        .HasForeignKey("DeskMetadataId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("DeskMotion.Models.User", null)
-                        .WithMany("Reservations")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("DeskMetadata");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -500,16 +466,6 @@ namespace DeskMotion.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("DeskMotion.Models.DeskMetadata", b =>
-                {
-                    b.Navigation("Reservations");
-                });
-
-            modelBuilder.Entity("DeskMotion.Models.User", b =>
-                {
-                    b.Navigation("Reservations");
                 });
 #pragma warning restore 612, 618
         }

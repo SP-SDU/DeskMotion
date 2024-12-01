@@ -1,17 +1,4 @@
-﻿// Copyright 2024 PET Group16
-//
-// Licensed under the Apache License, Version 2.0 (the "License"):
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     https://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
+﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -80,6 +67,46 @@ namespace DeskMotion.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_DeskMetadata", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Desks",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    RecordedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    IsLatest = table.Column<bool>(type: "boolean", nullable: false),
+                    MacAddress = table.Column<string>(type: "text", nullable: false),
+                    Config_Name = table.Column<string>(type: "text", nullable: false),
+                    Config_Manufacturer = table.Column<string>(type: "text", nullable: false),
+                    State_Position_mm = table.Column<int>(type: "integer", nullable: false),
+                    State_Speed_mms = table.Column<int>(type: "integer", nullable: false),
+                    State_Status = table.Column<string>(type: "text", nullable: false),
+                    State_IsPositionLost = table.Column<bool>(type: "boolean", nullable: false),
+                    State_IsOverloadProtectionUp = table.Column<bool>(type: "boolean", nullable: false),
+                    State_IsOverloadProtectionDown = table.Column<bool>(type: "boolean", nullable: false),
+                    State_IsAntiCollision = table.Column<bool>(type: "boolean", nullable: false),
+                    Usage_ActivationsCounter = table.Column<int>(type: "integer", nullable: false),
+                    Usage_SitStandCounter = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Desks", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Reservations",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
+                    DeskMetadataId = table.Column<Guid>(type: "uuid", nullable: false),
+                    StartTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    EndTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Reservations", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -189,65 +216,6 @@ namespace DeskMotion.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Desks",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    RecordedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    IsLatest = table.Column<bool>(type: "boolean", nullable: false),
-                    MacAddress = table.Column<string>(type: "text", nullable: false),
-                    MetadataId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Config_Name = table.Column<string>(type: "text", nullable: false),
-                    Config_Manufacturer = table.Column<string>(type: "text", nullable: false),
-                    State_Position_mm = table.Column<int>(type: "integer", nullable: false),
-                    State_Speed_mms = table.Column<int>(type: "integer", nullable: false),
-                    State_Status = table.Column<string>(type: "text", nullable: false),
-                    State_IsPositionLost = table.Column<bool>(type: "boolean", nullable: false),
-                    State_IsOverloadProtectionUp = table.Column<bool>(type: "boolean", nullable: false),
-                    State_IsOverloadProtectionDown = table.Column<bool>(type: "boolean", nullable: false),
-                    State_IsAntiCollision = table.Column<bool>(type: "boolean", nullable: false),
-                    Usage_ActivationsCounter = table.Column<int>(type: "integer", nullable: false),
-                    Usage_SitStandCounter = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Desks", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Desks_DeskMetadata_MetadataId",
-                        column: x => x.MetadataId,
-                        principalTable: "DeskMetadata",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Reservations",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
-                    DeskMetadataId = table.Column<Guid>(type: "uuid", nullable: false),
-                    StartTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    EndTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Reservations", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Reservations_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Reservations_DeskMetadata_DeskMetadataId",
-                        column: x => x.DeskMetadataId,
-                        principalTable: "DeskMetadata",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "LastError",
                 columns: table => new
                 {
@@ -304,21 +272,6 @@ namespace DeskMotion.Migrations
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Desks_MetadataId",
-                table: "Desks",
-                column: "MetadataId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Reservations_DeskMetadataId",
-                table: "Reservations",
-                column: "DeskMetadataId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Reservations_UserId",
-                table: "Reservations",
-                column: "UserId");
         }
 
         /// <inheritdoc />
@@ -340,6 +293,9 @@ namespace DeskMotion.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "DeskMetadata");
+
+            migrationBuilder.DropTable(
                 name: "LastError");
 
             migrationBuilder.DropTable(
@@ -349,13 +305,10 @@ namespace DeskMotion.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "Desks");
-
-            migrationBuilder.DropTable(
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "DeskMetadata");
+                name: "Desks");
         }
     }
 }
