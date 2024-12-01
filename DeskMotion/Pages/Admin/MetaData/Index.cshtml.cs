@@ -17,15 +17,14 @@ using DeskMotion.Models;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
-namespace DeskMotion.Pages.Admin.MetaData
-{
-    public class IndexModel(ApplicationDbContext context) : PageModel
-    {
-        public IList<DeskMetadata> DeskMetadata { get; set; } = default!;
+namespace DeskMotion.Pages.Admin.Metadata;
 
-        public async Task OnGetAsync()
-        {
-            DeskMetadata = await context.DeskMetadata.ToListAsync();
-        }
+public class IndexModel(ApplicationDbContext context) : PageModel
+{
+    public IList<DeskMetadata> DeskMetadata { get; set; } = default!;
+
+    public async Task OnGetAsync()
+    {
+        DeskMetadata = await context.DeskMetadata.ToListAsync();
     }
 }

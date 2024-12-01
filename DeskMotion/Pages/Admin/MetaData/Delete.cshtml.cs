@@ -18,49 +18,48 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
-namespace DeskMotion.Pages.Admin.MetaData
+namespace DeskMotion.Pages.Admin.Metadata;
+
+public class DeleteModel(ApplicationDbContext context) : PageModel
 {
-    public class DeleteModel(ApplicationDbContext context) : PageModel
+    [BindProperty]
+    public DeskMetadata DeskMetadata { get; set; } = default!;
+
+    public async Task<IActionResult> OnGetAsync(Guid? id)
     {
-        [BindProperty]
-        public DeskMetadata DeskMetadata { get; set; } = default!;
-
-        public async Task<IActionResult> OnGetAsync(Guid? id)
+        if (id == null)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var deskMetadata = await context.DeskMetadata.FirstOrDefaultAsync(m => m.Id == id);
-
-            if (deskMetadata == null)
-            {
-                return NotFound();
-            }
-            else
-            {
-                DeskMetadata = deskMetadata;
-            }
-            return Page();
+            return NotFound();
         }
 
-        public async Task<IActionResult> OnPostAsync(Guid? id)
+        var deskMetadata = await context.DeskMetadata.FirstOrDefaultAsync(m => m.Id == id);
+
+        if (deskMetadata == null)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var deskMetadata = await context.DeskMetadata.FindAsync(id);
-            if (deskMetadata != null)
-            {
-                DeskMetadata = deskMetadata;
-                _ = context.DeskMetadata.Remove(DeskMetadata);
-                _ = await context.SaveChangesAsync();
-            }
-
-            return RedirectToPage("./Index");
+            return NotFound();
         }
+        else
+        {
+            DeskMetadata = deskMetadata;
+        }
+        return Page();
+    }
+
+    public async Task<IActionResult> OnPostAsync(Guid? id)
+    {
+        if (id == null)
+        {
+            return NotFound();
+        }
+
+        var deskMetadata = await context.DeskMetadata.FindAsync(id);
+        if (deskMetadata != null)
+        {
+            DeskMetadata = deskMetadata;
+            _ = context.DeskMetadata.Remove(DeskMetadata);
+            _ = await context.SaveChangesAsync();
+        }
+
+        return RedirectToPage("./Index");
     }
 }

@@ -18,12 +18,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
-namespace DeskMotion.Pages.Admin.Metadata;
+namespace DeskMotion.Pages.Admin.Desks;
 
-public class EditModel(ApplicationDbContext context) : PageModel
+public class DeleteModel(ApplicationDbContext context) : PageModel
 {
     [BindProperty]
-    public DeskMetadata DeskMetadata { get; set; } = default!;
+    public Desk Desk { get; set; } = default!;
 
     public async Task<IActionResult> OnGetAsync(Guid? id)
     {
@@ -32,38 +32,34 @@ public class EditModel(ApplicationDbContext context) : PageModel
             return NotFound();
         }
 
-        var deskMetadata = await context.DeskMetadata.FirstOrDefaultAsync(m => m.Id == id);
-        if (deskMetadata == null)
+        var desk = await context.Desks.FirstOrDefaultAsync(m => m.Id == id);
+
+        if (desk == null)
         {
             return NotFound();
         }
-        DeskMetadata = deskMetadata;
+        else
+        {
+            Desk = desk;
+        }
         return Page();
     }
 
-    public async Task<IActionResult> OnPostAsync()
+    public async Task<IActionResult> OnPostAsync(Guid? id)
     {
-        if (!ModelState.IsValid)
-        {
-            return Page();
-        }
-
-        context.Attach(DeskMetadata).State = EntityState.Modified;
-
-        try
-        {
-            _ = await context.SaveChangesAsync();
-        }
-        catch (DbUpdateConcurrencyException) when (!DeskMetadataExists(DeskMetadata.Id))
+        if (id == null)
         {
             return NotFound();
         }
 
-        return RedirectToPage("./Index");
-    }
+        var desk = await context.Desks.FindAsync(id);
+        if (desk != null)
+        {
+            Desk = desk;
+            _ = context.Desks.Remove(Desk);
+            _ = await context.SaveChangesAsync();
+        }
 
-    private bool DeskMetadataExists(Guid id)
-    {
-        return context.DeskMetadata.Any(e => e.Id == id);
+        return RedirectToPage("./Index");
     }
 }
