@@ -2,84 +2,117 @@
 @model DeskMotion.Pages.Admin.Desks.DetailsDeskModel
 
 @{
-    ViewData["Title"] = "Details";
+	ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+<head>
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
 
-<div>
-    <h4>Desk</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Desk.Location)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Desk.Location)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Desk.QRCodeData)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Desk.QRCodeData)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Desk.MacAddress)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Desk.MacAddress)
-        </dd>
-		<dt class="col-sm-2">
-			@Html.DisplayNameFor(model => model.Desk.LastErrors)
-		</dt>
-		<dd class="col-sm-10">
-			@Html.DisplayFor(model => model.Desk.LastErrors)
-		</dd>
-		<dt class="col-sm-2">
-			@Html.DisplayNameFor(model => model.Desk.State)
-		</dt>
-		<dd class="col-sm-10">
-			@Html.DisplayFor(model => model.Desk.State)
-		</dd>
-		<dt class="col-sm-2">
-			@Html.DisplayNameFor(model => model.Desk.State.Position_mm)
-		</dt>
-		<dd class="col-sm-10">
-			@Html.DisplayFor(model => model.Desk.State.Position_mm)
-		</dd>
-		<dt class="col-sm-2">
-			@Html.DisplayNameFor(model => model.Desk.State.Speed_mms)
-		</dt>
-		<dd class="col-sm-10">
-			@Html.DisplayFor(model => model.Desk.State.Speed_mms)
-		</dd>
-		<dt class="col-sm-2">
-			@Html.DisplayNameFor(model => model.Desk.Config.Name)
-		</dt>
-		<dd class="col-sm-10">
-			@Html.DisplayFor(model => model.Desk.Config.Name)
-		</dd>
-		<dt class="col-sm-2">
-			@Html.DisplayNameFor(model => model.Desk.Config.Manufacturer)
-		</dt>
-		<dd class="col-sm-10">
-			@Html.DisplayFor(model => model.Desk.Config.Manufacturer)
-		</dd>
-		<dt class="col-sm-2">
-			@Html.DisplayNameFor(model => model.Desk.Usage.ActivationsCounter)
-		</dt>
-		<dd class="col-sm-10">
-			@Html.DisplayFor(model => model.Desk.Usage.ActivationsCounter)
-		</dd>
-		<dt class="col-sm-2">
-			@Html.DisplayNameFor(model => model.Desk.Usage.SitStandCounter)
-			</dt>
-		<dd class="col-sm-10">
-			@Html.DisplayFor(model => model.Desk.Usage.SitStandCounter)
-		</dd>
-    </dl>
-</div>
-<div>
-    <a asp-page="./EditDesk" asp-route-id="@Model.Desk.Id">Edit</a> |
-    <a asp-page="./Index">Back to List</a>
-</div>
+<body>
+	<div class="container-fluid py-2">
+		<form method="post" enctype="multipart/form-data">
+
+			<div class="row p-1 row">
+				<div class="head">
+					<p>Desk Details</p>
+				</div>
+				<div class="col-lg-6 col-sm-12 my-2">
+					<div class="column">
+						<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+						<input type="hidden" asp-for="Desk!.Id" />
+						<div class="form-group p-1">
+							<label asp-for="Desk!.Location" class="control-label"></label>
+							<input asp-for="Desk!.Location" class="form-control input" />
+							<span asp-validation-for="Desk!.Location" class="text-danger"></span>
+						</div>
+						<div class="form-group p-1">
+							<label asp-for="Desk.QRCodeData" class="control-label">QR-Code</label>
+							<img src="@Model.Desk!.QRCodeData" class="img-fluid input" alt="QR Code"
+								style="width: 300px; height: 300px; display: block; margin: 0 auto;" />
+							<span asp-validation-for="Desk.QRCodeData" class="text-danger"></span>
+						</div>
+						<div class="form-group p-1">
+							<label asp-for="Desk.MacAddress" class="control-label"></label>
+							<label class="form-control input">@Model.Desk.MacAddress</label>
+							<span asp-validation-for="Desk.MacAddress" class="text-danger"></span>
+						</div>
+						<div class="form-group p-1">
+							<label asp-for="Desk.LastErrors" class="control-label">Last Errors</label>
+							<table class="table">
+								<thead>
+									<tr>
+										<th>Time</th>
+										<th>Error Code</th>
+									</tr>
+								</thead>
+								<tbody>
+									@foreach (var error in Model.Desk.LastErrors)
+									{
+										<tr>
+											<td>@(TimeSpan.FromSeconds(error.Time_s).Add(TimeSpan.FromHours(6)).ToString(@"hh\:mm\:ss"))</td>
+											<td>@error.ErrorCode</td>
+										</tr>
+									}
+								</tbody>
+							</table>
+							<span asp-validation-for="Desk.LastErrors" class="text-danger"></span>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-lg-6 col-sm-12 my-2">
+					<div class="column">
+						<div class="form-group p-1">
+							<label asp-for="Desk.State.Status" class="control-label"></label>
+							<input asp-for="Desk.State.Status" class="form-control input" readonly />
+							<span asp-validation-for="Desk.State.Status" class="text-danger"></span>
+						</div>
+						<div class="form-group p-1">
+							<label asp-for="Desk.State.Position_mm" class="control-label"></label>
+							<input asp-for="Desk.State.Position_mm" class="form-control input" readonly />
+							<span asp-validation-for="Desk.State.Position_mm" class="text-danger"></span>
+						</div>
+						<div class="form-group p-1">
+							<label asp-for="Desk.State.Speed_mms" class="control-label"></label>
+							<input asp-for="Desk.State.Speed_mms" class="form-control input" readonly />
+							<span asp-validation-for="Desk.State.Speed_mms" class="text-danger"></span>
+						</div>
+						<div class="form-group p-1">
+							<label asp-for="Desk.Config.Name" class="control-label">Model Name</label>
+							<input asp-for="Desk.Config.Name" class="form-control input" readonly />
+							<span asp-validation-for="Desk.Config.Name" class="text-danger"></span>
+						</div>
+						<div class="form-group p-1">
+							<label asp-for="Desk.Config.Manufacturer" class="control-label"></label>
+							<input asp-for="Desk.Config.Manufacturer" class="form-control input" readonly />
+							<span asp-validation-for="Desk.Config.Manufacturer" class="text-danger"></span>
+						</div>
+						<div class="form-group p-1">
+							<label asp-for="Desk.Usage.ActivationsCounter" class="control-label"></label>
+							<input asp-for="Desk.Usage.ActivationsCounter" class="form-control input" readonly />
+							<span asp-validation-for="Desk.Usage.ActivationsCounter" class="text-danger"></span>
+						</div>
+						<div class="form-group p-1">
+							<label asp-for="Desk.Usage.SitStandCounter" class="control-label"></label>
+							<input asp-for="Desk.Usage.SitStandCounter" class="form-control input" readonly />
+							<span asp-validation-for="Desk.Usage.SitStandCounter" class="text-danger"></span>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row p-2 row">
+				<div class="col-12 text-center">
+					<input type="submit" value="Save" class="btn button" />
+					<a asp-page="./Index" class="btn button">Back to List</a>
+				</div>
+			</div>
+		</form>
+	</div>
+</body>
+
+@section Scripts {
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+}

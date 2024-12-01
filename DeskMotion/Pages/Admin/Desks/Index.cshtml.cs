@@ -8,8 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using DeskMotion.Data;
 using DeskMotion.Models;
 
-namespace DeskMotion.Pages.Admin.Desks
-{
+namespace DeskMotion.Pages.Admin.Desks;
+
     public class IndexModel : PageModel
     {
         private readonly ApplicationDbContext _context;
@@ -19,11 +19,10 @@ namespace DeskMotion.Pages.Admin.Desks
             _context = context;
         }
 
-        public IList<Desk> Desk { get;set; }
+        public IList<Desk>? Desk { get;set; }
 
         public async Task OnGetAsync()
         {
             Desk = await _context.Desks.ToListAsync();
         }
     }
-}
