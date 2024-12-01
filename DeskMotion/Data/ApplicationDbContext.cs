@@ -18,25 +18,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DeskMotion.Data;
 
-public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
+public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<User, Role, Guid>(options)
 {
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-        : base(options)
-    {
-    }
-
     public DbSet<Desk> Desks => Set<Desk>();
+    public DbSet<DeskMetadata> DeskMetadata => Set<DeskMetadata>();
     public DbSet<Reservation> Reservations => Set<Reservation>();
-    protected override void OnModelCreating(ModelBuilder builder)
-    {
-        base.OnModelCreating(builder);
-
-        builder.Entity<Desk>(desk =>
-        {
-            desk.OwnsOne(d => d.Config);
-            desk.OwnsOne(d => d.State);
-            desk.OwnsOne(d => d.Usage);
-            desk.OwnsMany(d => d.LastErrors);
-        });
-    }
 }

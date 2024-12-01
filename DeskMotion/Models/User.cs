@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 using Microsoft.AspNetCore.Identity;
 
 namespace DeskMotion.Models;
@@ -23,5 +22,6 @@ public class User : IdentityUser<Guid>
     public string LastName { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-    //public ICollection<Reservation> Reservations { get; set; } = [];
+    // Navigation properties
+    public List<Reservation> Reservations { get; set; } = [];
 }

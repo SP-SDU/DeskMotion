@@ -22,19 +22,19 @@ public class Desk
     public Guid Id { get; set; } = Guid.NewGuid();
 
     [JsonIgnore]
-    public string Location { get; set; } = string.Empty;
+    public DateTime RecordedAt { get; set; } = DateTime.UtcNow;
 
     [JsonIgnore]
-    public string QRCodeData { get; set; } = string.Empty;
+    public bool IsLatest { get; set; } = true;
 
     [JsonIgnore]
-    public string MacAddress { get; set; } = string.Empty;  // Obtained from the API
-
-    //public ICollection<Reservation> Reservations { get; set; } = [];
+    public string MacAddress { get; set; } = string.Empty;
 
     // Navigation Properties
-    public required Config Config { get; set; }
-    public required State State { get; set; }
-    public required Usage Usage { get; set; }
-    public required List<LastError> LastErrors { get; set; } = [];
+    [JsonIgnore]
+    public virtual DeskMetadata Metadata { get; set; } = default!;
+    public Config Config { get; set; } = default!;
+    public State State { get; set; } = default!;
+    public Usage Usage { get; set; } = default!;
+    public List<LastError> LastErrors { get; set; } = default!;
 }

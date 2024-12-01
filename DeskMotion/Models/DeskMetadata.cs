@@ -12,13 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Microsoft.EntityFrameworkCore;
-
 namespace DeskMotion.Models;
 
-[Owned]
-public class Config
+public class DeskMetadata
 {
-    public string Name { get; set; } = string.Empty;
-    public string Manufacturer { get; set; } = string.Empty;
+    public Guid Id { get; set; } = Guid.NewGuid();
+
+    public string MacAddress { get; set; } = string.Empty;
+
+    public string Location { get; set; } = string.Empty;
+
+    public string QRCodeData { get; set; } = string.Empty;
+
+    //navigation properties
+    public List<Reservation> Reservations { get; set; } = [];
 }

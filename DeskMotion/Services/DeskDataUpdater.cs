@@ -13,6 +13,8 @@
 // limitations under the License.
 
 using DeskMotion.Data;
+using DeskMotion.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace DeskMotion.Services;
 
@@ -33,25 +35,36 @@ public class DeskDataUpdater(DeskService deskService, IServiceProvider servicePr
 
                 foreach (var deskId in deskIds)
                 {
+                    // Ensure metadata exists for the desk
+                    var metadata = await dbContext.DeskMetadata
+                        .FirstOrDefaultAsync(dm => dm.MacAddress == deskId, stoppingToken);
+
+                    if (metadata == null)
+                    {
+                        metadata = new DeskMetadata
+                        {
+                            MacAddress = deskId,
+                        };
+                        _ = dbContext.DeskMetadata.Add(metadata);
+                        _ = await dbContext.SaveChangesAsync(stoppingToken);
+                    }
+
+                    // Fetch the latest desk data
                     var deskData = await deskService.GetDeskAsync(deskId);
+                    deskData.Metadata = metadata;
 
-                    // Update or add to database
-                    var existingDesk = dbContext.Desks.FirstOrDefault(d => d.MacAddress == deskId);
-                    if (existingDesk != null)
+                    // Find and set the last record to not be the latest
+                    var currentLatest = await dbContext.Desks
+                        .FirstOrDefaultAsync(d => d.MacAddress == deskId && d.IsLatest, stoppingToken);
+
+                    if (currentLatest != null)
                     {
-                        existingDesk.MacAddress = deskData.MacAddress;
-                        existingDesk.Config = deskData.Config;
-                        existingDesk.State = deskData.State;
-                        existingDesk.Usage = deskData.Usage;
-                        existingDesk.LastErrors = deskData.LastErrors;
+                        currentLatest.IsLatest = false;
                     }
-                    else
-                    {
-                        _ = dbContext.Desks.Add(deskData);
-                    }
+
+                    _ = dbContext.Desks.Add(deskData);
+                    _ = await dbContext.SaveChangesAsync(stoppingToken);
                 }
-
-                _ = await dbContext.SaveChangesAsync(stoppingToken);
             }
             catch (Exception ex)
             {
