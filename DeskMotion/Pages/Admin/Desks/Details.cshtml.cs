@@ -18,12 +18,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
-namespace DeskMotion.Pages.Admin.Metadata;
+namespace DeskMotion.Pages.Admin.Desks;
 
-public class EditModel(ApplicationDbContext context) : PageModel
+public class DetailsModel(ApplicationDbContext context) : PageModel
 {
-    [BindProperty]
-    public DeskMetadata DeskMetadata { get; set; } = default!;
+    public Desk Desk { get; set; } = default!;
 
     public async Task<IActionResult> OnGetAsync(Guid? id)
     {
@@ -32,38 +31,15 @@ public class EditModel(ApplicationDbContext context) : PageModel
             return NotFound();
         }
 
-        var deskMetadata = await context.DeskMetadata.FirstOrDefaultAsync(m => m.Id == id);
-        if (deskMetadata == null)
+        var desk = await context.Desks.FirstOrDefaultAsync(m => m.Id == id);
+        if (desk == null)
         {
             return NotFound();
         }
-        DeskMetadata = deskMetadata;
+        else
+        {
+            Desk = desk;
+        }
         return Page();
-    }
-
-    public async Task<IActionResult> OnPostAsync()
-    {
-        if (!ModelState.IsValid)
-        {
-            return Page();
-        }
-
-        context.Attach(DeskMetadata).State = EntityState.Modified;
-
-        try
-        {
-            _ = await context.SaveChangesAsync();
-        }
-        catch (DbUpdateConcurrencyException) when (!DeskMetadataExists(DeskMetadata.Id))
-        {
-            return NotFound();
-        }
-
-        return RedirectToPage("./Index");
-    }
-
-    private bool DeskMetadataExists(Guid id)
-    {
-        return context.DeskMetadata.Any(e => e.Id == id);
     }
 }
