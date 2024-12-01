@@ -61,9 +61,7 @@ public class EditModel(ApplicationDbContext context, UserManager<User> userManag
     {
         if (!ModelState.IsValid)
         {
-            Roles = roleManager.Roles
-                .Select(r => new SelectListItem { Value = r.Name, Text = r.Name })
-                .ToList();
+            Roles = [.. roleManager.Roles.Select(r => new SelectListItem { Value = r.Name, Text = r.Name })];
             return Page();
         }
 
