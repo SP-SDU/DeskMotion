@@ -9,7 +9,7 @@
 <h1>Index</h1>
 
 <p>
-    <a asp-page="Create">Create New</a>
+	<a asp-page="Create" class="action-link">Create New</a>
 </p>
 <table class="table">
     <thead>
@@ -39,9 +39,9 @@
                 @Html.DisplayFor(modelItem => item.QRCodeData)
             </td>
             <td>
-                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+					<a asp-page="./Edit" asp-route-id="@item.Id" class="action-link">Edit</a> |
+					<a asp-page="./Details" asp-route-id="@item.Id" class="action-link">Details</a> |
+					<a asp-page="./Delete" asp-route-id="@item.Id" class="action-link">Delete</a>
             </td>
         </tr>
 }

@@ -46,3 +46,21 @@ body {
 .nav-link-custom {
     color: #000 !important;
 }
+
+.action-link {
+    color: #52f700;
+}
+
+.table {
+    border: 2px solid #52f700;
+}
+
+    .table th {
+        background-color: #555a7a;
+        color: #52f700;
+    }
+
+    .table td {
+        background-color: #555a7a;
+        color: #52f700;
+    }

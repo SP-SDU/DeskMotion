@@ -9,7 +9,7 @@
 <h1>Roles</h1>
 
 <p>
-    <a asp-page="Create" class="btn btn-primary">Create New Role</a>
+    <a asp-page="Create" class=" action-link">Create New Role</a>
 </p>
 
 <table class="table">
@@ -25,8 +25,8 @@
             <tr>
                 <td>@role.Name</td>
                 <td>
-                    <a asp-page="Edit" asp-route-id="@role.Id" class="btn btn-primary">Edit</a>
-                    <a asp-page="Delete" asp-route-id="@role.Id" class="btn btn-danger">Delete</a>
+                    <a asp-page="Edit" asp-route-id="@role.Id" class=" action-link">Edit</a> |
+                    <a asp-page="Delete" asp-route-id="@role.Id" class=" action-link">Delete</a>
                 </td>
             </tr>
         }

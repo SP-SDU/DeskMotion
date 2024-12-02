@@ -9,7 +9,7 @@
 <header>
     <h1>Users</h1>
     <p class="text-lg-end">
-        <a asp-page="Create" class="btn btn-primary">Create New</a>
+        <a asp-page="Create" class=" action-link">Create New</a>
     </p>
 </header>
 
@@ -31,8 +31,8 @@
                     <td>@item.Email</td>
                     <td>@(Model.UserRoles.ContainsKey(item.Id) ? Model.UserRoles[item.Id] : "No Role")</td>
                     <td>
-                        <a asp-page="./Edit" asp-route-id="@item.Id" class="btn btn-primary btn-sm">Edit</a>
-                        <a asp-page="./Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm">Delete</a>
+                        <a asp-page="./Edit" asp-route-id="@item.Id" class=" action-link">Edit</a>
+                        <a asp-page="./Delete" asp-route-id="@item.Id" class=" action-link">Delete</a>
                     </td>
                 </tr>
             }
