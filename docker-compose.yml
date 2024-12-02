@@ -48,13 +48,9 @@ services:
     image: ${DOCKER_REGISTRY-}deskmotion.sim
     build:
       context: .
-      dockerfile: DeskMotion.Sim/Dockerfile
-    environment:
-      - args=--host 0.0.0.0
+      dockerfile: Dockerfile
     ports:
       - "${SIM_PORT}:8000"
-    volumes:
-      - ./DeskMotion.Sim:/app
 
 volumes:
   deskmotion_data:
