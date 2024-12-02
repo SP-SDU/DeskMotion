@@ -21,8 +21,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DeskMotion.Pages.Admin.Users;
 
-public class DeleteModel(ApplicationDbContext context, UserManager<User> userManager) : PageModel
+public class DeleteModel : PageModel
 {
+    private readonly ApplicationDbContext _context;
+    private readonly UserManager<User> _userManager;
+
+    public DeleteModel(ApplicationDbContext context, UserManager<User> userManager)
+    {
+        _context = context;
+        _userManager = userManager;
+    }
+
     [BindProperty]
     public User? IdentityUser { get; set; }
 
@@ -35,14 +44,14 @@ public class DeleteModel(ApplicationDbContext context, UserManager<User> userMan
             return NotFound();
         }
 
-        IdentityUser = await userManager.Users.FirstOrDefaultAsync(u => u.Id == id);
+        IdentityUser = await _userManager.Users.FirstOrDefaultAsync(u => u.Id == id);
 
         if (IdentityUser == null)
         {
             return NotFound();
         }
 
-        var roles = await userManager.GetRolesAsync(IdentityUser);
+        var roles = await _userManager.GetRolesAsync(IdentityUser);
         UserRole = roles.FirstOrDefault() ?? "No Role";
 
         return Page();
@@ -55,11 +64,11 @@ public class DeleteModel(ApplicationDbContext context, UserManager<User> userMan
             return NotFound();
         }
 
-        IdentityUser = await userManager.Users.FirstOrDefaultAsync(u => u.Id == id);
+        IdentityUser = await _userManager.Users.FirstOrDefaultAsync(u => u.Id == id);
 
         if (IdentityUser != null)
         {
-            var result = await userManager.DeleteAsync(IdentityUser);
+            var result = await _userManager.DeleteAsync(IdentityUser);
 
             if (result.Succeeded)
             {
