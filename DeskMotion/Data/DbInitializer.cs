@@ -45,20 +45,31 @@ public static class DbInitializer
             }
         }
 
-        var user = new User
+        // Find or create admin user
+        var adminEmail = "admin@example.com";
+        var adminUser = userManager.FindByEmailAsync(adminEmail).Result;
+        
+        if (adminUser == null)
         {
-            UserName = "admin@example.com",
-            Email = "admin@example.com",
-            EmailConfirmed = true
-        };
-
-        if (userManager.FindByNameAsync(user.UserName).Result == null)
-        {
-            var result = userManager.CreateAsync(user, "Password123!").Result;
+            adminUser = new User
+            {
+                UserName = adminEmail,
+                Email = adminEmail,
+                EmailConfirmed = true,
+                FirstName = "Admin",
+                LastName = "User"
+            };
+            var result = userManager.CreateAsync(adminUser, "Admin123!").Result;
             if (result.Succeeded)
             {
-                userManager.AddToRoleAsync(user, "Administrator").Wait();
+                userManager.AddToRoleAsync(adminUser, "Administrator").Wait();
             }
+        }
+        else
+        {
+            // Reset password for existing admin
+            var token = userManager.GeneratePasswordResetTokenAsync(adminUser).Result;
+            var resetResult = userManager.ResetPasswordAsync(adminUser, token, "Admin123!").Result;
         }
 
         context.SaveChanges();

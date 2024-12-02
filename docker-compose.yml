@@ -3,18 +3,21 @@ services:
     image: ${DOCKER_REGISTRY-}deskmotion
     build:
       context: .
-      dockerfile: DeskMotion/Dockerfile
+      dockerfile: Dockerfile
     environment:
-      - ConnectionStrings__DefaultConnection=Host=${DB_HOST};Port=${DB_PORT};Database=${DB_NAME};Username=${DB_USER};Password=${DB_PASSWORD};Include Error Detail=true
+      - ConnectionStrings__DefaultConnection=Host=${DB_HOST};Port=5432;Database=${DB_NAME};Username=${DB_USER};Password=${DB_PASSWORD};Include Error Detail=true
       - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
       - ASPNETCORE_HTTP_PORTS=${ASPNETCORE_HTTP_PORTS}
       - ASPNETCORE_HTTPS_PORTS=${ASPNETCORE_HTTPS_PORTS}
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=password
     ports:
       - "${ASPNETCORE_HTTP_PORTS}:8080"
       - "${ASPNETCORE_HTTPS_PORTS}:8081"
     volumes:
-      - "${SECRETS_PATH}/usersecrets:/home/app/.microsoft/usersecrets:ro"
-      - "${HTTPS_PATH}/https:/home/app/.aspnet/https:ro"
+      - ./.aspnet/https:/https:ro
+    depends_on:
+      - deskmotion.db
 
   deskmotion.db:
     image: postgres:latest

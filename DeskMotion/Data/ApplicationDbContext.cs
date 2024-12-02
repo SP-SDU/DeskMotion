@@ -26,5 +26,41 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
     }
 
     public DbSet<Desk> Desks => Set<Desk>();
+    public DbSet<DeskInfo> DeskInfos => Set<DeskInfo>();
     public DbSet<Reservation> Reservations => Set<Reservation>();
+    public DbSet<DeskPreference> DeskPreferences => Set<DeskPreference>();
+    public DbSet<ScheduledHeight> ScheduledHeights => Set<ScheduledHeight>();
+    public DbSet<HeightAdjustment> HeightAdjustments => Set<HeightAdjustment>();
+    public DbSet<DeskPreset> DeskPresets => Set<DeskPreset>();
+    public DbSet<UsageSession> UsageSessions => Set<UsageSession>();
+
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        base.OnModelCreating(builder);
+
+        // Configure relationships
+        builder.Entity<DeskInfo>()
+            .HasMany(d => d.Reservations)
+            .WithOne()
+            .HasForeignKey(r => r.DeskId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Entity<DeskInfo>()
+            .HasMany(d => d.HeightAdjustments)
+            .WithOne()
+            .HasForeignKey(h => h.DeskId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Entity<DeskInfo>()
+            .HasMany(d => d.Preferences)
+            .WithOne(p => p.Desk)
+            .HasForeignKey(p => p.DeskId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Entity<DeskPreference>()
+            .HasMany(p => p.ScheduledHeights)
+            .WithOne(h => h.Preference)
+            .HasForeignKey(h => h.PreferenceId)
+            .OnDelete(DeleteBehavior.Cascade);
+    }
 }

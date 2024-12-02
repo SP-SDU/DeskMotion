@@ -17,7 +17,7 @@ namespace DeskMotion.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.10")
+                .HasAnnotation("ProductVersion", "8.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -45,6 +45,139 @@ namespace DeskMotion.Migrations
                     b.ToTable("Desks");
                 });
 
+            modelBuilder.Entity("DeskMotion.Models.DeskInfo", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("AssignedUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("AssignedUserName")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("AssignmentEnd")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("AssignmentStart")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Configuration")
+                        .HasColumnType("text");
+
+                    b.Property<double?>("CurrentHeight")
+                        .HasColumnType("double precision");
+
+                    b.Property<string>("Department")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("DeskId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Floor")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsAssigned")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsMoving")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsTemporaryAssignment")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("LastUpdated")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<double>("MaxHeight")
+                        .HasColumnType("double precision");
+
+                    b.Property<double>("MinHeight")
+                        .HasColumnType("double precision");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("QRCodeData")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DeskInfos");
+                });
+
+            modelBuilder.Entity("DeskMotion.Models.DeskPreference", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<double?>("DefaultHeight")
+                        .HasColumnType("double precision");
+
+                    b.Property<Guid>("DeskId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DeskId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("DeskPreferences");
+                });
+
+            modelBuilder.Entity("DeskMotion.Models.HeightAdjustment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("DeskId")
+                        .HasColumnType("uuid");
+
+                    b.Property<double>("NewHeight")
+                        .HasColumnType("double precision");
+
+                    b.Property<double>("OldHeight")
+                        .HasColumnType("double precision");
+
+                    b.Property<DateTime>("Timestamp")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DeskId");
+
+                    b.ToTable("HeightAdjustments");
+                });
+
             modelBuilder.Entity("DeskMotion.Models.Reservation", b =>
                 {
                     b.Property<Guid>("Id")
@@ -64,6 +197,8 @@ namespace DeskMotion.Migrations
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("DeskId");
 
                     b.ToTable("Reservations");
                 });
@@ -96,6 +231,31 @@ namespace DeskMotion.Migrations
                         .HasDatabaseName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles", (string)null);
+                });
+
+            modelBuilder.Entity("DeskMotion.Models.ScheduledHeight", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<double>("Height")
+                        .HasColumnType("double precision");
+
+                    b.Property<string>("Note")
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("PreferenceId")
+                        .HasColumnType("uuid");
+
+                    b.Property<TimeSpan>("StartTime")
+                        .HasColumnType("interval");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PreferenceId");
+
+                    b.ToTable("ScheduledHeights");
                 });
 
             modelBuilder.Entity("DeskMotion.Models.User", b =>
@@ -279,6 +439,54 @@ namespace DeskMotion.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("DeskMotion.Models.DeskPreference", b =>
+                {
+                    b.HasOne("DeskMotion.Models.DeskInfo", "Desk")
+                        .WithMany("Preferences")
+                        .HasForeignKey("DeskId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DeskMotion.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Desk");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("DeskMotion.Models.HeightAdjustment", b =>
+                {
+                    b.HasOne("DeskMotion.Models.DeskInfo", null)
+                        .WithMany("HeightAdjustments")
+                        .HasForeignKey("DeskId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DeskMotion.Models.Reservation", b =>
+                {
+                    b.HasOne("DeskMotion.Models.DeskInfo", null)
+                        .WithMany("Reservations")
+                        .HasForeignKey("DeskId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DeskMotion.Models.ScheduledHeight", b =>
+                {
+                    b.HasOne("DeskMotion.Models.DeskPreference", "Preference")
+                        .WithMany("ScheduledHeights")
+                        .HasForeignKey("PreferenceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Preference");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.HasOne("DeskMotion.Models.Role", null)
@@ -328,6 +536,20 @@ namespace DeskMotion.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("DeskMotion.Models.DeskInfo", b =>
+                {
+                    b.Navigation("HeightAdjustments");
+
+                    b.Navigation("Preferences");
+
+                    b.Navigation("Reservations");
+                });
+
+            modelBuilder.Entity("DeskMotion.Models.DeskPreference", b =>
+                {
+                    b.Navigation("ScheduledHeights");
                 });
 #pragma warning restore 612, 618
         }

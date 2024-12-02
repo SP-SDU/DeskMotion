@@ -7,128 +7,136 @@
 <link rel="stylesheet" href="~/css/dashboard.css" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-@Html.AntiForgeryToken()
-<meta name="csrf-token" content="@Html.AntiForgeryToken()" />
-
-<div class="container">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1>@ViewData["Title"]</h1>
-        <div class="btn-group">
-            <button id="refreshStats" class="btn btn-outline-primary" aria-label="Refresh statistics">
-                <i class="fa-solid fa-sync"></i><span class="ms-2">Refresh</span>
-            </button>
-            <button id="toggleCharts" class="btn btn-outline-secondary" aria-label="Toggle chart view">
-                <i class="fa-solid fa-chart-line"></i><span class="ms-2">Toggle Charts</span>
-            </button>
+<div class="dashboard-container">
+    <!-- Alert Container -->
+    <div id="alertContainer" class="position-fixed top-0 end-0 p-3" style="z-index: 1050;"></div>
+    
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <!-- Assigned Desks Section -->
+        <div class="sidebar-section">
+            <h2>Assigned Desks</h2>
+            @{
+                var assignedDesks = Model.Desks?.Where(d => d.IsAssigned).ToList();
+            }
+            <div id="assignedDesks">
+                @if (assignedDesks != null && assignedDesks.Any())
+                {
+                    <ul class="desk-list" id="assignedDeskList">
+                        @foreach (var desk in assignedDesks)
+                        {
+                            <li class="desk-list-item" data-desk-id="@desk.Id">
+                                <div class="desk-name">@desk.Name</div>
+                                <div class="desk-status">
+                                    <i class="fa-solid fa-circle @(desk.IsActive ? "text-success" : "text-secondary")"></i>
+                                    <span>@(desk.IsActive ? "Active" : "Inactive")</span>
+                                </div>
+                                @if (desk.CurrentHeight.HasValue)
+                                {
+                                    <div class="desk-status">
+                                        <i class="fa-solid fa-arrows-up-down"></i>
+                                        <span>Current Height: @desk.CurrentHeight.Value.ToString("F1") cm</span>
+                                    </div>
+                                }
+                                <div class="desk-status">
+                                    <i class="fa-solid fa-clock"></i>
+                                    <span>Since: @desk.AssignmentStart?.ToLocalTime().ToString("MMM dd, HH:mm")</span>
+                                </div>
+                                <button class="btn btn-sm btn-danger mt-2" onclick="unassignDesk('@desk.Id')">
+                                    <i class="fa-solid fa-times"></i>
+                                    <span>Release Desk</span>
+                                </button>
+                            </li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <div class="no-desks-message">
+                        No assigned desks yet. Select desk below.
+                    </div>
+                }
+            </div>
         </div>
-    </div>
 
-    <div id="alertContainer" role="alert" aria-live="polite"></div>
+        <!-- Available Desks Section -->
+        <div class="sidebar-section">
+            <h2>Available Desks</h2>
+            @{
+                var availableDesks = Model.Desks?.Where(d => !d.IsAssigned).ToList();
+            }
+            <div id="availableDesks">
+                @if (availableDesks != null && availableDesks.Any())
+                {
+                    <ul class="desk-list" id="availableDeskList">
+                        @foreach (var desk in availableDesks)
+                        {
+                            <li class="desk-list-item" data-desk-id="@desk.Id">
+                                <div class="desk-name">@desk.Name</div>
+                                <div class="desk-status">
+                                    <i class="fa-solid fa-circle text-success"></i>
+                                    <span>Available</span>
+                                </div>
+                                <button class="btn btn-sm btn-primary assign-desk-btn" data-desk-id="@desk.Id">
+                                    <i class="fa-solid fa-plus"></i>
+                                    <span>Assign to Me</span>
+                                </button>
+                            </li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <div class="no-desks-message">
+                        No available desks at the moment.
+                    </div>
+                }
+            </div>
+        </div>
+    </aside>
 
-    <div class="row mb-4">
-        <div class="col">
-            <div class="input-group">
-                <input type="text" id="deskSearch" class="form-control" placeholder="Search desks..."
-                    value="@Model.SearchQuery" aria-label="Search desks">
-                <button class="btn btn-primary" id="searchButton">
-                    <i class="fa-solid fa-search"></i><span class="ms-2">Search</span>
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>@ViewData["Title"]</h1>
+            <div class="btn-group">
+                <button id="refreshStats" class="btn btn-outline-primary" aria-label="Refresh statistics">
+                    <i class="fa-solid fa-sync"></i><span class="ms-2">Refresh</span>
+                </button>
+                <button id="toggleCharts" class="btn btn-outline-secondary" aria-label="Toggle chart view">
+                    <i class="fa-solid fa-chart-line"></i><span class="ms-2">Toggle Charts</span>
                 </button>
             </div>
         </div>
-    </div>
 
-    <div class="row mb-4" id="statisticsSection">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    <div class="d-flex justify-content-between align-items-start">
-                        <div>
-                            <h5 class="card-title mb-1">Desk Usage Statistics</h5>
-                            <small id="selectedDeskLabel" class="text-muted d-block">Select a desk to view statistics</small>
-                        </div>
-                        <div class="tooltip">
-                            <i class="fa-solid fa-info-circle"></i>
-                            <span class="tooltip-text">Shows desk usage patterns over time</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-body position-relative">
-                    <div class="loading-overlay" id="usageChartLoader" style="display: none;">
-                        <div class="loading-spinner" role="status">
-                            <span class="visually-hidden">Loading usage statistics...</span>
-                        </div>
-                    </div>
-                    <div class="chart-container">
-                        <canvas id="usageChart"></canvas>
-                    </div>
+        <div id="alertContainer" role="alert" aria-live="polite"></div>
+
+        <!-- Statistics and Charts Section -->
+        <div class="row mb-4">
+            <div class="col">
+                <div class="input-group">
+                    <span class="input-group-text">
+                        <i class="fa-solid fa-calendar"></i>
+                    </span>
+                    <input type="date" id="startDate" class="form-control" />
+                    <input type="date" id="endDate" class="form-control" />
+                    <button id="applyDateFilter" class="btn btn-primary">
+                        <i class="fa-solid fa-filter"></i><span class="ms-2">Apply Filter</span>
+                    </button>
                 </div>
             </div>
         </div>
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="card-title mb-0">Height Adjustments</h5>
-                    <div class="tooltip">
-                        <i class="fa-solid fa-info-circle"></i>
-                        <span class="tooltip-text">Shows frequency of height adjustments</span>
-                    </div>
-                </div>
-                <div class="card-body position-relative">
-                    <div class="loading-overlay" id="heightChartLoader" style="display: none;">
-                        <div class="loading-spinner" role="status">
-                            <span class="visually-hidden">Loading height adjustment data...</span>
-                        </div>
-                    </div>
-                    <div class="chart-container">
-                        <canvas id="heightAdjustmentsChart"></canvas>
-                    </div>
-                </div>
+
+        <!-- Charts Container -->
+        <div id="chartsContainer">
+            <div class="chart-container mb-4">
+                <canvas id="heightDistributionChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <canvas id="adjustmentTimelineChart"></canvas>
             </div>
         </div>
-    </div>
-
-    <div id="deskList" class="row">
-        @if (Model.Desks != null)
-        {
-            foreach (var desk in Model.Desks)
-            {
-                <div class="col-md-6 mb-4">
-                    <div class="card" data-desk-id="@desk.DeskId">
-                        <div class="card-body">
-                            <div class="loading-overlay" id="desk-@desk.DeskId-loader" style="display: none;">
-                                <div class="loading-spinner" role="status">
-                                    <span class="visually-hidden">Loading desk data...</span>
-                                </div>
-                            </div>
-                            <h5 class="card-title">@desk.Name</h5>
-                            <p class="card-text">ID: @desk.DeskId</p>
-                            <div class="desk-status mb-3">
-                                <p class="mb-1">Current Height: <span
-                                        id="height-@desk.DeskId">@desk.CurrentHeight.ToString("F1")</span> cm</p>
-                                <div class="progress">
-                                    <div class="progress-bar" role="progressbar"
-                                        style="width: @(((desk.CurrentHeight - desk.MinHeight) / (desk.MaxHeight - desk.MinHeight)) * 100)%"
-                                        aria-valuenow="@desk.CurrentHeight" aria-valuemin="@desk.MinHeight"
-                                        aria-valuemax="@desk.MaxHeight">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="desk-controls">
-                                <div class="btn-group w-100">
-                                    <button class="btn btn-primary btn-up" type="button">
-                                        <i class="fas fa-arrow-up"></i> Up
-                                    </button>
-                                    <button class="btn btn-primary btn-down" type="button">
-                                        <i class="fas fa-arrow-down"></i> Down
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            }
-        }
-    </div>
+    </main>
 </div>
 
 <script id="initialData" type="application/json">
@@ -136,6 +144,6 @@
 </script>
 
 @section Scripts {
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <script src="~/js/dashboard.js"></script>
 }
