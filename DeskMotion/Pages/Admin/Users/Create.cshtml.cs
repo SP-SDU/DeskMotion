@@ -21,8 +21,18 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace DeskMotion.Pages.Admin.Users;
 
-public class CreateModel(ApplicationDbContext context, UserManager<User> userManager, RoleManager<Role> roleManager) : PageModel
+public class CreateModel : PageModel
 {
+    private readonly ApplicationDbContext _context;
+    private readonly UserManager<User> _userManager;
+    private readonly RoleManager<Role> _roleManager;
+
+    public CreateModel(ApplicationDbContext context, UserManager<User> userManager, RoleManager<Role> roleManager)
+    {
+        _context = context;
+        _userManager = userManager;
+        _roleManager = roleManager;
+    }
     public IActionResult OnGet()
     {
         IdentityUser = new User
@@ -32,7 +42,7 @@ public class CreateModel(ApplicationDbContext context, UserManager<User> userMan
         };
 
         // Populate roles for dropdown
-        Roles = [.. roleManager.Roles.Select(r => new SelectListItem { Value = r.Name, Text = r.Name })];
+        Roles = [.. _roleManager.Roles.Select(r => new SelectListItem { Value = r.Name, Text = r.Name })];
 
         // Default role
         SelectedRole = "User";
@@ -55,7 +65,7 @@ public class CreateModel(ApplicationDbContext context, UserManager<User> userMan
     {
         if (!ModelState.IsValid)
         {
-            Roles = [.. roleManager.Roles.Select(r => new SelectListItem { Value = r.Name, Text = r.Name })];
+            Roles = [.. _roleManager.Roles.Select(r => new SelectListItem { Value = r.Name, Text = r.Name })];
             return Page();
         }
 
@@ -66,14 +76,14 @@ public class CreateModel(ApplicationDbContext context, UserManager<User> userMan
             EmailConfirmed = true
         };
 
-        var result = await userManager.CreateAsync(user, Password!);
+        var result = await _userManager.CreateAsync(user, Password!);
 
         if (result.Succeeded)
         {
             // Assign selected role
             if (!string.IsNullOrEmpty(SelectedRole))
             {
-                _ = await userManager.AddToRoleAsync(user, SelectedRole);
+                _ = await _userManager.AddToRoleAsync(user, SelectedRole);
             }
 
             return RedirectToPage("./Index");
@@ -84,7 +94,7 @@ public class CreateModel(ApplicationDbContext context, UserManager<User> userMan
             ModelState.AddModelError(string.Empty, error.Description);
         }
 
-        Roles = [.. roleManager.Roles.Select(r => new SelectListItem { Value = r.Name, Text = r.Name })];
+        Roles = [.. _roleManager.Roles.Select(r => new SelectListItem { Value = r.Name, Text = r.Name })];
 
         return Page();
     }
