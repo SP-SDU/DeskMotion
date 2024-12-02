@@ -45,10 +45,7 @@ services:
       - pgadmin_data:/var/lib/pgadmin
 
   deskmotion.sim:
-    image: ${DOCKER_REGISTRY-}deskmotion.sim
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: respectmathias/wifi2ble-box-simulator:latest
     ports:
       - "${SIM_PORT}:8000"
 
