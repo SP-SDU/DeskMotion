@@ -22,19 +22,37 @@
 
 ## Running with Docker 🐳
 
-1. **Copy the `.env.example` file to `.env` in the project root:**
-
-   ```bash
-   cp .env.example .env
-   ```
+1. **Set up your `.env` file:**
+   - Copy the `example.env` file to `.env` in the project root:
+     ```bash
+     cp example.env .env
+     ```
+   - **Note**: Uncomment the secret and certificate paths for macOS/Linux in the `.env` file.
 
 2. **Run the application:**
+   - **Note**: Set up HTTPS certificates first (see below).
+     ```bash
+     docker-compose up
+     ```
 
-   ```bash
-   docker-compose up
+## Setting Up HTTPS Certificates 🛡️
+
+### Windows
+1. Generate and trust the HTTPS certificate:
+   ```powershell
+   dotnet dev-certs https -ep "$env:USERPROFILE\.aspnet\https\DeskMotion.pfx" -p crypticpassword
+   dotnet dev-certs https --trust
    ```
 
-This sets up the necessary environment variables for ASP.NET Core using the provided `.env.example` file.
+### macOS or Linux
+1. Generate the HTTPS certificate:
+   ```bash
+   dotnet dev-certs https -ep "${HOME}/.aspnet/https/DeskMotion.pfx" -p crypticpassword
+   ```
+2. Trust the certificate (**macOS only**):
+   ```bash
+   dotnet dev-certs https --trust
+   ```
 
 ## Updating Migrations in the Asp.NET Project 🖱️
 
