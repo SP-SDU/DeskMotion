@@ -1,0 +1,51 @@
+﻿@page
+@model DeskMotion.Pages.Admin.Reservations.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Reservation</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Reservation.Id" />
+
+            <div class="form-group">
+                <label asp-for="Reservation.UserId" class="control-label"></label>
+                <select asp-for="Reservation.UserId" class="form-control" asp-items="Model.Users"></select>
+                <span asp-validation-for="Reservation.UserId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Reservation.DeskMetadataId" class="control-label"></label>
+                <select asp-for="Reservation.DeskMetadataId" class="form-control" asp-items="Model.Desks"></select>
+                <span asp-validation-for="Reservation.DeskMetadataId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="StartTimeLocal" class="control-label"></label>
+                <input asp-for="StartTimeLocal" class="form-control" type="datetime-local" />
+                <span asp-validation-for="StartTimeLocal" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="EndTimeLocal" class="control-label"></label>
+                <input asp-for="EndTimeLocal" class="form-control" type="datetime-local" />
+                <span asp-validation-for="EndTimeLocal" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary action-link" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index" class="action-link">Back to List</a>
+</div>

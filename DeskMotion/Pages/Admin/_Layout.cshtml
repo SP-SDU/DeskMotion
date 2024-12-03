@@ -1,0 +1,42 @@
+﻿@{
+    if (ViewData.TryGetValue("ParentLayout", out var parentLayout) && parentLayout != null)
+    {
+        Layout = parentLayout.ToString();
+    }
+    else
+    {
+        Layout = "/Pages/Shared/_Layout.cshtml";
+    }
+}
+
+
+<div>
+    <div class="row manage-nav">
+        <partial name="_ManageNav" />
+    </div>
+    <div class="row m-4 content-body">
+        @RenderBody()
+    </div>
+</div>
+
+@section Scripts {
+    @RenderSection("Scripts", required: false)
+}
+
+<style>
+	.manage-nav {
+		box-shadow: 0 12px 0px 8px #4d4a48;
+		border-radius: 5px;
+	}
+
+	.content-body {
+		background-color: #555a7a;
+		color: #52f700;
+		padding: 5px;
+		border-color: black;
+		border-width: 30px;
+		border-style: solid;
+		border-radius: 10px;
+	}
+</style>
+<link src="stylesheet" href="~/wwwroot/css/site.css" />

@@ -8,7 +8,6 @@
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
     <DockerServiceUrl>{Scheme}://localhost:{ServicePort}</DockerServiceUrl>
     <DockerServiceName>deskmotion</DockerServiceName>
-    <NoWarn>$(NoWarn);MSB3243</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <None Include="docker-compose.yml" />

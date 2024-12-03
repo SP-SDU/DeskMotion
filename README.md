@@ -1,6 +1,6 @@
 <!-- PROJECT LOGO -->
 <div align="center">
-  <img src="images/PET.avif" alt="Logo" width="256" height="256">
+  <img src="images/PET.svg" alt="Logo" width="256" height="256">
   <h3 align="center">The PET Group</h3>
   <p align="center">
     DeskMotion for desk stuff.

@@ -21,7 +21,7 @@ public class State
 {
     public int Position_mm { get; set; }
     public int Speed_mms { get; set; }
-    public required string Status { get; set; }
+    public string Status { get; set; } = string.Empty;
     public bool IsPositionLost { get; set; }
     public bool IsOverloadProtectionUp { get; set; }
     public bool IsOverloadProtectionDown { get; set; }

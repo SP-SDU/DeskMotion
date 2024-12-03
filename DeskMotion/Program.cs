@@ -15,7 +15,9 @@
 using DeskMotion.Data;
 using DeskMotion.Models;
 using DeskMotion.Services;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
+using System.IO.Compression;
 
 namespace DeskMotion;
 
@@ -33,6 +35,25 @@ public class Program
         builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
             .AddRoles<Role>()
             .AddEntityFrameworkStores<ApplicationDbContext>();
+
+        builder.Services.ConfigureApplicationCookie(options =>
+        {
+            options.LoginPath = "/Account/Login";
+            options.LogoutPath = "/Account/Logout";
+            options.AccessDeniedPath = "/Account/AccessDenied";
+        });
+
+        builder.Services.AddRazorPages()
+            .AddRazorPagesOptions(options =>
+            {
+                options.Conventions.AuthorizeFolder("/");
+                options.Conventions.AllowAnonymousToPage("/Account/Login");
+                options.Conventions.AuthorizeFolder("/Admin", "RequireAdministratorRole");
+            });
+        builder.Services.AddAuthorization(options =>
+        {
+            options.AddPolicy("RequireAdministratorRole", policy => policy.RequireRole("Administrator"));
+        });
 
         builder.Services.AddRazorPages();
 
@@ -55,7 +76,26 @@ public class Program
             return new DeskDataUpdater(deskService, sp, logger);
         });
 
+        builder.Services.AddResponseCompression(options =>
+        {
+            options.EnableForHttps = true;
+            options.Providers.Add<BrotliCompressionProvider>();
+            options.Providers.Add<GzipCompressionProvider>();
+        });
+
+        builder.Services.Configure<BrotliCompressionProviderOptions>(options =>
+        {
+            options.Level = CompressionLevel.Fastest;
+        });
+
+        builder.Services.Configure<GzipCompressionProviderOptions>(options =>
+        {
+            options.Level = CompressionLevel.SmallestSize;
+        });
+
         var app = builder.Build();
+
+        app.UseResponseCompression();
 
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())

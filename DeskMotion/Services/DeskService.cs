@@ -25,7 +25,7 @@ public class DeskService(HttpClient httpClient)
         PropertyNameCaseInsensitive = true
     };
 
-    public async Task<List<string>> GetDeskIdsAsync()
+    public virtual async Task<List<string>> GetDeskIdsAsync()
     {
         var response = await httpClient.GetAsync("desks");
         _ = response.EnsureSuccessStatusCode();
@@ -34,7 +34,7 @@ public class DeskService(HttpClient httpClient)
         return JsonSerializer.Deserialize<List<string>>(content, _jsonOptions) ?? [];
     }
 
-    public async Task<Desk> GetDeskAsync(string deskId)
+    public virtual async Task<Desk> GetDeskAsync(string deskId)
     {
         var response = await httpClient.GetAsync($"desks/{deskId}");
         _ = response.EnsureSuccessStatusCode();
@@ -48,6 +48,7 @@ public class DeskService(HttpClient httpClient)
 
     public async Task UpdateDeskPositionAsync(string deskId, int newPositionMm)
     {
+
         var content = new StringContent(
             JsonSerializer.Serialize(new { position_mm = newPositionMm }, _jsonOptions),
             Encoding.UTF8,

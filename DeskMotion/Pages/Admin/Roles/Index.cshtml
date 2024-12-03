@@ -1,0 +1,34 @@
+@page
+@model DeskMotion.Pages.Admin.Roles.IndexModel
+
+@{
+    ViewData["Title"] = "Roles";
+    ViewData["ActivePage"] = ManageNavPages.Roles;
+}
+
+<h1>Roles</h1>
+
+<p>
+    <a asp-page="Create" class=" action-link">Create New Role</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var role in Model.Roles!)
+        {
+            <tr>
+                <td>@role.Name</td>
+                <td>
+                    <a asp-page="Edit" asp-route-id="@role.Id" class=" action-link">Edit</a> |
+                    <a asp-page="Delete" asp-route-id="@role.Id" class=" action-link">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

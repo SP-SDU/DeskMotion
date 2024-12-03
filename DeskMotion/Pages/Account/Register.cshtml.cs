@@ -16,6 +16,7 @@
 
 using DeskMotion.Models;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -27,6 +28,7 @@ using System.Text.Encodings.Web;
 
 namespace DeskMotion.Pages.Account;
 
+[Authorize(Policy = "RequireAdministratorRole")]
 public class RegisterModel : PageModel
 {
     private readonly SignInManager<User> _signInManager;

@@ -17,12 +17,33 @@ namespace DeskMotion.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.10")
+                .HasAnnotation("ProductVersion", "8.0.11")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("DeskMotion.Models.Desk", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("IsLatest")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("MacAddress")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("RecordedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Desks");
+                });
+
+            modelBuilder.Entity("DeskMotion.Models.DeskMetadata", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -42,7 +63,7 @@ namespace DeskMotion.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Desks");
+                    b.ToTable("DeskMetadata");
                 });
 
             modelBuilder.Entity("DeskMotion.Models.Reservation", b =>
@@ -51,7 +72,7 @@ namespace DeskMotion.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("DeskId")
+                    b.Property<Guid>("DeskMetadataId")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("EndTime")
