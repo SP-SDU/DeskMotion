@@ -9,14 +9,13 @@ services:
       - DeskApi__BaseUri=http://host.docker.internal:8000/api/${SIM_VERSION}/${SIM_API}/
       - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
       - ASPNETCORE_URLS=https://+:8081;http://+:8080
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/home/app/.aspnet/https/DeskMotion.pfx
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=${ASPNETCORE_CERT_PASSWORD}
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/app/certs/LocalhostDevCert.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=postgres
     ports:
       - ${ASPNETCORE_HTTP_PORTS}:8080
       - ${ASPNETCORE_HTTPS_PORTS}:8081
     volumes:
-      - ${SECRETS_PATH}/usersecrets:/home/app/.microsoft/usersecrets:ro
-      - ${HTTPS_PATH}/https:/home/app/.aspnet/https:ro
+      - ./certs:/app/certs:ro
 
   deskmotion.db:
     image: postgres:latest

@@ -27,7 +27,6 @@
      ```bash
      cp example.env .env
      ```
-   - **Note**: Uncomment the secret and certificate paths for macOS/Linux in the `.env` file.
 
 2. **Run the application:**
    - **Note**: Set up HTTPS certificates first (see below).
@@ -35,24 +34,16 @@
      docker-compose up
      ```
 
-## Setting Up HTTPS Certificates 🛡️
+## Setting Up Dev HTTPS Certificates 🛡️
 
-### Windows
-1. Generate and trust the HTTPS certificate:
-   ```powershell
-   dotnet dev-certs https -ep "$env:USERPROFILE\.aspnet\https\DeskMotion.pfx" -p crypticpassword
-   dotnet dev-certs https --trust
+1. Open the terminal in the project root and trust the HTTPS certificate:
+   - **Note**: You **MUST** close all the entire browser for it to take affect.
+   ```bash
+   dotnet dev-certs https --trust -ep certs/LocalhostDevCert.pfx -p postgres
    ```
 
-### macOS or Linux
-1. Generate the HTTPS certificate:
-   ```bash
-   dotnet dev-certs https -ep "${HOME}/.aspnet/https/DeskMotion.pfx" -p crypticpassword
-   ```
-2. Trust the certificate (**macOS only**):
-   ```bash
-   dotnet dev-certs https --trust
-   ```
+Will be replaced by a real Cert from Let's Encrypt in Production.
+
 
 ## Updating Migrations in the Asp.NET Project 🖱️
 
