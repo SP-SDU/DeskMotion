@@ -22,19 +22,27 @@
 
 ## Running with Docker 🐳
 
-1. **Copy the `.env.example` file to `.env` in the project root:**
-
-   ```bash
-   cp .env.example .env
-   ```
+1. **Set up your `.env` file:**
+   - Copy the `example.env` file to `.env` in the project root:
+     ```bash
+     cp example.env .env
+     ```
 
 2. **Run the application:**
+     ```bash
+     docker-compose up
+     ```
 
+## Trusting Dev HTTPS Certificates (Optional) 🛡️
+
+1. Open the terminal in the project root and trust the HTTPS certificate:
+   - **Note**: You **MUST** close all the entire browser for it to take affect.
    ```bash
-   docker-compose up
+   dotnet dev-certs https --trust -ep certs/LocalhostDevCert.pfx -p postgres
    ```
 
-This sets up the necessary environment variables for ASP.NET Core using the provided `.env.example` file.
+Will be replaced by a real Cert from Let's Encrypt in Production.
+
 
 ## Updating Migrations in the Asp.NET Project 🖱️
 
