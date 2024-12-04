@@ -29,12 +29,11 @@
      ```
 
 2. **Run the application:**
-   - **Note**: Set up HTTPS certificates first (see below).
      ```bash
      docker-compose up
      ```
 
-## Setting Up Dev HTTPS Certificates 🛡️
+## Trusting Dev HTTPS Certificates (Optional) 🛡️
 
 1. Open the terminal in the project root and trust the HTTPS certificate:
    - **Note**: You **MUST** close all the entire browser for it to take affect.
