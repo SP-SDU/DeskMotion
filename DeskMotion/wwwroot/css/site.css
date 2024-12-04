@@ -1,32 +1,58 @@
 html {
-  font-size: 14px;
+    font-size: 20px;
+    position: relative;
+    min-height: 100%;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
   box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
-html {
-  position: relative;
-  min-height: 100%;
+@font-face {
+    font-family: 'Silkscreen';
+    src: url('/fonts/PixelifySans-Regular.ttf') format('truetype');
+    font-weight: 100;
+    font-style:normal;
+}
+
+@font-face {
+    font-family: 'Silkscreen';
+    src: url('/fonts/PixelifySans-Medium.ttf') format('truetype');
+    font-weight: 200;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Silkscreen';
+    src: url('/fonts/PixelifySans-SemiBold.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Silkscreen';
+    src: url('/fonts/PixelifySans-Bold.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+    font-family: 'Silkscreen', sans-serif;
 }
 
 .nav-custom {
     background-color: #a49f9b;
     font-size: 25px;
-    font-weight: 700;
     padding-bottom: 5px;
-    font-family: 'Courier New', Courier, monospace;
+    font-family: 'Silkscreen', sans-serif;
+    font-weight: 700;
 }
 
 .nav-item-custom {
@@ -36,15 +62,20 @@ body {
     background-color: #68605d;
     box-shadow: 0 10px 0px 6px #837a72;
     transition: all 0.2s ease;
+    font-family: 'Silkscreen', sans-serif;
 }
 
     .nav-item-custom:active {
         box-shadow: 0 4px #666;
         transform: translateY(6px);
+        font-family: 'Silkscreen', sans-serif;
+        font-weight:400;
     }
 
 .nav-link-custom {
     color: #000 !important;
+    font-family: 'Silkscreen', sans-serif;
+    font-weight: 400;
 }
 
 .action-link {
@@ -53,11 +84,14 @@ body {
 
 .table {
     border: 2px solid #52f700;
+    font-family: 'Silkscreen', sans-serif;
+    font-weight: 400;
 }
 
     .table th {
         background-color: #555a7a;
         color: #52f700;
+        font-size: 30px;
     }
 
     .table td {
