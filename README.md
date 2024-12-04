@@ -30,7 +30,7 @@
 
 2. **Run the application:**
      ```bash
-     docker-compose up
+     docker-compose up --build
      ```
 
 ## Trusting Dev HTTPS Certificates (Optional) 🛡️
