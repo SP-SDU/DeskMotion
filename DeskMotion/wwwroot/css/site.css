@@ -14,6 +14,13 @@ html {
   box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
+/*@font-face {
+    font-family: 'Silkscreen';
+    src: url('/fonts/PixelifySans-VariableFont_wght.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}*/
+
 @font-face {
     font-family: 'Silkscreen';
     src: url('/fonts/PixelifySans-Regular.ttf') format('truetype');
