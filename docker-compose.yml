@@ -5,7 +5,7 @@ services:
       context: .
       dockerfile: DeskMotion/Dockerfile
     environment:
-      - ConnectionStrings__DefaultConnection=Host=${DB_HOST};Port=${DB_PORT};Database=${DB_NAME};Username=${DB_USER};Password=${DB_PASSWORD};Include Error Detail=true
+      - ConnectionStrings__DefaultConnection=Host=${DB_HOST};Port=5432;Database=${DB_NAME};Username=${DB_USER};Password=${DB_PASSWORD};Include Error Detail=true
       - DeskApi__BaseUri=http://host.docker.internal:8000/api/${SIM_VERSION}/${SIM_API}/
       - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
       - ASPNETCORE_URLS=https://+:8081;http://+:8080
