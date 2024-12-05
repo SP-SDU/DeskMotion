@@ -30,7 +30,7 @@
 
 2. **Run the application:**
      ```bash
-     docker-compose up --build
+     docker compose up --detach --build
      ```
 
 ## Trusting Dev HTTPS Certificates (Optional) 🛡️
