@@ -11,6 +11,8 @@ services:
       - ASPNETCORE_URLS=https://+:8081;http://+:8080
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/app/certs/LocalhostDevCert.pfx
       - ASPNETCORE_Kestrel__Certificates__Default__Password=postgres
+      - DOTNET_USE_POLLING_FILE_WATCHER=1
+
     ports:
       - ${ASPNETCORE_HTTP_PORTS}:8080
       - ${ASPNETCORE_HTTPS_PORTS}:8081

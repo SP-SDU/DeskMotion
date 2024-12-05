@@ -25,6 +25,9 @@ public class Program
 {
     public static void Main(string[] args)
     {
+        Console.WriteLine("Delaying to ensure dependency services are ready...");
+        Thread.Sleep(2000);
+
         var builder = WebApplication.CreateBuilder(args);
 
         // Add services to the container.
