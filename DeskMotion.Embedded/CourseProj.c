@@ -5,16 +5,16 @@
 #include "pico/multicore.h"
 #include "lwip/tcp.h"
 
-const char *wifiName = "something"
-const char *Password = "something else"
+const char *wifiName = "something";
+const char *Password = "something else";
 
 const uint buz_pin = 20;
 const uint led_pin = 7;
 
-const uint8_t ledMult = 5; //max led 25 timing 25 sec due to uint8_t of buzzerMultiplier
+const uint8_t ledMult = 5; // max led 25 timing 25 sec due to uint8_t of buzzerMultiplier
 const uint8_t buzMult = ledMult * 10;
 
-//led control
+// led control
 void led_run(uint8_t max)
 {
     uint8_t i = 0;
@@ -28,9 +28,9 @@ void led_run(uint8_t max)
         i++;
     }
 }
-//buz control
+// buz control
 void buz_run(uint8_t max)
-{   
+{
     uint8_t i = 0;
 
     while (i < max)
@@ -44,15 +44,18 @@ void buz_run(uint8_t max)
 }
 
 // Entry function for the second core
-void core1_entry() {
+void core1_entry()
+{
     printf("2nd thread is up\n");
 
-    while (true) {
+    while (true)
+    {
         uint32_t command = multicore_fifo_pop_blocking(); // Wait for a command from Core 0
         printf("Core 1 received command: %u\n", command);
 
         // Handle the command (e.g., run the buzzer)
-        if (command == 1) {
+        if (command == 1)
+        {
             buz_run(buzMult); // Execute the buzzer task
         }
 
@@ -62,8 +65,10 @@ void core1_entry() {
 }
 
 // Callback for incoming TCP data
-static err_t http_server_recv(void *arg, struct tcp_pcb *tpcb, struct pbuf *p, err_t err) {
-    if (!p) {
+static err_t http_server_recv(void *arg, struct tcp_pcb *tpcb, struct pbuf *p, err_t err)
+{
+    if (!p)
+    {
         printf("Client disconnected.\n");
         tcp_close(tpcb);
         return ERR_OK;
@@ -72,10 +77,9 @@ static err_t http_server_recv(void *arg, struct tcp_pcb *tpcb, struct pbuf *p, e
     char *data = (char *)p->payload;
     printf("Received request:\n%s\n", data);
 
-    //second core starts working
+    // second core starts working
     printf("Sending command to Core 1...\n");
     multicore_fifo_push_blocking(1); // run buzzer
-
 
     led_run(ledMult);
 
@@ -92,7 +96,6 @@ static err_t http_server_recv(void *arg, struct tcp_pcb *tpcb, struct pbuf *p, e
         "\r\n"
         "Hello, World!";
 
-
     tcp_write(tpcb, response, strlen(response), TCP_WRITE_FLAG_COPY);
     tcp_output(tpcb);
 
@@ -105,13 +108,14 @@ static err_t http_server_recv(void *arg, struct tcp_pcb *tpcb, struct pbuf *p, e
 }
 
 // Callback for accepting new connections
-static err_t http_server_accept(void *arg, struct tcp_pcb *newpcb, err_t err) {
+static err_t http_server_accept(void *arg, struct tcp_pcb *newpcb, err_t err)
+{
     printf("new connection accept\n");
     tcp_recv(newpcb, http_server_recv);
     return ERR_OK;
 }
 
-//main loop, requests
+// main loop, requests
 int main()
 {
     stdio_init_all();
@@ -123,7 +127,8 @@ int main()
     gpio_set_dir(buz_pin, GPIO_OUT);
 
     // Initialise the Wi-Fi chip
-    if (cyw43_arch_init()) {
+    if (cyw43_arch_init())
+    {
         printf("Wi-Fi init failed\n");
         return -1;
     }
@@ -132,20 +137,23 @@ int main()
     cyw43_arch_enable_sta_mode();
 
     printf("Connecting to Wi-Fi...\n");
-    if (cyw43_arch_wifi_connect_timeout_ms(wifiName, Password, CYW43_AUTH_WPA2_AES_PSK, 30000)) {
+    if (cyw43_arch_wifi_connect_timeout_ms(wifiName, Password, CYW43_AUTH_WPA2_AES_PSK, 30000))
+    {
         printf("failed to connect.\n");
         return 1;
-    } else {
+    }
+    else
+    {
         printf("Connected.\n");
         // Read the ip address in a human readable way
-        uint8_t *ip_address = (uint8_t*)&(cyw43_state.netif[0].ip_addr.addr);
+        uint8_t *ip_address = (uint8_t *)&(cyw43_state.netif[0].ip_addr.addr);
         printf("IP address %d.%d.%d.%d\n", ip_address[0], ip_address[1], ip_address[2], ip_address[3]);
     }
 
-    //debug (run outside)
+    // debug (run outside)
     multicore_launch_core1(core1_entry);
 
-    //tcp server
+    // tcp server
     struct tcp_pcb *server_pcb = tcp_new();
     tcp_bind(server_pcb, IP_ADDR_ANY, 80);
     server_pcb = tcp_listen(server_pcb);
@@ -153,10 +161,9 @@ int main()
 
     printf("HTTP server running on port 80\n");
 
-
-    while (true) 
+    while (true)
     {
-        cyw43_arch_poll();//listen to wifi
+        cyw43_arch_poll(); // listen to wifi
     }
 
     cyw43_arch_deinit();
