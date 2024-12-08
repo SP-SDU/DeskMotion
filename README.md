@@ -51,7 +51,7 @@ If you make changes to the application database context, follow these steps to u
 1. **Delete the ****`Migrations`**** folder** in the project directory.
 2. **Run the following command** in the Razor Pages project directory:
    ```bash
-   dotnet ef migrations add Init
+   dotnet ef migrations add InitialCreate
    ```
 
 This will create a new initial migration reflecting the changes to the database context.
