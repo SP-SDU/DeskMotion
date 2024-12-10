@@ -1,0 +1,31 @@
+@page
+@model DeskMotion.Pages.HelpModel
+@{
+    ViewData["Title"] = "Help";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<h2>Common Questions and Answers</h2>
+<ul>
+    <li><strong>Q:</strong> How do I reset my password?<br /><strong>A:</strong> Click on the "Forgot Password" link on the login page.</li>
+    <li><strong>Q:</strong> How do I contact support?<br /><strong>A:</strong> You can contact support by emailing support@example.com.</li>
+    <li><strong>Q:</strong> How do I update my profile?<br /><strong>A:</strong> Go to the "Profile" section in your account settings.</li>
+</ul>
+
+<h2>Submit an Issue Report</h2>
+<form method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label for="Title">Title</label>
+        <input type="text" class="form-control" id="Title" name="Title" required />
+    </div>
+    <div class="form-group">
+        <label for="Description">Description</label>
+        <textarea class="form-control" id="Description" name="Description" required></textarea>
+    </div>
+    <div class="form-group">
+        <label for="Attachment">Attachment (optional)</label>
+        <input type="file" class="form-control" id="Attachment" name="Attachment" />
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
