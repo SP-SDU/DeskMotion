@@ -35,6 +35,7 @@ public class IndexModel : PageModel
         _signInManager = signInManager;
     }
 
+    public bool IsAdminRole { get; set; }
     /// <summary>
     ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
     ///     directly from your code. This API may change or be removed in future releases.
@@ -90,6 +91,8 @@ public class IndexModel : PageModel
         {
             return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
         }
+
+        IsAdminRole = _userManager.IsInRoleAsync(user, "Administrator").Result;
 
         await LoadAsync(user);
         return Page();

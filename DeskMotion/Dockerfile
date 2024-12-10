@@ -2,11 +2,16 @@
 
 # This stage is used when running from VS in fast mode (Default for Debug configuration)
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+
+# Install wget and download vsdbg in a separate layer to leverage caching
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends wget \
+    && wget -q https://aka.ms/getvsdbgsh -O - | /bin/sh /dev/stdin -v latest -l /remote_debugger
+
 USER $APP_UID
 WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
-
 
 # This stage is used to build the service project
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build

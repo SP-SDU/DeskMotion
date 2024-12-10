@@ -18,5 +18,5 @@ namespace DeskMotion.Models;
 
 public class Role : IdentityRole<Guid>
 {
-    public string? Description { get; set; }
+    public string Description { get; set; } = string.Empty;
 }

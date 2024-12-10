@@ -22,5 +22,10 @@
             </div>
             <button id="update-profile-button" type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
         </form>
+
+        @if (Model.IsAdminRole)
+        {
+            <a asp-area="" asp-page="/Admin/Index">Admin Dashboard</a>
+        }
     </div>
 </div>

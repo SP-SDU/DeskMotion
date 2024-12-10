@@ -14,7 +14,10 @@
 
 using DeskMotion.Data;
 using DeskMotion.Models;
+using DeskMotion.Services;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
+using System.IO.Compression;
 
 namespace DeskMotion;
 
@@ -22,6 +25,9 @@ public class Program
 {
     public static void Main(string[] args)
     {
+        Console.WriteLine("Delaying to ensure dependency services are ready...");
+        Thread.Sleep(2000);
+
         var builder = WebApplication.CreateBuilder(args);
 
         // Add services to the container.
@@ -33,9 +39,66 @@ public class Program
             .AddRoles<Role>()
             .AddEntityFrameworkStores<ApplicationDbContext>();
 
+        builder.Services.ConfigureApplicationCookie(options =>
+        {
+            options.LoginPath = "/Account/Login";
+            options.LogoutPath = "/Account/Logout";
+            options.AccessDeniedPath = "/Account/AccessDenied";
+        });
+
+        builder.Services.AddRazorPages()
+            .AddRazorPagesOptions(options =>
+            {
+                options.Conventions.AuthorizeFolder("/");
+                options.Conventions.AllowAnonymousToPage("/Account/Login");
+                options.Conventions.AuthorizeFolder("/Admin", "RequireAdministratorRole");
+            });
+        builder.Services.AddAuthorization(options =>
+        {
+            options.AddPolicy("RequireAdministratorRole", policy => policy.RequireRole("Administrator"));
+        });
+
         builder.Services.AddRazorPages();
 
+        var apiBaseUri = builder.Configuration["DeskApi:BaseUri"];
+
+        builder.Services.AddHttpClient("DeskApi", client =>
+        {
+            client.BaseAddress = new Uri(apiBaseUri!);
+        });
+        builder.Services.AddTransient<DeskService>(sp =>
+        {
+            var httpClient = sp.GetRequiredService<IHttpClientFactory>().CreateClient("DeskApi");
+            return new DeskService(httpClient);
+        });
+
+        builder.Services.AddHostedService<DeskDataUpdater>(sp =>
+        {
+            var deskService = sp.GetRequiredService<DeskService>();
+            var logger = sp.GetRequiredService<ILogger<DeskDataUpdater>>();
+            return new DeskDataUpdater(deskService, sp, logger);
+        });
+
+        builder.Services.AddResponseCompression(options =>
+        {
+            options.EnableForHttps = true;
+            options.Providers.Add<BrotliCompressionProvider>();
+            options.Providers.Add<GzipCompressionProvider>();
+        });
+
+        builder.Services.Configure<BrotliCompressionProviderOptions>(options =>
+        {
+            options.Level = CompressionLevel.Fastest;
+        });
+
+        builder.Services.Configure<GzipCompressionProviderOptions>(options =>
+        {
+            options.Level = CompressionLevel.SmallestSize;
+        });
+
         var app = builder.Build();
+
+        app.UseResponseCompression();
 
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
