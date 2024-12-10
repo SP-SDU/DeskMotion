@@ -1,0 +1,25 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Docker .NET Debug",
+            "type": "docker",
+            "request": "attach",
+            "platform": "netCore",
+            "containerName": "deskmotion-deskmotion-1",
+            "sourceFileMap": {
+                "/src": "${workspaceFolder}"
+            },
+            "preLaunchTask": "docker-compose: up",
+            "postDebugTask": "docker-compose: down",
+            "netCore": {
+                "debuggerPath": "/remote_debugger/vsdbg"
+            },
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+https?://\\[::\\]:(\\d+)",
+                "uriFormat": "https://localhost:%s"
+            }
+        }
+    ]
+}

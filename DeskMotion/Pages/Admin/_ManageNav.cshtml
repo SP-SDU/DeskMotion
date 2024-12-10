@@ -1,21 +1,31 @@
 ﻿<ul class="nav flex-row text-light shadow-sm rounded justify-content-center nav-custom">
     <li class="nav-item nav-item-custom">
-        <a class="nav-link @ManageNavPages.IndexNavClass(ViewContext) nav-link-custom" id="dashboard" asp-page="/Admin/Index">Dashboard</a>
+        <a class="nav-link @ManageNavPages.IndexNavClass(ViewContext) nav-link-custom" id="dashboard"
+            asp-page="/Admin/Index">Dashboard</a>
     </li>
     <li class="nav-item nav-item-custom">
-        <a class="nav-link @ManageNavPages.DesksNavClass(ViewContext) nav-link-custom" id="Desks" asp-page="/Admin/Desks/Index">Desks</a>
+        <a class="nav-link @ManageNavPages.DesksNavClass(ViewContext) nav-link-custom" id="Desks"
+            asp-page="/Admin/Desks/Index">Desks</a>
     </li>
     <li class="nav-item nav-item-custom">
-        <a class="nav-link @ManageNavPages.MetadataNavClass(ViewContext) nav-link-custom" id="Metadata" asp-page="/Admin/Metadata/Index">Metadata</a>
+        <a class="nav-link @ManageNavPages.MetadataNavClass(ViewContext) nav-link-custom" id="Metadata"
+            asp-page="/Admin/Metadata/Index">Metadata</a>
     </li>
     <li class="nav-item nav-item-custom">
-        <a class="nav-link @ManageNavPages.ReservationsNavClass(ViewContext) nav-link-custom" id="user-libraries" asp-page="/Admin/Reservations/Index">Reservations</a>
+        <a class="nav-link @ManageNavPages.ReservationsNavClass(ViewContext) nav-link-custom" id="user-libraries"
+            asp-page="/Admin/Reservations/Index">Reservations</a>
     </li>
     <li class="nav-item nav-item-custom">
-        <a class="nav-link @ManageNavPages.UsersNavClass(ViewContext) nav-link-custom" id="users" asp-page="/Admin/Users/Index">Users</a>
+        <a class="nav-link @ManageNavPages.UsersNavClass(ViewContext) nav-link-custom" id="users"
+            asp-page="/Admin/Users/Index">Users</a>
     </li>
     <li class="nav-item nav-item-custom">
-        <a class="nav-link @ManageNavPages.RolesNavClass(ViewContext) nav-link-custom" id="roles" asp-page="/Admin/Roles/Index">Roles</a>
+        <a class="nav-link @ManageNavPages.RolesNavClass(ViewContext) nav-link-custom" id="roles"
+            asp-page="/Admin/Roles/Index">Roles</a>
+    </li>
+    <li class="nav-item nav-item-custom">
+        <a class="nav-link @ManageNavPages.ManageReportsNavClass(ViewContext) nav-link-custom" id="manage-reports"
+            asp-page="/Admin/ManageReports/Index">Manage Reports</a>
     </li>
 </ul>
 
@@ -28,22 +38,22 @@
 		padding-bottom: 5px;
 		font-family: 'Silkscreen', sans-serif;
 	}
+  
+    .nav-item-custom {
+        padding: 1px;
+        margin: 15px;
+        border-radius: 8px;
+        background-color: #68605d;
+        box-shadow: 0 10px 0px 6px #837a72;
+        transition: all 0.1s ease;
+    }
 
-	.nav-item-custom {
-		padding: 1px;
-		margin: 15px;
-		border-radius: 8px;
-		background-color: #68605d;
-		box-shadow: 0 10px 0px 6px  #837a72;
-		transition: all 0.1s ease;
-	}
+    .nav-item-custom:active {
+        box-shadow: 0 4px #666;
+        transform: translateY(6px);
+    }
 
-	.nav-item-custom:active {
-		box-shadow: 0 4px #666;
-		transform: translateY(6px);
-	}
-
-	.nav-link-custom {
-		color: #000 !important;
-	}
+    .nav-link-custom {
+        color: #000 !important;
+    }
 </style>

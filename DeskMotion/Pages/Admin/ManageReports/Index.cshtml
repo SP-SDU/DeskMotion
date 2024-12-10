@@ -1,0 +1,44 @@
+@page
+@model DeskMotion.Pages.Admin.ManageReports.IndexModel
+@{
+    ViewData["Title"] = "Manage Reports";
+    ViewData["ActivePage"] = ManageNavPages.ManageReports;
+}
+
+<div class="container mt-5">
+    <h1>Manage Reports</h1>
+    <p class="lead">View, respond to, and manage issue reports submitted by users.</p>
+
+    <!-- Report Table -->
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Title</th>
+                    <th>User</th>
+                    <th>Status</th>
+                    <th>Created At</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var report in Model.IssueReports)
+                {
+                    <tr>
+                        <td>@report.Id</td>
+                        <td>@report.Title</td>
+                        <td>@report.UserId</td>
+                        <td>@report.Status</td>
+                        <td>@report.CreatedAt.ToString("g")</td>
+                        <td>
+                            <a asp-page="/Help/Issues/Details" asp-route-id="@report.Id"
+                                class="btn btn-primary btn-sm">Respond</a>
+                            <a asp-page="./Delete" asp-route-id="@report.Id" class="btn btn-danger btn-sm">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

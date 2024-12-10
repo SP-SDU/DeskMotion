@@ -1,0 +1,122 @@
+﻿@page "{id:guid}"
+@model DeskMotion.Pages.Help.Issues.DetailsModel
+@{
+    ViewData["Title"] = "Issue Details";
+}
+
+<div class="container mt-5">
+    <h1>@Model.Report.Title</h1>
+    <p class="text-muted">Issue #@Model.Report.Id - Created by <strong>@Model.Author</strong> on
+        @Model.Report.CreatedAt.ToString("f")</p>
+
+    <!-- Initial Issue Report -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Description</h5>
+            <p class="card-text">@Model.Report.Description</p>
+
+            @if (Model.Report.Attachments.Any())
+            {
+                <h6>Attachments</h6>
+                <ul>
+                    @foreach (var attachment in Model.Report.Attachments)
+                    {
+                        <li>
+                            <a asp-page="./Details" asp-route-id="@Model.Report.Id"
+                                asp-route-attachmentName="@attachment.FileName"
+                                asp-route-download="true">@attachment.FileName</a>
+                        </li>
+                    }
+                </ul>
+            }
+
+            <!-- Status Badge -->
+            <p class="text-muted">
+                Status: <span class="badge" id="status-badge">@Model.Report.Status</span>
+            </p>
+        </div>
+    </div>
+
+    <!-- Admin Status Update (for admins only) -->
+    @if (User.IsInRole("Administrator"))
+    {
+        <form method="post" asp-page-handler="UpdateStatus" class="mb-4">
+            <div class="input-group">
+                <select name="status" class="form-select">
+                    <option value="Open" selected="@(Model.Report.Status == "Open" ? "selected" : null)">Open</option>
+                    <option value="In Progress" selected="@(Model.Report.Status == "In Progress" ? "selected" : null)">In
+                        Progress</option>
+                    <option value="Resolved" selected="@(Model.Report.Status == "Resolved" ? "selected" : null)">Resolved
+                    </option>
+                </select>
+                <button type="submit" class="btn btn-success">Update Status</button>
+            </div>
+        </form>
+    }
+
+    <!-- Timeline -->
+    <h3>Timeline</h3>
+    <div class="list-group">
+        @foreach (var item in Model.Timeline)
+        {
+            @if (item is IssueComment comment)
+            {
+                <div class="list-group-item">
+                    <p class="text-muted border-bottom pb-2">
+                        <strong>@comment.Author</strong> commented on @comment.CreatedAt.ToString("f")
+                    </p>
+                    <p>@comment.Content</p>
+
+                    @if (comment.Attachments.Any())
+                    {
+                        <h6>Attachments:</h6>
+                        <ul>
+                            @foreach (var attachment in comment.Attachments)
+                            {
+                                <li>
+                                    <a asp-page="./Details" asp-route-id="@Model.Report.Id"
+                                        asp-route-attachmentName="@attachment.FileName"
+                                        asp-route-download="true">@attachment.FileName</a>
+                                </li>
+                            }
+                        </ul>
+                    }
+                </div>
+            }
+            else if (item is IssueEvent evt)
+            {
+                <div>
+                    <p class="text-muted pb-2">
+                        <strong>System</strong> on @evt.Timestamp.ToString("f"):
+                        <span class="badge" data-status="@evt.Description">@evt.Description</span>
+                    </p>
+                </div>
+            }
+        }
+    </div>
+
+    <!-- Add Comment -->
+    <h4 class="mt-4">Add a Comment</h4>
+    <form method="post" asp-page-handler="AddComment" enctype="multipart/form-data">
+        <textarea name="content" class="form-control mb-3" rows="3" placeholder="Write a comment..."
+            required></textarea>
+        <div class="mb-3">
+            <label for="attachments" class="form-label">Attachments (optional)</label>
+            <input type="file" id="attachments" name="attachments" multiple class="form-control" />
+        </div>
+        <button type="submit" class="btn btn-primary">Comment</button>
+    </form>
+</div>
+
+<script>
+    const statusClasses = {
+        "Open": "bg-primary",
+        "In Progress": "bg-warning",
+        "Resolved": "bg-success",
+        "Default": "bg-secondary"
+    };
+    document.querySelectorAll(".badge").forEach(badge => {
+        const status = Object.keys(statusClasses).find(key => badge.textContent.includes(key));
+        badge.classList.add(statusClasses[status] || statusClasses["Default"]);
+    });
+</script>

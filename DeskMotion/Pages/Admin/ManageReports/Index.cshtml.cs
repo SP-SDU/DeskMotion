@@ -12,16 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using DeskMotion.Data;
 using DeskMotion.Models;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
-namespace DeskMotion.Data;
+namespace DeskMotion.Pages.Admin.ManageReports;
 
-public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<User, Role, Guid>(options)
+public class IndexModel(ApplicationDbContext context) : PageModel
 {
-    public DbSet<Desk> Desks => Set<Desk>();
-    public DbSet<DeskMetadata> DeskMetadata => Set<DeskMetadata>();
-    public DbSet<Reservation> Reservations => Set<Reservation>();
-    public DbSet<IssueReport> IssueReports => Set<IssueReport>();
+    public List<IssueReport> IssueReports { get; private set; } = [];
+
+    public void OnGet()
+    {
+        IssueReports = [.. context.IssueReports];
+    }
 }

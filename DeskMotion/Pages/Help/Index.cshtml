@@ -1,0 +1,68 @@
+﻿@page
+@model DeskMotion.Pages.Help.IndexModel
+@{
+    ViewData["Title"] = "Help Center";
+}
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-12 text-center">
+            <h1 class="mb-4">Help Center</h1>
+            <p class="lead">Find answers to your questions or report an issue to our team.</p>
+        </div>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="row my-4">
+        <div class="col-12 col-md-8 offset-md-2">
+            <form method="get" class="input-group">
+                <input type="text" name="search" class="form-control" placeholder="Search FAQs..."
+                    value="@Model.SearchQuery" />
+                <button type="submit" class="btn btn-primary">Search</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- FAQ Section -->
+    <div class="row">
+        <div class="col-12">
+            <h2 class="mb-3">Common Questions</h2>
+            @if (!Model.FAQs.Any())
+            {
+                <div class="alert alert-warning text-center">
+                    <p>No FAQs match your search.</p>
+                    <a asp-page="./Issues/Create" class="btn btn-primary">Report an Issue</a>
+                </div>
+            }
+            else
+            {
+                <ul class="list-group">
+                    @for (int i = 0; i < Model.FAQs.Count(); i++)
+                    {
+                        var (question, answer) = Model.FAQs.ElementAt(i);
+                        <li class="list-group-item">
+                            <strong>@question</strong>
+                            <p class="mt-2">@answer</p>
+                        </li>
+                    }
+                </ul>
+            }
+        </div>
+    </div>
+
+    <!-- Common Questions Section -->
+    <div class="row mt-4">
+        <div class="col-12 text-center">
+            <a asp-page="./Issues/Index" class="btn btn-secondary">View My Reports</a>
+        </div>
+    </div>
+
+    <!-- Report Issue Section -->
+    <div class="row mt-5">
+        <div class="col-12 text-center">
+            <h2>Still Need Help?</h2>
+            <p class="mb-3">If you can't find the answer you're looking for, let us know!</p>
+            <a asp-page="./Issues/Create" class="btn btn-primary">Report an Issue</a>
+        </div>
+    </div>
+</div>

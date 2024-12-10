@@ -12,16 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using DeskMotion.Models;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace DeskMotion.Data;
+namespace DeskMotion.Models;
 
-public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<User, Role, Guid>(options)
+[Owned]
+public class IssueComment
 {
-    public DbSet<Desk> Desks => Set<Desk>();
-    public DbSet<DeskMetadata> DeskMetadata => Set<DeskMetadata>();
-    public DbSet<Reservation> Reservations => Set<Reservation>();
-    public DbSet<IssueReport> IssueReports => Set<IssueReport>();
+    public string Author { get; set; } = string.Empty;
+    public string Content { get; set; } = string.Empty;
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public List<IssueAttachment> Attachments { get; set; } = [];
 }
