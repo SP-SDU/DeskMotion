@@ -6,100 +6,113 @@
 
 <div class="container mt-5">
     <h1>@Model.Report.Title</h1>
-    <p class="text-muted">Created: @Model.Report.CreatedAt.ToString("f")</p>
-    <p>@Model.Report.Description</p>
+    <p class="text-muted">Issue #@Model.Report.Id - Created by <strong>@Model.Author</strong> on @Model.Report.CreatedAt.ToString("f")</p>
 
-    <h3>Status</h3>
-    <p>
-        <span class="badge bg-primary">@Model.Report.Status</span>
-        @if (User.IsInRole("Administrator"))
-        {
-        <form method="post" asp-page-handler="UpdateStatus" class="d-inline">
-            <select name="status" class="form-select d-inline w-auto">
-                <option value="Open" selected="@(Model.Report.Status == "Open" ? "selected" : null)">Open</option>
-                <option value="In Progress" selected="@(Model.Report.Status == "In Progress" ? "selected" : null)">
-                    In Progress
-                </option>
-                <option value="Resolved" selected="@(Model.Report.Status == "Resolved" ? "selected" : null)">
-                    Resolved
-                </option>
-            </select>
-            <button type="submit" class="btn btn-sm btn-success">Update</button>
-        </form>
-        }
-    </p>
+    <!-- Initial Issue Report -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Description</h5>
+            <p class="card-text">@Model.Report.Description</p>
 
-    <h3>Timeline</h3>
-    <ul class="list-group">
-        @foreach (var evt in Model.Report.Events.OrderBy(e => e.Timestamp))
-        {
-            <li class="list-group-item">
-                <small class="text-muted">@evt.Timestamp.ToString("g")</small>
-                <p>@evt.Description</p>
-            </li>
-        }
-    </ul>
-
-    @if (Model.Report.Attachments.Any())
-    {
-        <h4>Attachments</h4>
-        <ul class="list-group">
-            @foreach (var attachment in Model.Report.Attachments)
+            @if (Model.Report.Attachments.Any())
             {
-                <li class="list-group-item">
-                    <a
-                        href="@Url.Page("/Help/ViewIssue", new { id = Model.Report.Id, attachmentName = attachment.FileName, download = true })">
-                        @attachment.FileName
-                    </a>
-                </li>
+                <h6>Attachments</h6>
+                <ul>
+                    @foreach (var attachment in Model.Report.Attachments)
+                    {
+                        <li>
+                            <a href="@Url.Page("/Help/ViewIssue", new { id = Model.Report.Id, attachmentName = attachment.FileName, download = true })">
+                                @attachment.FileName
+                            </a>
+                        </li>
+                    }
+                </ul>
             }
-        </ul>
+
+            <!-- Status Badge -->
+            <p class="text-muted">
+                Status: <span class="badge" id="status-badge">@Model.Report.Status</span>
+            </p>
+        </div>
+    </div>
+
+    <!-- Admin Status Update (for admins only) -->
+    @if (User.IsInRole("Administrator"))
+    {
+        <form method="post" asp-page-handler="UpdateStatus" class="mb-4">
+            <div class="input-group">
+                <select name="status" class="form-select">
+                    <option value="Open" selected="@(Model.Report.Status == "Open" ? "selected" : null)">Open</option>
+                    <option value="In Progress" selected="@(Model.Report.Status == "In Progress" ? "selected" : null)">In Progress</option>
+                    <option value="Resolved" selected="@(Model.Report.Status == "Resolved" ? "selected" : null)">Resolved</option>
+                </select>
+                <button type="submit" class="btn btn-success">Update Status</button>
+            </div>
+        </form>
     }
 
-    <h3>Comments</h3>
-    @if (Model.Report.Comments.Any())
-    {
-        <ul class="list-group">
-            @foreach (var comment in Model.Report.Comments.OrderBy(c => c.CreatedAt))
+    <!-- Timeline -->
+    <h3>Timeline</h3>
+    <div class="list-group">
+        @foreach (var item in Model.Timeline)
+        {
+            @if (item is IssueComment comment)
             {
-                <li class="list-group-item">
-                    <strong>@comment.Author</strong>
-                    <small class="text-muted">@comment.CreatedAt.ToString("g")</small>
+                <div class="list-group-item">
+                    <p class="text-muted border-bottom pb-2">
+                        <strong>@comment.Author</strong> commented on @comment.CreatedAt.ToString("f")
+                    </p>
                     <p>@comment.Content</p>
 
                     @if (comment.Attachments.Any())
                     {
-                        <div class="mt-2">
-                            <strong>Attachments:</strong>
-                            <ul class="list-inline">
-                                @foreach (var attachment in comment.Attachments)
-                                {
-                                    <li class="list-inline-item">
-                                        <a
-                                            href="@Url.Page("/Help/ViewIssue", new { id = Model.Report.Id, attachmentName = attachment.FileName, download = true })">
-                                            @attachment.FileName
-                                        </a>
-                                    </li>
-                                }
-                            </ul>
-                        </div>
+                        <h6>Attachments:</h6>
+                        <ul>
+                            @foreach (var attachment in comment.Attachments)
+                            {
+                                <li>
+                                    <a href="@Url.Page("/Help/ViewIssue", new { id = Model.Report.Id, attachmentName = attachment.FileName, download = true })">
+                                        @attachment.FileName
+                                    </a>
+                                </li>
+                            }
+                        </ul>
                     }
-                </li>
+                </div>
             }
-        </ul>
-    }
-    else
-    {
-        <p>No comments yet.</p>
-    }
+            else if (item is IssueEvent evt)
+            {
+                <div>
+                    <p class="text-muted pb-2">
+                        <strong>System</strong> on @evt.Timestamp.ToString("f"):
+                        <span class="badge" data-status="@evt.Description">@evt.Description</span>
+                    </p>
+                </div>
+            }
+        }
+    </div>
 
-    <h4>Add a Comment</h4>
+    <!-- Add Comment -->
+    <h4 class="mt-4">Add a Comment</h4>
     <form method="post" asp-page-handler="AddComment" enctype="multipart/form-data">
-        <textarea name="content" class="form-control" rows="3" required></textarea>
-        <div class="form-group mt-2">
-            <label for="attachment">Attach Files</label>
-            <input type="file" id="attachment" name="attachments" multiple class="form-control" />
+        <textarea name="content" class="form-control mb-3" rows="3" placeholder="Write a comment..." required></textarea>
+        <div class="mb-3">
+            <label for="attachments" class="form-label">Attachments (optional)</label>
+            <input type="file" id="attachments" name="attachments" multiple class="form-control" />
         </div>
-        <button type="submit" class="btn btn-primary mt-2">Comment</button>
+        <button type="submit" class="btn btn-primary">Comment</button>
     </form>
 </div>
+
+<script>
+    const statusClasses = {
+        "Open": "bg-primary",
+        "In Progress": "bg-warning",
+        "Resolved": "bg-success",
+        "Default": "bg-secondary"
+    };
+    document.querySelectorAll(".badge").forEach(badge => {
+        const status = Object.keys(statusClasses).find(key => badge.textContent.includes(key));
+        badge.classList.add(statusClasses[status] || statusClasses["Default"]);
+    });
+</script>

@@ -10,12 +10,16 @@ namespace DeskMotion.Pages.Help;
 public class ViewIssueModel(ApplicationDbContext context) : PageModel
 {
     public IssueReport Report { get; private set; } = default!;
+    public List<object> Timeline { get; private set; } = [];
+    public string Author { get; private set; } = string.Empty;
 
     public IActionResult OnGet(Guid id, string? attachmentName = null, bool download = false)
     {
+        // Load issue report with comments and events
         var report = context.IssueReports
             .Include(r => r.Attachments)
             .Include(r => r.Comments).ThenInclude(c => c.Attachments)
+            .Include(r => r.Events)
             .FirstOrDefault(r => r.Id == id);
 
         if (report == null)
@@ -25,6 +29,10 @@ public class ViewIssueModel(ApplicationDbContext context) : PageModel
 
         Report = report;
 
+        var user = context.Users.FirstOrDefault(u => u.Id == Report.UserId);
+        Author = user?.UserName ?? "Unknown";
+
+        // Handle attachment downloads
         if (download && attachmentName != null)
         {
             var attachment = Report.Attachments.FirstOrDefault(a => a.FileName == attachmentName)
@@ -37,6 +45,11 @@ public class ViewIssueModel(ApplicationDbContext context) : PageModel
 
             return File(attachment.Content, attachment.MimeType, attachment.FileName);
         }
+
+        // Build timeline (combine comments and events)
+        Timeline = Report.Comments.Cast<object>().ToList();
+        Timeline.AddRange(Report.Events);
+        Timeline = Timeline.OrderBy(e => e is IssueComment c ? c.CreatedAt : ((IssueEvent) e).Timestamp).ToList();
 
         return Page();
     }
@@ -75,7 +88,7 @@ public class ViewIssueModel(ApplicationDbContext context) : PageModel
         report.Comments.Add(newComment);
         report.UpdatedAt = DateTime.UtcNow;
 
-        await context.SaveChangesAsync();
+        _ = await context.SaveChangesAsync();
 
         return RedirectToPage(new { id });
     }
@@ -93,11 +106,11 @@ public class ViewIssueModel(ApplicationDbContext context) : PageModel
 
         report.Events.Add(new IssueEvent
         {
-            Description = $"Status updated to {status} by {User.Identity?.Name ?? "Unknown"}",
+            Description = $"Status updated to {status}",
             Timestamp = DateTime.UtcNow
         });
 
-        await context.SaveChangesAsync();
+        _ = await context.SaveChangesAsync();
 
         return RedirectToPage(new { id });
     }
