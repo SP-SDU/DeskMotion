@@ -12,6 +12,20 @@
             "type": "shell",
             "command": "docker-compose down",
             "problemMatcher": []
+        },
+        {
+            "type": "dotnet",
+            "task": "clean",
+            "group": "clean",
+            "problemMatcher": [],
+            "label": "dotnet: clean"
+        },
+        {
+            "type": "dotnet",
+            "task": "build",
+            "group": "build",
+            "problemMatcher": [],
+            "label": "dotnet: build"
         }
     ]
 }

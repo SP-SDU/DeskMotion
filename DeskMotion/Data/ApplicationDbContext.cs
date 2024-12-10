@@ -23,4 +23,5 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<Desk> Desks => Set<Desk>();
     public DbSet<DeskMetadata> DeskMetadata => Set<DeskMetadata>();
     public DbSet<Reservation> Reservations => Set<Reservation>();
+    public DbSet<IssueReport> IssueReports => Set<IssueReport>();
 }
