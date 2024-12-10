@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DeskMotion.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241210140929_InitialCreate")]
+    [Migration("20241210161627_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -77,6 +77,10 @@ namespace DeskMotion.Migrations
 
                     b.Property<byte[]>("Attachment")
                         .HasColumnType("bytea");
+
+                    b.Property<string>("AttachmentFileName")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");

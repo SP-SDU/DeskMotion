@@ -11,7 +11,10 @@ public class ReportIssueModel(ApplicationDbContext context, UserManager<User> us
     [BindProperty]
     public IssueReport IssueReport { get; set; } = new();
 
-    public IActionResult OnGet()
+    public void OnGet()
+    {
+    }
+    public async Task<IActionResult> OnPostAsync(IFormFile? file)
     {
         var userId = userManager.GetUserId(User);
         if (string.IsNullOrEmpty(userId) || !Guid.TryParse(userId, out var userGuid))
@@ -22,14 +25,17 @@ public class ReportIssueModel(ApplicationDbContext context, UserManager<User> us
 
         IssueReport.UserId = userGuid;
 
-        return Page();
-    }
-
-    public async Task<IActionResult> OnPostAsync()
-    {
         if (!ModelState.IsValid)
         {
             return Page();
+        }
+
+        if (file != null && file.Length > 0)
+        {
+            using var memoryStream = new MemoryStream();
+            await file.CopyToAsync(memoryStream);
+            IssueReport.Attachment = memoryStream.ToArray();
+            IssueReport.AttachmentFileName = file.FileName;
         }
 
         _ = context.IssueReports.Add(IssueReport);

@@ -10,15 +10,15 @@
 <form method="post" enctype="multipart/form-data">
     <div class="form-group">
         <label for="Title">Title</label>
-        <input type="text" class="form-control" id="Title" name="Title" required />
+        <input type="text" class="form-control" id="Title" name="IssueReport.Title" required />
     </div>
     <div class="form-group">
         <label for="Description">Description</label>
-        <textarea class="form-control" id="Description" name="Description" required></textarea>
+        <textarea class="form-control" id="Description" name="IssueReport.Description" required></textarea>
     </div>
     <div class="form-group">
         <label for="Attachment">Attachment (optional)</label>
-        <input type="file" class="form-control" id="Attachment" name="Attachment" />
+        <input type="file" class="form-control" id="Attachment" name="file" />
     </div>
     <button type="submit" class="btn btn-primary">Submit</button>
 </form>

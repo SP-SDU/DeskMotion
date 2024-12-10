@@ -5,34 +5,39 @@
     ViewData["ActivePage"] = ManageNavPages.ManageReports;
 }
 
-<h1>@ViewData["Title"]</h1>
+<div class="container mt-5">
+    <h1>Manage Reports</h1>
+    <p class="lead">View, respond to, and manage issue reports submitted by users.</p>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Title</th>
-            <th>Description</th>
-            <th>Status</th>
-            <th>Created At</th>
-            <th>Updated At</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var report in Model.IssueReports)
-        {
-            <tr>
-                <td>@report.Title</td>
-                <td>@report.Description</td>
-                <td>@report.Status</td>
-                <td>@report.CreatedAt</td>
-                <td>@report.UpdatedAt</td>
-                <td>
-                    <a asp-page-handler="Respond" asp-route-id="@report.Id" class="btn btn-primary">Respond</a>
-                    <a asp-page-handler="Close" asp-route-id="@report.Id" class="btn btn-danger">Close</a>
-                    <a asp-page-handler="UpdateStatus" asp-route-id="@report.Id" class="btn btn-secondary">Update Status</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+    <!-- Report Table -->
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Title</th>
+                    <th>User</th>
+                    <th>Status</th>
+                    <th>Created At</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var report in Model.IssueReports)
+                {
+                    <tr>
+                        <td>@report.Id</td>
+                        <td>@report.Title</td>
+                        <td>@report.UserId</td>
+                        <td>@report.Status</td>
+                        <td>@report.CreatedAt.ToString("g")</td>
+                        <td>
+                            <a asp-page="./Respond/@report.Id" class="btn btn-primary btn-sm">Respond</a>
+                            <a asp-page="./Delete/@report.Id" class="btn btn-danger btn-sm">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

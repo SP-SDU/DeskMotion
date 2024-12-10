@@ -75,6 +75,10 @@ namespace DeskMotion.Migrations
                     b.Property<byte[]>("Attachment")
                         .HasColumnType("bytea");
 
+                    b.Property<string>("AttachmentFileName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 

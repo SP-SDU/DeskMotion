@@ -1,0 +1,58 @@
+﻿@page "{id:guid}"
+@model DeskMotion.Pages.Help.ViewIssueModel
+@{
+    ViewData["Title"] = "View Issue Report";
+}
+
+<div class="container mt-5">
+    <h1>Issue Report Details</h1>
+
+    <dl class="row">
+        <dt class="col-sm-3">Title</dt>
+        <dd class="col-sm-9">@Model.Report.Title</dd>
+
+        <dt class="col-sm-3">Description</dt>
+        <dd class="col-sm-9">@Model.Report.Description</dd>
+
+        <dt class="col-sm-3">Status</dt>
+        <dd class="col-sm-9">@Model.Report.Status</dd>
+
+        <dt class="col-sm-3">Last Updated</dt>
+        <dd class="col-sm-9">
+            @if (Model.Report.UpdatedAt.HasValue)
+            {
+                @Model.Report.UpdatedAt.Value.ToString("g")
+            }
+            else
+            {
+                <span>Never</span>
+            }
+        </dd>
+
+        <dt class="col-sm-3">Admin Response</dt>
+        <dd class="col-sm-9">
+            @if (!string.IsNullOrEmpty(Model.AdminResponse))
+            {
+                <p>@Model.AdminResponse</p>
+            }
+            else
+            {
+                <p>No response has been provided yet.</p>
+            }
+        </dd>
+
+        <dt class="col-sm-3">Attachment</dt>
+        <dd class="col-sm-9">
+            @if (Model.Report.Attachment != null)
+            {
+                <a href="@Url.Page("/Help/ViewIssue", new { id = Model.Report.Id, download = true })" class="btn btn-link">
+                    Download Attachment
+                </a>
+            }
+            else
+            {
+                <p>No attachment provided.</p>
+            }
+        </dd>
+    </dl>
+</div>

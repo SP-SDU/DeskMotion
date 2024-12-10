@@ -105,7 +105,8 @@ namespace DeskMotion.Migrations
                     Status = table.Column<string>(type: "text", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    Attachment = table.Column<byte[]>(type: "bytea", nullable: true)
+                    Attachment = table.Column<byte[]>(type: "bytea", nullable: true),
+                    AttachmentFileName = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {

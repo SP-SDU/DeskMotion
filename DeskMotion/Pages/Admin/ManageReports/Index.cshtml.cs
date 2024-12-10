@@ -8,54 +8,10 @@ namespace DeskMotion.Pages.Admin.ManageReports;
 
 public class IndexModel(ApplicationDbContext context) : PageModel
 {
-    public IList<IssueReport> IssueReports { get; set; } = default!;
+    public List<IssueReport> IssueReports { get; private set; } = [];
 
-    public async Task OnGetAsync()
+    public void OnGet()
     {
-        IssueReports = await context.IssueReports.ToListAsync();
-    }
-
-    public async Task<IActionResult> OnPostRespondAsync(Guid id)
-    {
-        var report = await context.IssueReports.FindAsync(id);
-        if (report == null)
-        {
-            return NotFound();
-        }
-
-        report.UpdatedAt = DateTime.UtcNow;
-        _ = await context.SaveChangesAsync();
-
-        return RedirectToPage();
-    }
-
-    public async Task<IActionResult> OnPostCloseAsync(Guid id)
-    {
-        var report = await context.IssueReports.FindAsync(id);
-        if (report == null)
-        {
-            return NotFound();
-        }
-
-        report.Status = "Closed";
-        report.UpdatedAt = DateTime.UtcNow;
-        _ = await context.SaveChangesAsync();
-
-        return RedirectToPage();
-    }
-
-    public async Task<IActionResult> OnPostUpdateStatusAsync(Guid id, string status)
-    {
-        var report = await context.IssueReports.FindAsync(id);
-        if (report == null)
-        {
-            return NotFound();
-        }
-
-        report.Status = status;
-        report.UpdatedAt = DateTime.UtcNow;
-        _ = await context.SaveChangesAsync();
-
-        return RedirectToPage();
+        IssueReports = [.. context.IssueReports];
     }
 }

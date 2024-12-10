@@ -17,4 +17,5 @@ public class IssueReport
     public DateTime? UpdatedAt { get; set; }
 
     public byte[]? Attachment { get; set; }
+    public string AttachmentFileName { get; set; } = string.Empty;
 }

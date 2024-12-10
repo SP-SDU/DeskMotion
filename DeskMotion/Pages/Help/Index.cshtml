@@ -31,7 +31,7 @@
             {
                 <div class="alert alert-warning text-center">
                     <p>No FAQs match your search.</p>
-                    <a href="/Help/ReportIssue" class="btn btn-primary">Report an Issue</a>
+                    <a asp-page="./ReportIssue" class="btn btn-primary">Report an Issue</a>
                 </div>
             }
             else
@@ -50,12 +50,19 @@
         </div>
     </div>
 
+    <!-- Common Questions Section -->
+    <div class="row mt-4">
+        <div class="col-12 text-center">
+            <a href="/Help/MyReports" class="btn btn-secondary">View My Reports</a>
+        </div>
+    </div>
+
     <!-- Report Issue Section -->
     <div class="row mt-5">
         <div class="col-12 text-center">
             <h2>Still Need Help?</h2>
             <p class="mb-3">If you can't find the answer you're looking for, let us know!</p>
-            <a href="/Help/ReportIssue" class="btn btn-primary">Report an Issue</a>
+            <a asp-page="./ReportIssue" class="btn btn-primary">Report an Issue</a>
         </div>
     </div>
 </div>
