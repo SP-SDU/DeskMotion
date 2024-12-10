@@ -26,6 +26,22 @@
             "group": "build",
             "problemMatcher": [],
             "label": "dotnet: build"
+        },
+        {
+            "label": "dotnet: format",
+            "type": "shell",
+            "command": "dotnet",
+            "args": [
+                "format",
+                "DeskMotion.sln",
+                "--verbosity",
+                "diagnostic"
+            ],
+            "group": "none",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always"
+            }
         }
     ]
 }
