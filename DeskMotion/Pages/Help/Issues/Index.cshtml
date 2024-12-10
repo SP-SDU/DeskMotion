@@ -1,5 +1,5 @@
 ﻿@page
-@model DeskMotion.Pages.Help.MyReportsModel
+@model DeskMotion.Pages.Help.Issues.IndexModel
 @{
     ViewData["Title"] = "My Reports";
 }
@@ -7,6 +7,8 @@
 <div class="container mt-5">
     <h1>My Issue Reports</h1>
     <p class="lead">Below is a list of issue reports you have submitted.</p>
+
+    <a asp-page="./Create" class="btn btn-primary mb-4">Report an Issue</a>
 
     @if (!Model.UserReports.Any())
     {
@@ -31,7 +33,7 @@
                         <td>@report.Status</td>
                         <td>@report.CreatedAt.ToString("g")</td>
                         <td>
-                            <a asp-page="./ViewIssue" asp-route-id="@report.Id" class="btn btn-primary btn-sm">View</a>
+                            <a asp-page="./Details" asp-route-id="@report.Id" class="btn btn-primary btn-sm">View</a>
                         </td>
                     </tr>
                 }

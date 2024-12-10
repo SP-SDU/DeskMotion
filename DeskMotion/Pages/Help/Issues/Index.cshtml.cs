@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Identity;
 using DeskMotion.Data;
 using DeskMotion.Models;
 
-namespace DeskMotion.Pages.Help;
+namespace DeskMotion.Pages.Help.Issues;
 
-public class MyReportsModel(ApplicationDbContext context, UserManager<User> userManager) : PageModel
+public class IndexModel(ApplicationDbContext context, UserManager<User> userManager) : PageModel
 {
     public List<IssueReport> UserReports { get; private set; } = [];
 

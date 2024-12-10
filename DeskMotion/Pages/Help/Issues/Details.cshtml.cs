@@ -3,11 +3,10 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using DeskMotion.Data;
 using DeskMotion.Models;
-using System.Collections.Generic;
 
-namespace DeskMotion.Pages.Help;
+namespace DeskMotion.Pages.Help.Issues;
 
-public class ViewIssueModel(ApplicationDbContext context) : PageModel
+public class DetailsModel(ApplicationDbContext context) : PageModel
 {
     public IssueReport Report { get; private set; } = default!;
     public List<object> Timeline { get; private set; } = [];

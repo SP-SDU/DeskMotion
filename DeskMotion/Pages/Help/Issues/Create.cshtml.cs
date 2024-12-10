@@ -3,11 +3,10 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Identity;
 using DeskMotion.Models;
 using DeskMotion.Data;
-using System.Collections.Generic;
 
-namespace DeskMotion.Pages.Help;
+namespace DeskMotion.Pages.Help.Issues;
 
-public class ReportIssueModel(ApplicationDbContext context, UserManager<User> userManager, ILogger<ReportIssueModel> logger) : PageModel
+public class CreateModel(ApplicationDbContext context, UserManager<User> userManager, ILogger<CreateModel> logger) : PageModel
 {
     [BindProperty]
     public IssueReport IssueReport { get; set; } = new();
