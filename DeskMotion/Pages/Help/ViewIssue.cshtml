@@ -1,58 +1,105 @@
 ﻿@page "{id:guid}"
 @model DeskMotion.Pages.Help.ViewIssueModel
 @{
-    ViewData["Title"] = "View Issue Report";
+    ViewData["Title"] = "Issue Details";
 }
 
 <div class="container mt-5">
-    <h1>Issue Report Details</h1>
+    <h1>@Model.Report.Title</h1>
+    <p class="text-muted">Created: @Model.Report.CreatedAt.ToString("f")</p>
+    <p>@Model.Report.Description</p>
 
-    <dl class="row">
-        <dt class="col-sm-3">Title</dt>
-        <dd class="col-sm-9">@Model.Report.Title</dd>
+    <h3>Status</h3>
+    <p>
+        <span class="badge bg-primary">@Model.Report.Status</span>
+        @if (User.IsInRole("Administrator"))
+        {
+        <form method="post" asp-page-handler="UpdateStatus" class="d-inline">
+            <select name="status" class="form-select d-inline w-auto">
+                <option value="Open" selected="@(Model.Report.Status == "Open" ? "selected" : null)">Open</option>
+                <option value="In Progress" selected="@(Model.Report.Status == "In Progress" ? "selected" : null)">
+                    In Progress
+                </option>
+                <option value="Resolved" selected="@(Model.Report.Status == "Resolved" ? "selected" : null)">
+                    Resolved
+                </option>
+            </select>
+            <button type="submit" class="btn btn-sm btn-success">Update</button>
+        </form>
+        }
+    </p>
 
-        <dt class="col-sm-3">Description</dt>
-        <dd class="col-sm-9">@Model.Report.Description</dd>
+    <h3>Timeline</h3>
+    <ul class="list-group">
+        @foreach (var evt in Model.Report.Events.OrderBy(e => e.Timestamp))
+        {
+            <li class="list-group-item">
+                <small class="text-muted">@evt.Timestamp.ToString("g")</small>
+                <p>@evt.Description</p>
+            </li>
+        }
+    </ul>
 
-        <dt class="col-sm-3">Status</dt>
-        <dd class="col-sm-9">@Model.Report.Status</dd>
+    @if (Model.Report.Attachments.Any())
+    {
+        <h4>Attachments</h4>
+        <ul class="list-group">
+            @foreach (var attachment in Model.Report.Attachments)
+            {
+                <li class="list-group-item">
+                    <a
+                        href="@Url.Page("/Help/ViewIssue", new { id = Model.Report.Id, attachmentName = attachment.FileName, download = true })">
+                        @attachment.FileName
+                    </a>
+                </li>
+            }
+        </ul>
+    }
 
-        <dt class="col-sm-3">Last Updated</dt>
-        <dd class="col-sm-9">
-            @if (Model.Report.UpdatedAt.HasValue)
+    <h3>Comments</h3>
+    @if (Model.Report.Comments.Any())
+    {
+        <ul class="list-group">
+            @foreach (var comment in Model.Report.Comments.OrderBy(c => c.CreatedAt))
             {
-                @Model.Report.UpdatedAt.Value.ToString("g")
-            }
-            else
-            {
-                <span>Never</span>
-            }
-        </dd>
+                <li class="list-group-item">
+                    <strong>@comment.Author</strong>
+                    <small class="text-muted">@comment.CreatedAt.ToString("g")</small>
+                    <p>@comment.Content</p>
 
-        <dt class="col-sm-3">Admin Response</dt>
-        <dd class="col-sm-9">
-            @if (!string.IsNullOrEmpty(Model.AdminResponse))
-            {
-                <p>@Model.AdminResponse</p>
+                    @if (comment.Attachments.Any())
+                    {
+                        <div class="mt-2">
+                            <strong>Attachments:</strong>
+                            <ul class="list-inline">
+                                @foreach (var attachment in comment.Attachments)
+                                {
+                                    <li class="list-inline-item">
+                                        <a
+                                            href="@Url.Page("/Help/ViewIssue", new { id = Model.Report.Id, attachmentName = attachment.FileName, download = true })">
+                                            @attachment.FileName
+                                        </a>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    }
+                </li>
             }
-            else
-            {
-                <p>No response has been provided yet.</p>
-            }
-        </dd>
+        </ul>
+    }
+    else
+    {
+        <p>No comments yet.</p>
+    }
 
-        <dt class="col-sm-3">Attachment</dt>
-        <dd class="col-sm-9">
-            @if (Model.Report.Attachment != null)
-            {
-                <a href="@Url.Page("/Help/ViewIssue", new { id = Model.Report.Id, download = true })" class="btn btn-link">
-                    Download Attachment
-                </a>
-            }
-            else
-            {
-                <p>No attachment provided.</p>
-            }
-        </dd>
-    </dl>
+    <h4>Add a Comment</h4>
+    <form method="post" asp-page-handler="AddComment" enctype="multipart/form-data">
+        <textarea name="content" class="form-control" rows="3" required></textarea>
+        <div class="form-group mt-2">
+            <label for="attachment">Attach Files</label>
+            <input type="file" id="attachment" name="attachments" multiple class="form-control" />
+        </div>
+        <button type="submit" class="btn btn-primary mt-2">Comment</button>
+    </form>
 </div>

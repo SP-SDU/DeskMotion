@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Identity;
 using DeskMotion.Models;
 using DeskMotion.Data;
+using System.Collections.Generic;
 
 namespace DeskMotion.Pages.Help;
 
@@ -14,8 +15,10 @@ public class ReportIssueModel(ApplicationDbContext context, UserManager<User> us
     public void OnGet()
     {
     }
-    public async Task<IActionResult> OnPostAsync(IFormFile? file)
+
+    public async Task<IActionResult> OnPostAsync(List<IFormFile>? attachments)
     {
+        // Validate User
         var userId = userManager.GetUserId(User);
         if (string.IsNullOrEmpty(userId) || !Guid.TryParse(userId, out var userGuid))
         {
@@ -25,19 +28,33 @@ public class ReportIssueModel(ApplicationDbContext context, UserManager<User> us
 
         IssueReport.UserId = userGuid;
 
+        // Validate Model
         if (!ModelState.IsValid)
         {
             return Page();
         }
 
-        if (file != null && file.Length > 0)
+        // Handle Attachments
+        if (attachments != null && attachments.Any())
         {
-            using var memoryStream = new MemoryStream();
-            await file.CopyToAsync(memoryStream);
-            IssueReport.Attachment = memoryStream.ToArray();
-            IssueReport.AttachmentFileName = file.FileName;
+            foreach (var file in attachments)
+            {
+                if (file.Length > 0)
+                {
+                    using var memoryStream = new MemoryStream();
+                    await file.CopyToAsync(memoryStream);
+
+                    IssueReport.Attachments.Add(new IssueAttachment
+                    {
+                        FileName = file.FileName,
+                        MimeType = file.ContentType,
+                        Content = memoryStream.ToArray()
+                    });
+                }
+            }
         }
 
+        // Save Issue Report
         _ = context.IssueReports.Add(IssueReport);
         _ = await context.SaveChangesAsync();
 

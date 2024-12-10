@@ -104,9 +104,7 @@ namespace DeskMotion.Migrations
                     UserId = table.Column<Guid>(type: "uuid", nullable: false),
                     Status = table.Column<string>(type: "text", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    Attachment = table.Column<byte[]>(type: "bytea", nullable: true),
-                    AttachmentFileName = table.Column<string>(type: "text", nullable: false)
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -255,6 +253,94 @@ namespace DeskMotion.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "IssueComment",
+                columns: table => new
+                {
+                    IssueReportId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Author = table.Column<string>(type: "text", nullable: false),
+                    Content = table.Column<string>(type: "text", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_IssueComment", x => new { x.IssueReportId, x.Id });
+                    table.ForeignKey(
+                        name: "FK_IssueComment_IssueReports_IssueReportId",
+                        column: x => x.IssueReportId,
+                        principalTable: "IssueReports",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "IssueEvent",
+                columns: table => new
+                {
+                    IssueReportId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Description = table.Column<string>(type: "text", nullable: false),
+                    Timestamp = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_IssueEvent", x => new { x.IssueReportId, x.Id });
+                    table.ForeignKey(
+                        name: "FK_IssueEvent_IssueReports_IssueReportId",
+                        column: x => x.IssueReportId,
+                        principalTable: "IssueReports",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "IssueReports_Attachments",
+                columns: table => new
+                {
+                    IssueReportId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    FileName = table.Column<string>(type: "text", nullable: false),
+                    MimeType = table.Column<string>(type: "text", nullable: false),
+                    Content = table.Column<byte[]>(type: "bytea", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_IssueReports_Attachments", x => new { x.IssueReportId, x.Id });
+                    table.ForeignKey(
+                        name: "FK_IssueReports_Attachments_IssueReports_IssueReportId",
+                        column: x => x.IssueReportId,
+                        principalTable: "IssueReports",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "IssueComment_Attachments",
+                columns: table => new
+                {
+                    IssueCommentIssueReportId = table.Column<Guid>(type: "uuid", nullable: false),
+                    IssueCommentId = table.Column<int>(type: "integer", nullable: false),
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    FileName = table.Column<string>(type: "text", nullable: false),
+                    MimeType = table.Column<string>(type: "text", nullable: false),
+                    Content = table.Column<byte[]>(type: "bytea", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_IssueComment_Attachments", x => new { x.IssueCommentIssueReportId, x.IssueCommentId, x.Id });
+                    table.ForeignKey(
+                        name: "FK_IssueComment_Attachments_IssueComment_IssueCommentIssueRepo~",
+                        columns: x => new { x.IssueCommentIssueReportId, x.IssueCommentId },
+                        principalTable: "IssueComment",
+                        principalColumns: new[] { "IssueReportId", "Id" },
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -315,7 +401,13 @@ namespace DeskMotion.Migrations
                 name: "DeskMetadata");
 
             migrationBuilder.DropTable(
-                name: "IssueReports");
+                name: "IssueComment_Attachments");
+
+            migrationBuilder.DropTable(
+                name: "IssueEvent");
+
+            migrationBuilder.DropTable(
+                name: "IssueReports_Attachments");
 
             migrationBuilder.DropTable(
                 name: "LastError");
@@ -330,7 +422,13 @@ namespace DeskMotion.Migrations
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
+                name: "IssueComment");
+
+            migrationBuilder.DropTable(
                 name: "Desks");
+
+            migrationBuilder.DropTable(
+                name: "IssueReports");
         }
     }
 }
