@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DeskMotion.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241201174820_Init")]
-    partial class Init
+    [Migration("20241210170816_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -67,6 +67,38 @@ namespace DeskMotion.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("DeskMetadata");
+                });
+
+            modelBuilder.Entity("DeskMotion.Models.IssueReport", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("IssueReports");
                 });
 
             modelBuilder.Entity("DeskMotion.Models.Reservation", b =>
@@ -418,6 +450,138 @@ namespace DeskMotion.Migrations
 
                     b.Navigation("Usage")
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("DeskMotion.Models.IssueReport", b =>
+                {
+                    b.OwnsMany("DeskMotion.Models.IssueComment", "Comments", b1 =>
+                        {
+                            b1.Property<Guid>("IssueReportId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("integer");
+
+                            NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b1.Property<int>("Id"));
+
+                            b1.Property<string>("Author")
+                                .IsRequired()
+                                .HasColumnType("text");
+
+                            b1.Property<string>("Content")
+                                .IsRequired()
+                                .HasColumnType("text");
+
+                            b1.Property<DateTime>("CreatedAt")
+                                .HasColumnType("timestamp with time zone");
+
+                            b1.HasKey("IssueReportId", "Id");
+
+                            b1.ToTable("IssueComment");
+
+                            b1.WithOwner()
+                                .HasForeignKey("IssueReportId");
+
+                            b1.OwnsMany("DeskMotion.Models.IssueAttachment", "Attachments", b2 =>
+                                {
+                                    b2.Property<Guid>("IssueCommentIssueReportId")
+                                        .HasColumnType("uuid");
+
+                                    b2.Property<int>("IssueCommentId")
+                                        .HasColumnType("integer");
+
+                                    b2.Property<int>("Id")
+                                        .ValueGeneratedOnAdd()
+                                        .HasColumnType("integer");
+
+                                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b2.Property<int>("Id"));
+
+                                    b2.Property<byte[]>("Content")
+                                        .IsRequired()
+                                        .HasColumnType("bytea");
+
+                                    b2.Property<string>("FileName")
+                                        .IsRequired()
+                                        .HasColumnType("text");
+
+                                    b2.Property<string>("MimeType")
+                                        .IsRequired()
+                                        .HasColumnType("text");
+
+                                    b2.HasKey("IssueCommentIssueReportId", "IssueCommentId", "Id");
+
+                                    b2.ToTable("IssueComment_Attachments");
+
+                                    b2.WithOwner()
+                                        .HasForeignKey("IssueCommentIssueReportId", "IssueCommentId");
+                                });
+
+                            b1.Navigation("Attachments");
+                        });
+
+                    b.OwnsMany("DeskMotion.Models.IssueEvent", "Events", b1 =>
+                        {
+                            b1.Property<Guid>("IssueReportId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("integer");
+
+                            NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b1.Property<int>("Id"));
+
+                            b1.Property<string>("Description")
+                                .IsRequired()
+                                .HasColumnType("text");
+
+                            b1.Property<DateTime>("Timestamp")
+                                .HasColumnType("timestamp with time zone");
+
+                            b1.HasKey("IssueReportId", "Id");
+
+                            b1.ToTable("IssueEvent");
+
+                            b1.WithOwner()
+                                .HasForeignKey("IssueReportId");
+                        });
+
+                    b.OwnsMany("DeskMotion.Models.IssueAttachment", "Attachments", b1 =>
+                        {
+                            b1.Property<Guid>("IssueReportId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("integer");
+
+                            NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b1.Property<int>("Id"));
+
+                            b1.Property<byte[]>("Content")
+                                .IsRequired()
+                                .HasColumnType("bytea");
+
+                            b1.Property<string>("FileName")
+                                .IsRequired()
+                                .HasColumnType("text");
+
+                            b1.Property<string>("MimeType")
+                                .IsRequired()
+                                .HasColumnType("text");
+
+                            b1.HasKey("IssueReportId", "Id");
+
+                            b1.ToTable("IssueReports_Attachments");
+
+                            b1.WithOwner()
+                                .HasForeignKey("IssueReportId");
+                        });
+
+                    b.Navigation("Attachments");
+
+                    b.Navigation("Comments");
+
+                    b.Navigation("Events");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
