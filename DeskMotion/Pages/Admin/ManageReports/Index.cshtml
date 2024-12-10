@@ -32,8 +32,8 @@
                         <td>@report.Status</td>
                         <td>@report.CreatedAt.ToString("g")</td>
                         <td>
-                            <a asp-page="./Respond/@report.Id" class="btn btn-primary btn-sm">Respond</a>
-                            <a asp-page="./Delete/@report.Id" class="btn btn-danger btn-sm">Delete</a>
+                            <a asp-page="./Respond" asp-route-id="@report.Id" class="btn btn-primary btn-sm">Respond</a>
+                            <a asp-page="./Delete" asp-route-id="@report.Id" class="btn btn-danger btn-sm">Delete</a>
                         </td>
                     </tr>
                 }
