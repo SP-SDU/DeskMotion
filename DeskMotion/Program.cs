@@ -30,11 +30,14 @@ public class Program
 
         var builder = WebApplication.CreateBuilder(args);
 
-        // Add services to the container.
         var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+        var apiBaseUri = builder.Configuration["DeskApi:BaseUri"];
+
+        // Database Configuration
         builder.Services.AddDbContext<ApplicationDbContext>(options =>
             options.UseNpgsql(connectionString));
 
+        // Identity Configuration
         builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
             .AddRoles<Role>()
             .AddEntityFrameworkStores<ApplicationDbContext>();
@@ -46,26 +49,25 @@ public class Program
             options.AccessDeniedPath = "/Account/AccessDenied";
         });
 
-        builder.Services.AddRazorPages()
-            .AddRazorPagesOptions(options =>
-            {
-                options.Conventions.AuthorizeFolder("/");
-                options.Conventions.AllowAnonymousToPage("/Account/Login");
-                options.Conventions.AuthorizeFolder("/Admin", "RequireAdministratorRole");
-            });
+        builder.Services.AddRazorPages(options =>
+        {
+            options.Conventions.AuthorizeFolder("/");
+            options.Conventions.AllowAnonymousToPage("/Account/Login");
+            options.Conventions.AuthorizeFolder("/Admin", "RequireAdministratorRole");
+        });
+
         builder.Services.AddAuthorization(options =>
         {
             options.AddPolicy("RequireAdministratorRole", policy => policy.RequireRole("Administrator"));
         });
 
-        builder.Services.AddRazorPages();
-
-        var apiBaseUri = builder.Configuration["DeskApi:BaseUri"];
-
+        // API Client
         builder.Services.AddHttpClient("DeskApi", client =>
         {
             client.BaseAddress = new Uri(apiBaseUri!);
         });
+
+        // Custom Services
         builder.Services.AddTransient<DeskService>(sp =>
         {
             var httpClient = sp.GetRequiredService<IHttpClientFactory>().CreateClient("DeskApi");
@@ -79,6 +81,7 @@ public class Program
             return new DeskDataUpdater(deskService, sp, logger);
         });
 
+        // Response Compression
         builder.Services.AddResponseCompression(options =>
         {
             options.EnableForHttps = true;
