@@ -18,6 +18,7 @@ using DeskMotion.Services;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using System.IO.Compression;
+using System.Text.Json;
 
 namespace DeskMotion;
 
@@ -62,24 +63,35 @@ public class Program
         });
 
         // API Client
-        builder.Services.AddHttpClient("DeskApi", client =>
+        builder.Services.AddHttpClient("DeskApiClient", client =>
         {
             client.BaseAddress = new Uri(apiBaseUri!);
+            client.DefaultRequestHeaders.Add("Accept", "application/json");
         });
 
-        // Custom Services
-        builder.Services.AddTransient<DeskService>(sp =>
+        var jsonOptions = new JsonSerializerOptions
         {
-            var httpClient = sp.GetRequiredService<IHttpClientFactory>().CreateClient("DeskApi");
-            return new DeskService(httpClient);
+            PropertyNameCaseInsensitive = true,
+        };
+
+        builder.Services.AddScoped<RestRepository<List<string>>>(provider =>
+        {
+            var httpClientFactory = provider.GetRequiredService<IHttpClientFactory>();
+            var httpClient = httpClientFactory.CreateClient("DeskApiClient");
+            return new RestRepository<List<string>>(httpClient, jsonOptions);
         });
 
-        builder.Services.AddHostedService<DeskDataUpdater>(sp =>
+        builder.Services.AddScoped<RestRepository<Desk>>(provider =>
         {
-            var deskService = sp.GetRequiredService<DeskService>();
-            var logger = sp.GetRequiredService<ILogger<DeskDataUpdater>>();
-            return new DeskDataUpdater(deskService, sp, logger);
+            var httpClientFactory = provider.GetRequiredService<IHttpClientFactory>();
+            var httpClient = httpClientFactory.CreateClient("DeskApiClient");
+            return new RestRepository<Desk>(httpClient, jsonOptions);
         });
+
+        builder.Services.AddHostedService<DeskDataUpdater>();
+
+        // Register logging
+        builder.Services.AddLogging();
 
         // Response Compression
         builder.Services.AddResponseCompression(options =>
