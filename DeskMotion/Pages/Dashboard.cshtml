@@ -1,0 +1,99 @@
+@page
+@model DeskMotion.Pages.DashboardModel
+@{
+    ViewData["Title"] = "My Desk Dashboard";
+}
+
+<h1>My Desk Dashboard</h1>
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="card text-white bg-primary mb-3">
+            <div class="card-header">Active Reservations</div>
+            <div class="card-body">
+                <h5 class="card-title">@Model.ActiveReservations</h5>
+                <a href="/Reservations/Create" class="btn btn-light btn-sm mt-2">Reserve a Desk</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-success mb-3">
+            <div class="card-header">Today's Usage</div>
+            <div class="card-body">
+                <h5 class="card-title">@Model.TodayDeskUsageHours.ToString("F1") hours</h5>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-info mb-3">
+            <div class="card-header">Standing Time</div>
+            <div class="card-body">
+                <h5 class="card-title">@Model.AverageStandingTimePercentage.ToString("F1")%</h5>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-warning mb-3">
+            <div class="card-header">Preferred Height</div>
+            <div class="card-body">
+                <h5 class="card-title">@Model.PreferredDeskHeight.ToString("F1") cm</h5>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Daily Usage Pattern</h5>
+                <canvas id="deskUsageByTimeChart"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Standing vs Sitting Time</h5>
+                <canvas id="healthInsightsChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Desk Height Trends</h5>
+                <canvas id="deskHeightOverTimeChart"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Standing Time Trends</h5>
+                <canvas id="standingSittingRatioChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" crossorigin="anonymous"></script>
+    <script>
+        // Helper function to generate charts
+        function generateChart(chartId, chartConfig) {
+            var ctx = document.getElementById(chartId).getContext('2d');
+            ctx.canvas.style.backgroundColor = '#fff';
+            new Chart(ctx, chartConfig);
+        }
+
+        // Generate charts with server-provided configurations
+        generateChart('deskUsageByTimeChart', @Html.Raw(Model.DeskUsageByTimeChartConfig));
+        generateChart('healthInsightsChart', @Html.Raw(Model.HealthInsightsChartConfig));
+        generateChart('deskHeightOverTimeChart', @Html.Raw(Model.DeskHeightOverTimeChartConfig));
+        generateChart('standingSittingRatioChart', @Html.Raw(Model.StandingSittingRatioChartConfig));
+    </script>
+}
