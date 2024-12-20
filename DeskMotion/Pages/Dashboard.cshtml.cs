@@ -69,31 +69,36 @@ public class DashboardModel : PageModel
         {
             var today = DateTime.UtcNow.Date;
             var deskUsageToday = await _context.Desks
-                .Include(d => d.State)
-                .Include(d => d.Usage)
                 .Where(d => userDesks.Contains(d.Id) && d.RecordedAt.Date == today)
                 .ToListAsync();
 
             TodayDeskUsageHours = deskUsageToday.Sum(d => d.Usage?.ActivationsCounter * 10.0 / 60.0 ?? 0);
 
-            var totalPositions = deskUsageToday.Count(d => d.State != null);
-            var standingPositions = deskUsageToday.Count(d => d.State?.Position_mm > 800);
+            var totalPositions = deskUsageToday.Count();
+            var standingPositions = deskUsageToday.Count(d => d.State.Position_mm > 800);
 
             AverageStandingTimePercentage = totalPositions > 0 ? (standingPositions * 100.0 / totalPositions) : 0;
 
-            PreferredDeskHeight = await _context.Desks
-                .Where(d => userDesks.Contains(d.Id) && d.State != null)
-                .Select(d => (double?)d.State.Position_mm / 10.0)
-                .AverageAsync() ?? 0;
+            var deskHeights = await _context.Desks
+                .Where(d => userDesks.Contains(d.Id))
+                .Select(d => new { Height = d.State.Position_mm })
+                .ToListAsync();
 
+            PreferredDeskHeight = deskHeights.Any() 
+                ? deskHeights.Average(d => d.Height / 10.0)
+                : 0;
 
-            var usageByHour = await _context.Desks
-                .Include(d => d.State)
+            var usageData = await _context.Desks
                 .Where(d => userDesks.Contains(d.Id) && d.RecordedAt >= DateTime.UtcNow.AddDays(-7))
-                .GroupBy(d => d.RecordedAt.Hour)
-                .Select(g => new { Hour = g.Key, Count = g.Count() })
-                .OrderBy(x => x.Hour)
-                .ToDictionaryAsync(x => x.Hour.ToString("D2"), x => x.Count);
+                .Select(d => new { d.RecordedAt.Hour })
+                .ToListAsync();
+
+            var usageByHour = usageData
+                .GroupBy(d => d.Hour)
+                .ToDictionary(
+                    g => g.Key.ToString("D2"),
+                    g => g.Count()
+                );
 
             DeskUsageByTimeChartConfig = JsonSerializer.Serialize(GetChartConfig(usageByHour, "bar", "Desk Usage by Hour"));
 
@@ -105,23 +110,37 @@ public class DashboardModel : PageModel
 
             HealthInsightsChartConfig = JsonSerializer.Serialize(GetChartConfig(healthData, "doughnut"));
 
-            var heightOverTime = await _context.Desks
-                .Include(d => d.State)
-                .Where(d => userDesks.Contains(d.Id) && d.State != null && d.RecordedAt >= DateTime.UtcNow.AddDays(-7))
-                .GroupBy(d => d.RecordedAt.Date)
-                .Select(g => new { Date = g.Key, Height = g.Average(d => d.State.Position_mm / 10.0) })
-                .OrderBy(x => x.Date)
-                .ToDictionaryAsync(x => x.Date.ToString("MM/dd"), x => x.Height);
+            var heightData = await _context.Desks
+                .Where(d => userDesks.Contains(d.Id) && d.RecordedAt >= DateTime.UtcNow.AddDays(-7))
+                .Select(d => new { 
+                    Date = d.RecordedAt.Date,
+                    Height = d.State.Position_mm / 10.0
+                })
+                .ToListAsync();
+
+            var heightOverTime = heightData
+                .GroupBy(d => d.Date)
+                .ToDictionary(
+                    g => g.Key.ToString("MM/dd"),
+                    g => g.Average(d => d.Height)
+                );
 
             DeskHeightOverTimeChartConfig = JsonSerializer.Serialize(GetChartConfig(heightOverTime, "line", "Average Desk Height (cm)"));
 
-            var standingSittingRatio = await _context.Desks
-                .Include(d => d.State)
-                .Where(d => userDesks.Contains(d.Id) && d.State != null && d.RecordedAt >= DateTime.UtcNow.AddDays(-7))
-                .GroupBy(d => d.RecordedAt.Date)
-                .Select(g => new { Date = g.Key, StandingRatio = g.Count(d => d.State.Position_mm > 800) * 100.0 / g.Count() })
-                .OrderBy(x => x.Date)
-                .ToDictionaryAsync(x => x.Date.ToString("MM/dd"), x => x.StandingRatio);
+            var standingData = await _context.Desks
+                .Where(d => userDesks.Contains(d.Id) && d.RecordedAt >= DateTime.UtcNow.AddDays(-7))
+                .Select(d => new { 
+                    Date = d.RecordedAt.Date,
+                    IsStanding = d.State.Position_mm > 800
+                })
+                .ToListAsync();
+
+            var standingSittingRatio = standingData
+                .GroupBy(d => d.Date)
+                .ToDictionary(
+                    g => g.Key.ToString("MM/dd"),
+                    g => g.Count(d => d.IsStanding) * 100.0 / g.Count()
+                );
 
             StandingSittingRatioChartConfig = JsonSerializer.Serialize(GetChartConfig(standingSittingRatio, "line", "Standing Time (%)", true));
         }
@@ -152,7 +171,7 @@ public class DashboardModel : PageModel
         };
     }
 
-        private object GetChartConfig(Dictionary<string, double> data, string type, string label = null, bool percentage = false)
+    private object GetChartConfig(Dictionary<string, double> data, string type, string label = null, bool percentage = false)
     {
         return new
         {
