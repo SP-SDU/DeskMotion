@@ -60,8 +60,8 @@ public class DetailsModel(ApplicationDbContext context, RestRepository<int> rest
             .Select(g => new { Date = g.Key, Usage = g.Sum(d => d.Usage.ActivationsCounter) })
             .ToListAsync();
 
-        DailyUsageLabels = usageData.Select(u => u.Date.ToString("MM/dd")).ToList();
-        DailyUsageData = usageData.Select(u => u.Usage).ToList();
+        DailyUsageLabels = usageData.ConvertAll(u => u.Date.ToString("MM/dd"));
+        DailyUsageData = usageData.ConvertAll(u => u.Usage);
 
         var standingData = await context.Desks
             .Where(d => d.MacAddress == DeskMetadata.MacAddress)
