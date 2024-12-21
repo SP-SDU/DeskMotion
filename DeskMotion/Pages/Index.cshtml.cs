@@ -12,21 +12,29 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using DeskMotion.Data;
+using DeskMotion.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 
 namespace DeskMotion.Pages;
 
-public class IndexModel : PageModel
+public class IndexModel(ApplicationDbContext dbContext, UserManager<User> userManager) : PageModel
 {
-    private readonly ILogger<IndexModel> _logger;
+    public List<DeskMetadata> UserDesks { get; set; } = [];
 
-    public IndexModel(ILogger<IndexModel> logger)
+    public async Task OnGetAsync()
     {
-        _logger = logger;
-    }
+        // Get the current logged-in user
+        var user = await userManager.GetUserAsync(User);
 
-    public void OnGet()
-    {
-
+        if (user != null)
+        {
+            // Fetch desks belonging to the user
+            UserDesks = await dbContext.DeskMetadata
+                .Where(d => d.OwnerId == user.Id)
+                .ToListAsync();
+        }
     }
 }

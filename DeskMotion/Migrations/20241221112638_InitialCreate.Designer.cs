@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DeskMotion.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241210170816_InitialCreate")]
+    [Migration("20241221112638_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -60,11 +60,16 @@ namespace DeskMotion.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<Guid?>("OwnerId")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("QRCodeData")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("OwnerId");
 
                     b.ToTable("DeskMetadata");
                 });
@@ -452,6 +457,15 @@ namespace DeskMotion.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("DeskMotion.Models.DeskMetadata", b =>
+                {
+                    b.HasOne("DeskMotion.Models.User", "Owner")
+                        .WithMany("Desks")
+                        .HasForeignKey("OwnerId");
+
+                    b.Navigation("Owner");
+                });
+
             modelBuilder.Entity("DeskMotion.Models.IssueReport", b =>
                 {
                     b.OwnsMany("DeskMotion.Models.IssueComment", "Comments", b1 =>
@@ -633,6 +647,11 @@ namespace DeskMotion.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("DeskMotion.Models.User", b =>
+                {
+                    b.Navigation("Desks");
                 });
 #pragma warning restore 612, 618
         }

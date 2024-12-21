@@ -27,10 +27,12 @@ public class CreateModel(ApplicationDbContext context) : PageModel
     public DeskMetadata DeskMetadata { get; set; } = default!;
 
     public List<SelectListItem> AvailableDesks { get; set; } = [];
+    public List<SelectListItem> AvailableUsers { get; set; } = [];
 
     public async Task<IActionResult> OnGetAsync()
     {
         await LoadAvailableDesksAsync();
+        await LoadAvailableUsersAsync();
         return Page();
     }
 
@@ -39,6 +41,7 @@ public class CreateModel(ApplicationDbContext context) : PageModel
         if (!ModelState.IsValid)
         {
             await LoadAvailableDesksAsync();
+            await LoadAvailableUsersAsync();
             return Page();
         }
 
@@ -51,6 +54,7 @@ public class CreateModel(ApplicationDbContext context) : PageModel
             // Update the existing metadata
             existingMetadata.Location = DeskMetadata.Location;
             existingMetadata.QRCodeData = DeskMetadata.QRCodeData;
+            existingMetadata.OwnerId = DeskMetadata.OwnerId;
         }
         else
         {
@@ -68,6 +72,13 @@ public class CreateModel(ApplicationDbContext context) : PageModel
         AvailableDesks = await context.Desks
             .Select(d => new SelectListItem { Value = d.MacAddress, Text = d.MacAddress })
             .Distinct()
+            .ToListAsync();
+    }
+
+    private async Task LoadAvailableUsersAsync()
+    {
+        AvailableUsers = await context.Users
+            .Select(u => new SelectListItem { Value = u.Id.ToString(), Text = u.Email })
             .ToListAsync();
     }
 }
