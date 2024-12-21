@@ -6,62 +6,95 @@
 
 <h1>Desk Details</h1>
 
-<div>
-    <h4>Desk Metadata</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">Mac Address</dt>
-        <dd class="col-sm-10">@Model.DeskMetadata.MacAddress</dd>
-        <dt class="col-sm-2">Location</dt>
-        <dd class="col-sm-10">@Model.DeskMetadata.Location</dd>
-        <dt class="col-sm-2">QR Code Data</dt>
-        <dd class="col-sm-10">@Model.DeskMetadata.QRCodeData</dd>
-    </dl>
-</div>
-
-<div>
-    <h4>Desk State</h4>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Attribute</th>
-                <th>Value</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>Current Position (mm)</td>
-                <td>@Model.LatestDeskData.State.Position_mm</td>
-            </tr>
-            <tr>
-                <td>Speed (mm/s)</td>
-                <td>@Model.LatestDeskData.State.Speed_mms</td>
-            </tr>
-            <tr>
-                <td>Status</td>
-                <td>@Model.LatestDeskData.State.Status</td>
-            </tr>
-            <tr>
-                <td>Activations Counter</td>
-                <td>@Model.LatestDeskData.Usage.ActivationsCounter</td>
-            </tr>
-            <tr>
-                <td>Sit/Stand Counter</td>
-                <td>@Model.LatestDeskData.Usage.SitStandCounter</td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-
-<div class="mt-4">
-    <h4>Desk Control</h4>
-    <form method="post">
-        <div class="d-flex align-items-center gap-3">
-            <button class="btn btn-primary" name="positionMm" value="1200">Move Up</button>
-            <button class="btn btn-primary" name="positionMm" value="500">Move Down</button>
-            <button class="btn btn-danger" name="positionMm" value="0">Stop</button>
+<div class="row">
+    <div class="col-md-6">
+        <div class="card mb-3">
+            <div class="card-header bg-primary text-white">Desk Metadata</div>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-sm-4">Mac Address</dt>
+                    <dd class="col-sm-8">@Model.DeskMetadata.MacAddress</dd>
+                    <dt class="col-sm-4">Location</dt>
+                    <dd class="col-sm-8">@Model.DeskMetadata.Location</dd>
+                    <dt class="col-sm-4">QR Code Data</dt>
+                    <dd class="col-sm-8">@Model.DeskMetadata.QRCodeData</dd>
+                </dl>
+            </div>
         </div>
-    </form>
+    </div>
+    <div class="col-md-6">
+        <div class="card mb-3">
+            <div class="card-header bg-success text-white">Desk Control</div>
+            <div class="card-body">
+                <form method="post">
+                    <div class="d-flex align-items-center gap-3">
+                        <button class="btn btn-primary" name="positionMm" value="1200">Move Up</button>
+                        <button class="btn btn-primary" name="positionMm" value="500">Move Down</button>
+                        <button class="btn btn-danger" name="positionMm" value="0">Stop</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card mb-3">
+            <div class="card-header bg-info text-white">Desk State</div>
+            <div class="card-body">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Attribute</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Current Position (mm)</td>
+                            <td>@Model.LatestDeskData.State.Position_mm</td>
+                        </tr>
+                        <tr>
+                            <td>Speed (mm/s)</td>
+                            <td>@Model.LatestDeskData.State.Speed_mms</td>
+                        </tr>
+                        <tr>
+                            <td>Status</td>
+                            <td>@Model.LatestDeskData.State.Status</td>
+                        </tr>
+                        <tr>
+                            <td>Activations Counter</td>
+                            <td>@Model.LatestDeskData.Usage.ActivationsCounter</td>
+                        </tr>
+                        <tr>
+                            <td>Sit/Stand Counter</td>
+                            <td>@Model.LatestDeskData.Usage.SitStandCounter</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card mb-3">
+            <div class="card-header bg-warning text-white">Daily Usage Pattern</div>
+            <div class="card-body">
+                <canvas id="deskUsageByTimeChart"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card mb-3">
+            <div class="card-header bg-danger text-white">Standing vs Sitting Time</div>
+            <div class="card-body">
+                <canvas id="healthInsightsChart"></canvas>
+            </div>
+        </div>
+    </div>
 </div>
 
 @if (ModelState.ErrorCount > 0)
@@ -75,3 +108,37 @@
 }
 
 <a asp-page="./Index" class="btn btn-secondary mt-3">Back to List</a>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" crossorigin="anonymous"></script>
+    <script>
+        // Example chart initialization with placeholder data
+        generateChart('deskUsageByTimeChart', {
+            type: 'bar',
+            data: {
+                labels: ['8 AM', '9 AM', '10 AM', '11 AM', '12 PM'],
+                datasets: [{
+                    label: 'Usage by Hour',
+                    data: [3, 7, 5, 8, 6],
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: { responsive: true }
+        });
+
+        generateChart('healthInsightsChart', {
+            type: 'doughnut',
+            data: {
+                labels: ['Standing', 'Sitting'],
+                datasets: [{
+                    label: 'Time Distribution',
+                    data: [65, 35],
+                    backgroundColor: ['#36a2eb', '#ff6384']
+                }]
+            },
+            options: { responsive: true }
+        });
+    </script>
+}
