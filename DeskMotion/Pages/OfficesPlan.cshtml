@@ -1,5 +1,5 @@
 ﻿@page
-@model DeskMotion.Pages.OfficPlanModel
+@model DeskMotion.Pages.OfficesPlanModel
 @{
 	ViewData["Title"] = "Office Plan";
 }
@@ -237,4 +237,53 @@
 			}
 		}
 	}
+
+
+	// Save canvas data to the server///
+	var fgCanvas = new fabric.fgCanvas('foregroundCanvas');
+	var bgCanvas = new fabric.bgCanvas('backgroundCanvas');
+
+	function loadSaveData(){
+		// Load data from the server
+		$.ajax({
+			url: '/api/OfficesPlan',
+			type: 'GET',
+			data: { id: @Model.OfficesPlan.Id },
+			success: function(data) {
+			if (data) {
+				if (data.bgCanvasData) {
+					bgCanvas.loadFromJSON(data.bgCanvasData, function() {
+						bgCanvas.renderAll();
+					});
+				}
+				if (data.fgCanvasData) {
+					fgCanvas.loadFromJSON(data.fgCanvasData, function() {
+						fgCanvas.renderAll();
+					});
+				}
+			}
+			}
+		});
+	}
+
+	function saveCanvasData() {
+		// Save data to the server
+		$.ajax({
+			url: '/api/OfficesPlan',
+			type: 'POST',
+			data: {
+			id: @Model.OfficesPlan.Id,
+			bgCanvasData: JSON.stringify(bgCanvas.toJSON()),
+			fgCanvasData: JSON.stringify(fgCanvas.toJSON())
+			},
+			success: function() {
+			alert('Data saved successfully');
+			}
+		});
+	}
+
+	loadSaveData();
+	document.getElementById('save').addEventListener('click', saveCanvasData);
+
 </script>
+<script src="https://cdn.jsdelivr.net/npm/fabric@latest/dist/index.min.js"></script>
