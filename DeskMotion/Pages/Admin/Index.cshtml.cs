@@ -15,7 +15,6 @@
 using DeskMotion.Data;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using System.Text.Json;
 
 namespace DeskMotion.Pages.Admin;
 
@@ -26,113 +25,51 @@ public class IndexModel(ApplicationDbContext context) : PageModel
     public int TotalUsers { get; set; }
     public double AverageDeskUsageTimeMinutes { get; set; }
 
-    public string DeskUsageByLocationChartConfig { get; private set; } = string.Empty;
-    public string UserActivityChartConfig { get; private set; } = string.Empty;
-    public string HealthInsightsChartConfig { get; private set; } = string.Empty;
-    public string DeskHeightOverTimeChartConfig { get; private set; } = string.Empty;
+    public List<string> DeskUsageByLocationLabels { get; private set; } = [];
+    public List<int> DeskUsageByLocationData { get; private set; } = [];
+    public List<string> UserActivityLabels { get; private set; } = [];
+    public List<int> UserActivityData { get; private set; } = [];
+    public List<string> HealthInsightsLabels { get; private set; } = [];
+    public List<int> HealthInsightsData { get; private set; } = [];
+    public List<string> DeskHeightOverTimeLabels { get; private set; } = [];
+    public List<double> DeskHeightOverTimeData { get; private set; } = [];
 
     public async Task OnGetAsync()
     {
         TotalDesks = await context.Desks.CountAsync();
         TotalMetadata = await context.DeskMetadata.CountAsync();
         TotalUsers = await context.Users.CountAsync();
-
         AverageDeskUsageTimeMinutes = await context.Desks
             .Where(d => d.Usage != null)
-            .AverageAsync(d => d.Usage.ActivationsCounter * 10); // Example: 10 minutes per activation
+            .AverageAsync(d => d.Usage.ActivationsCounter * 10);
 
         var deskUsageByLocation = await context.DeskMetadata
             .GroupBy(dm => dm.Location)
             .ToDictionaryAsync(g => g.Key, g => g.Count());
 
+        DeskUsageByLocationLabels = deskUsageByLocation.Keys.ToList();
+        DeskUsageByLocationData = deskUsageByLocation.Values.ToList();
+
         var userActivity = await context.Users
             .GroupBy(u => u.CreatedAt.Date)
             .ToDictionaryAsync(g => g.Key.ToString("yyyy-MM-dd"), g => g.Count());
+
+        UserActivityLabels = userActivity.Keys.ToList();
+        UserActivityData = userActivity.Values.ToList();
 
         var healthInsights = await context.Desks
             .Where(d => d.State != null)
             .GroupBy(d => d.State.IsPositionLost ? "Unhealthy" : "Healthy")
             .ToDictionaryAsync(g => g.Key, g => g.Count());
 
+        HealthInsightsLabels = healthInsights.Keys.ToList();
+        HealthInsightsData = healthInsights.Values.ToList();
+
         var deskHeightOverTime = await context.Desks
             .GroupBy(d => d.RecordedAt.Date)
-            .ToDictionaryAsync(g => g.Key.ToString("yyyy-MM-dd"), g => g.Average(d => d.State.Position_mm / 10.0)); // Convert mm to cm
+            .ToDictionaryAsync(g => g.Key.ToString("yyyy-MM-dd"), g => g.Average(d => d.State.Position_mm / 10.0));
 
-        DeskUsageByLocationChartConfig = JsonSerializer.Serialize(new
-        {
-            type = "pie",
-            data = new
-            {
-                labels = deskUsageByLocation.Keys,
-                datasets = new[]
-                {
-                    new
-                    {
-                        data = deskUsageByLocation.Values,
-                        backgroundColor = new[] { "#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0" }
-                    }
-                }
-            }
-        });
-
-        UserActivityChartConfig = JsonSerializer.Serialize(new
-        {
-            type = "line",
-            data = new
-            {
-                labels = userActivity.Keys,
-                datasets = new[]
-                {
-                    new
-                    {
-                        label = "User Registrations",
-                        data = userActivity.Values,
-                        backgroundColor = "rgba(75, 192, 192, 0.2)",
-                        borderColor = "rgba(75, 192, 192, 1)",
-                        borderWidth = 1
-                    }
-                }
-            }
-        });
-
-        HealthInsightsChartConfig = JsonSerializer.Serialize(new
-        {
-            type = "bar",
-            data = new
-            {
-                labels = healthInsights.Keys,
-                datasets = new[]
-                {
-                    new
-                    {
-                        label = "Hours in Healthy Range",
-                        data = healthInsights.Values,
-                        backgroundColor = "rgba(54, 162, 235, 0.2)",
-                        borderColor = "rgba(54, 162, 235, 1)",
-                        borderWidth = 1
-                    }
-                }
-            }
-        });
-
-        DeskHeightOverTimeChartConfig = JsonSerializer.Serialize(new
-        {
-            type = "line",
-            data = new
-            {
-                labels = deskHeightOverTime.Keys,
-                datasets = new[]
-                {
-                    new
-                    {
-                        label = "Average Desk Height",
-                        data = deskHeightOverTime.Values,
-                        backgroundColor = "rgba(255, 206, 86, 0.2)",
-                        borderColor = "rgba(255, 206, 86, 1)",
-                        borderWidth = 1
-                    }
-                }
-            }
-        });
+        DeskHeightOverTimeLabels = deskHeightOverTime.Keys.ToList();
+        DeskHeightOverTimeData = deskHeightOverTime.Values.ToList();
     }
 }

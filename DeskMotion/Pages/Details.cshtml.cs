@@ -25,6 +25,10 @@ public class DetailsModel(ApplicationDbContext context, RestRepository<int> rest
 {
     public DeskMetadata DeskMetadata { get; set; } = default!;
     public Desk LatestDeskData { get; set; } = default!;
+    public List<string> DailyUsageLabels { get; set; } = [];
+    public List<int> DailyUsageData { get; set; } = [];
+    public List<string> StandingSittingLabels { get; set; } = ["Standing Time", "Sitting Time"];
+    public List<int> StandingSittingData { get; set; } = [];
 
     public async Task<IActionResult> OnGetAsync(Guid? id)
     {
@@ -49,6 +53,25 @@ public class DetailsModel(ApplicationDbContext context, RestRepository<int> rest
             return NotFound();
         }
         LatestDeskData = latestDeskData;
+
+        var usageData = await context.Desks
+            .Where(d => d.MacAddress == DeskMetadata.MacAddress && d.RecordedAt >= DateTime.UtcNow.AddDays(-7))
+            .GroupBy(d => d.RecordedAt.Date)
+            .Select(g => new { Date = g.Key, Usage = g.Sum(d => d.Usage.ActivationsCounter) })
+            .ToListAsync();
+
+        DailyUsageLabels = usageData.Select(u => u.Date.ToString("MM/dd")).ToList();
+        DailyUsageData = usageData.Select(u => u.Usage).ToList();
+
+        var standingData = await context.Desks
+            .Where(d => d.MacAddress == DeskMetadata.MacAddress)
+            .Select(d => d.State.Position_mm > 800)
+            .ToListAsync();
+
+        var total = standingData.Count;
+        var standing = standingData.Count(s => s);
+
+        StandingSittingData = [standing, total - standing];
 
         return Page();
     }

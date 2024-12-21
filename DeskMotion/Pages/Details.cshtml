@@ -80,20 +80,21 @@
 
 <div class="row">
     <div class="col-md-6">
-        <div class="card mb-3">
-            <div class="card-header bg-warning text-white">Daily Usage Pattern</div>
-            <div class="card-body">
-                <canvas id="deskUsageByTimeChart"></canvas>
-            </div>
-        </div>
+        <h2>Daily Usage Pattern</h2>
+        <canvas id="dailyUsageChart"
+                data-chart-type="line"
+                data-chart-label-text="Daily Desk Usage"
+                data-chart-labels='@Html.Raw(Json.Serialize(Model.DailyUsageLabels))'
+                data-chart-data='@Html.Raw(Json.Serialize(Model.DailyUsageData))'>
+        </canvas>
     </div>
     <div class="col-md-6">
-        <div class="card mb-3">
-            <div class="card-header bg-danger text-white">Standing vs Sitting Time</div>
-            <div class="card-body">
-                <canvas id="healthInsightsChart"></canvas>
-            </div>
-        </div>
+        <h2>Standing vs Sitting Time</h2>
+        <canvas id="standingSittingChart"
+                data-chart-type="pie"
+                data-chart-labels='@Html.Raw(Json.Serialize(Model.StandingSittingLabels))'
+                data-chart-data='@Html.Raw(Json.Serialize(Model.StandingSittingData))'>
+        </canvas>
     </div>
 </div>
 
@@ -110,35 +111,6 @@
 <a asp-page="./Index" class="btn btn-secondary mt-3">Back to List</a>
 
 @section Scripts {
-    <script src="https://cdn.jsdelivr.net/npm/chart.js" crossorigin="anonymous"></script>
-    <script>
-        // Example chart initialization with placeholder data
-        generateChart('deskUsageByTimeChart', {
-            type: 'bar',
-            data: {
-                labels: ['8 AM', '9 AM', '10 AM', '11 AM', '12 PM'],
-                datasets: [{
-                    label: 'Usage by Hour',
-                    data: [3, 7, 5, 8, 6],
-                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                    borderColor: 'rgba(54, 162, 235, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: { responsive: true }
-        });
-
-        generateChart('healthInsightsChart', {
-            type: 'doughnut',
-            data: {
-                labels: ['Standing', 'Sitting'],
-                datasets: [{
-                    label: 'Time Distribution',
-                    data: [65, 35],
-                    backgroundColor: ['#36a2eb', '#ff6384']
-                }]
-            },
-            options: { responsive: true }
-        });
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+    <script src="~/js/graphs.min.js"></script>
 }
