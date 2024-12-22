@@ -9,9 +9,6 @@ on:
   pull_request:
     branches: [ "main" ]
 
-# env:
-#   DOCKERHUB_USERNAME: infamous11
-#   DOCKERHUB_TOKEN: dckr_pat_Zl21COtCCQJnWvwMoHcJuWutG1w
 
 jobs:
   build-and-test:
@@ -53,8 +50,6 @@ jobs:
         with:
           username: infamous11
           password: dckr_pat_Zl21COtCCQJnWvwMoHcJuWutG1w
-          # username: ${{ env.DOCKERHUB_USERNAME }}
-          # password: ${{ env.DOCKERHUB_TOKEN }}
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -69,4 +64,3 @@ jobs:
           dockerfile: Dockerfile
           push: true
           tags: infamous11/deskmotion:latest
-          # tags: ${{ env.DOCKERHUB_USERNAME}}/deskmotion:latest
