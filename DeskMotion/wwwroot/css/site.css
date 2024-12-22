@@ -52,15 +52,53 @@ body {
 }
 
 .table {
-    border: 2px solid #52f700;
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 16px;
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.1);
+  background-color: #979594;
+
 }
 
-    .table th {
-        background-color: #555a7a;
-        color: #52f700;
-    }
+.table td, .table th {
+  padding: 15px;
+  text-align: left;
+  border-bottom: 10px solid #525252 !important;
+}
 
-    .table td {
-        background-color: #555a7a;
-        color: #52f700;
-    }
+
+/* Header styling */
+.table thead th {
+  background-color: #35b93a;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: bold;
+
+}
+
+/* Table row hover effect */
+.table tbody tr:hover {
+  background-color: #7d7a7a;
+  cursor: pointer;
+}
+
+/* Action links */
+a {
+  color: #eaeaea;
+  text-decoration: none;
+  font-weight: bold;
+  margin-right: 15px;
+  display: inline-block;
+  padding: 5px 10px;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  transition: all 0.3s ease;
+}
+
+.EditDelete:hover {
+  background-color: #4CAF50;
+  color: white;
+  border-color: #4CAF50;
+}
