@@ -9,7 +9,34 @@ html {
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #ffffff;
+}
+/* general button styling */
+
+.btn{
+  background-color: #35b93a;
+  border:none;
+  border-radius: 5px;
+  padding: 0px;
+  cursor: pointer;
+  outline-offset: 4px;
+  margin-bottom: 10px;
+
+}
+.btn:hover{
+  background-color: #17aa2b !important;
+}
+.btn:active .button-back{
+  transform: translateY(-4px);
+}
+.button-back{
+  display: block;
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 1.25rem;
+  background: hsl(124, 66%, 36%);
+  color: white;
+  transform: translateY(-8px);
 }
 
 html {
@@ -48,7 +75,7 @@ body {
 }
 
 .action-link {
-    color: #52f700;
+    color: #ffffff;
 }
 
 .table {
@@ -101,4 +128,28 @@ a {
   background-color: #4CAF50;
   color: white;
   border-color: #4CAF50;
+}
+/*forms styling for CRUD operations*/
+
+/* input */
+.form-control{
+  color: #258cfb;
+}
+/* title of input in forms */
+.control-label{
+  color: #ffffff;
+}
+.form-group {
+  display: flex; /* Enable flexbox */
+  align-items: center; /* Align items vertically */
+  gap: 10px; /* Add spacing between items */
+  margin-bottom: 20px; /* Space between form groups */
+}
+
+.row.m-4.content-body{
+  margin: 20px;
+  padding: 30px;
+  border: none !important;
+  background-color: #525252;
+  display: flex;
 }
