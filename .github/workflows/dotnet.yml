@@ -60,6 +60,6 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
-          dockerfile: DeskMotion/Dockerfile
+          dockerfile: DeskMotion\Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME}}/deskmotion:latest
