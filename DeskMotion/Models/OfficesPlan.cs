@@ -18,13 +18,11 @@ namespace DeskMotion.Models;
 
     public class OfficesPlan
     {
-        [JsonIgnore]
         public Guid Id { get; set; } = Guid.NewGuid();
-
-        [JsonIgnore]
         public string FgCanvasData { get; set; } = string.Empty;
+        public string BgCanvasData { get; set; } = string.Empty;
 
         [JsonIgnore]
-        public string BgCanvasData { get; set; } = string.Empty;
-    }
+        public List<DeskMetadata> DeskMetadata { get; set; }
+}
 

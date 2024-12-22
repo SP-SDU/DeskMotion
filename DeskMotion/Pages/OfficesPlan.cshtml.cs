@@ -17,6 +17,7 @@ using DeskMotion.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 
 namespace DeskMotion.Pages;
 
@@ -29,58 +30,61 @@ public class OfficesPlanModel : PageModel
         _context = context;
     }
 
-    public OfficesPlan OfficesPlan { get; set; } = default!;
+    [BindProperty]
+    public OfficesPlan? OfficesPlan { get; set; }
 
-    public async Task<IActionResult> OnGetAsync(Guid? id)
+    public async Task<IActionResult> OnGetAsync()
     {
-        if (id == null)
-        {
-            return NotFound();
-        }
-
-        var officesPlan = await _context.OfficesPlan.FirstOrDefaultAsync(p => p.Id == id);
+        OfficesPlan = await _context.OfficesPlan.FirstOrDefaultAsync();
 
         if (OfficesPlan == null)
         {
-            return NotFound();
-        }
-        else
-        {
-            officesPlan = OfficesPlan;
+            OfficesPlan = new OfficesPlan();
+            _context.OfficesPlan.Add(OfficesPlan);
+            await _context.SaveChangesAsync();
         }
 
         return Page();
     }
 
-    public async Task<IActionResult> OnGetSavedData(Guid? id)
+    // Handler for fetching saved data (called by JavaScript)
+    public async Task<IActionResult> OnGetSavedDataAsync()
     {
-        var officesPlan = await _context.OfficesPlan.FirstOrDefaultAsync(p => p.Id == id);
-        if (officesPlan != null)
+        var plan = await _context.OfficesPlan.FirstOrDefaultAsync();
+        if (plan == null)
         {
-            return new JsonResult(officesPlan);
+            return new JsonResult(new { success = false, message = "No data found" });
         }
-        return new JsonResult(null);
+
+        return new JsonResult(plan);
     }
 
-    public async Task<IActionResult> OnPostSaveData(Guid? id, string bgCanvasData, string fgCanvasData)
+    // Handler for saving data (called by JavaScript)
+    public async Task<IActionResult> OnPostSaveDataAsync([FromBody] OfficesPlan planData)
     {
-
-        var existingPlan = await _context.OfficesPlan.FirstOrDefaultAsync(p => p.Id == id);
-        if (existingPlan == null)
+        if (planData == null || string.IsNullOrEmpty(planData.FgCanvasData) || string.IsNullOrEmpty(planData.BgCanvasData))
         {
-            existingPlan = new OfficesPlan
-            {
-                FgCanvasData = fgCanvasData,
-                BgCanvasData = bgCanvasData
-            };
-            _context.OfficesPlan.Add(existingPlan);
+            return BadRequest(new { success = false, message = "Invalid or missing data." });
         }
 
-            OfficesPlan.BgCanvasData = bgCanvasData;
-            OfficesPlan.FgCanvasData = fgCanvasData;
-            await _context.SaveChangesAsync();
+        var existingPlan = await _context.OfficesPlan.FirstOrDefaultAsync();
+        if (existingPlan != null)
+        {
+            existingPlan.BgCanvasData = planData.BgCanvasData;
+            existingPlan.FgCanvasData = planData.FgCanvasData;
+        }
+        else
+        {
+            var newPlan = new OfficesPlan
+            {
+                BgCanvasData = planData.BgCanvasData,
+                FgCanvasData = planData.FgCanvasData
+            };
+            _context.OfficesPlan.Add(newPlan);
+        }
+
+        await _context.SaveChangesAsync();
 
         return new JsonResult(new { success = true });
     }
 }
-
