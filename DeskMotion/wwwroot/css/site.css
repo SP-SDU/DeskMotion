@@ -22,7 +22,6 @@ html {
   cursor: pointer;
   outline-offset: 4px;
   margin-bottom: 10px;
-
 }
 .btn:hover{
   background-color: #17aa2b !important;
@@ -47,6 +46,7 @@ html {
 
 body {
   margin-bottom: 60px;
+  background-color: #525252;
 }
 
 .nav-custom {
