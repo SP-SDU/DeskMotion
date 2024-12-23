@@ -73,6 +73,24 @@ body {
 .nav-link-custom {
     color: #000 !important;
 }
+.nav-pills .nav-link.active {
+  background-color: #1f9827 !important; 
+}
+.nav-pills .nav-link
+{
+  color: #ffffff !important;
+  border: 1px solid rgb(104, 104, 104);
+  border-radius: 5px;
+  background-color: transparent;
+}
+.bg-primary-subtle 
+{
+  background-color: #115d16 !important;
+}
+.nav-pills .nav-link:hover 
+{
+  background-color: #525252; /* Add a light hover background */
+}
 
 .action-link {
     color: #ffffff;
