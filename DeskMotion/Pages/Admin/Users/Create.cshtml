@@ -8,31 +8,33 @@
 <h1>Create User</h1>
 
 <div class="row container">
-    <div class="col-md-4">
+    <div class="details-container">
         <form method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
             <div class="form-group">
-                <label asp-for="IdentityUser!.Email" class="control-label">Email</label>
-                <input asp-for="IdentityUser!.Email" class="form-control" />
+                <label asp-for="IdentityUser!.Email" class="details-title">Email</label>
+                <input asp-for="IdentityUser!.Email" class="details-input" />
                 <span asp-validation-for="IdentityUser!.Email" class="text-danger"></span>
             </div>
 
             <div class="form-group">
-                <label asp-for="Password" class="control-label">Password</label>
-                <input asp-for="Password" class="form-control" type="password" />
+                <label asp-for="Password" class="details-title">Password</label>
+                <input asp-for="Password" class="details-input" type="password" />
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
 
             <div class="form-group">
-                <label asp-for="SelectedRole" class="control-label">Role</label>
-                <select asp-for="SelectedRole" class="form-control" asp-items="Model.Roles"></select>
+                <label asp-for="SelectedRole" class="details-title">Role</label>
+                <select asp-for="SelectedRole" class="details-input" asp-items="Model.Roles"></select>
                 <span asp-validation-for="SelectedRole" class="text-danger"></span>
             </div>
 
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary action-link" />
-                <a asp-page="Index" class="btn action-link">Back to List</a>
+                <button type="submit" class="btn btn-primary action-link"><span
+                        class="button-back">Create</span></button>
+                <a asp-page="Index" class="btn btn-primary action-link"><span class="button-back">Back to
+                        List</span></a>
             </div>
         </form>
     </div>
