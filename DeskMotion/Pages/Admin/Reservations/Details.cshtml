@@ -8,36 +8,48 @@
 <h1>Details</h1>
 
 <div>
-    <h4>Reservation</h4>
+    <h4>See Reservation</h4>
     <hr />
     <dl class="row">
-        <dt class="col-sm-2">
+        <dt class="details-title">
             User
         </dt>
-        <dd class="col-sm-10">
+        <dd class="details-input">
             @Model.UserName
         </dd>
-        <dt class="col-sm-2">
+        <dt class="details-title">
             Desk MAC Address
         </dt>
-        <dd class="col-sm-10">
+        <dd class="details-input">
             @Model.DeskMacAddress
         </dd>
-        <dt class="col-sm-2">
+        <dt class="details-title">
             Start Time
         </dt>
-        <dd class="col-sm-10">
+        <dd class="details-input">
             @Model.Reservation.StartTime.ToLocalTime().ToString("yyyy-MM-dd HH:mm")
         </dd>
-        <dt class="col-sm-2">
+        <dt class="details-title">
             End Time
         </dt>
-        <dd class="col-sm-10">
+        <dd class="details-input">
             @Model.Reservation.EndTime.ToLocalTime().ToString("yyyy-MM-dd HH:mm")
         </dd>
     </dl>
 </div>
 <div>
-    <a asp-page="./Edit" asp-route-id="@Model.Reservation.Id" class="action-link">Edit</a> |
-    <a asp-page="./Index" class="action-link">Back to List</a>
+    <a asp-page="./Edit" asp-route-id="@Model.Reservation.Id" class="btn action-link"><span class="button-back">Edit</span></a> 
+    <a asp-page="Index" class="btn btn-primary action-link"><span class="button-back">Back to List</span></a>
 </div>
+
+<style>
+    .btn{
+    width: 150px;
+    margin-right: 20px;
+
+    }
+    .button-back{
+    width: 150px;
+    margin-right: 20px;
+    }
+</style>
