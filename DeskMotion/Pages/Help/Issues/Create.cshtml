@@ -10,24 +10,36 @@
 
     <form method="post" enctype="multipart/form-data">
         <!-- Title -->
-        <div class="form-group mb-3">
-            <label for="Title" class="form-label">Title</label>
-            <input type="text" class="form-control" id="Title" name="IssueReport.Title" required />
+        <div class="form-group">
+            <label for="Title" class="details-title">Title</label>
+            <input type="text" class="details-input" id="Title" name="IssueReport.Title" required />
         </div>
 
         <!-- Description -->
         <div class="form-group mb-3">
-            <label for="Description" class="form-label">Description</label>
-            <textarea class="form-control" id="Description" name="IssueReport.Description" rows="5" required></textarea>
+            <label for="Description" class="details-title">Description</label>
+            <textarea class="details-input" id="Description" name="IssueReport.Description" rows="5" required></textarea>
         </div>
 
         <!-- Attachments -->
         <div class="form-group mb-3">
-            <label for="Attachments" class="form-label">Attachments (optional)</label>
-            <input type="file" id="Attachments" name="attachments" multiple class="form-control" />
+            <label for="Attachments" class="details-title">Attachments (optional)</label>
+            <input type="file" id="Attachments" name="attachments" multiple class="details-input" />
         </div>
 
         <!-- Submit -->
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-primary"><span class="button-back">Submit</span></button>
     </form>
 </div>
+
+<style>
+    .form-group{
+        display: flex; 
+  flex-direction: column; /* Stack children vertically */
+  align-items: stretch;
+    }
+    .details-title{
+        align-self: flex-start;
+        width: 50%;
+    }
+</style>

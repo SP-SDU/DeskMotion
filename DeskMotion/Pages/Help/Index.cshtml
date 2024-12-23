@@ -15,7 +15,7 @@
     <!-- Search Bar -->
     <div class="row my-4">
         <div class="col-12 col-md-8 offset-md-2">
-            <form method="get" class="input-group">
+            <form method="get" class="searchbar">
                 <input type="text" name="search" class="form-control" placeholder="Search FAQs..."
                     value="@Model.SearchQuery" />
                 <button type="submit" class="btn btn-primary"><span class="button-back">Search</span></button>
@@ -71,12 +71,20 @@
     .btn{
     width: 180px;
     margin-right: 20px;
-    
-
     }
     .button-back{
     width: 180px;
     margin-right: 20px;
-    padding: 5px;
+    padding: 10px;
+    transform: translateY(-4px);
+    
+    }
+    .form-control{
+        margin-right: 10px !important;
+        width: 60%;
+    }
+    .searchbar{
+        display: flex;
+        gap: 20px;
     }
 </style>
