@@ -64,7 +64,7 @@ public class IndexModel(ApplicationDbContext context) : PageModel
             data = new
             {
                 labels = deskUsageByLocation.Keys,
-                datasets = new[]
+                datasets = new[] 
                 {
                     new
                     {
@@ -81,7 +81,7 @@ public class IndexModel(ApplicationDbContext context) : PageModel
             data = new
             {
                 labels = userActivity.Keys,
-                datasets = new[]
+                datasets = new[] 
                 {
                     new
                     {
@@ -90,6 +90,45 @@ public class IndexModel(ApplicationDbContext context) : PageModel
                         backgroundColor = "rgba(75, 192, 192, 0.2)",
                         borderColor = "rgba(75, 192, 192, 1)",
                         borderWidth = 1
+                    }
+                }
+            },
+            options = new
+            {
+                responsive = true,
+                plugins = new
+                {
+                    legend = new
+                    {
+                        labels = new
+                        {
+                            color = "#FFFFFF"
+                        }
+                    }
+                },
+                scales = new
+                {
+                    x = new
+                    {
+                        ticks = new
+                        {
+                            color = "#FFFFFF"
+                        },
+                        grid = new
+                        {
+                            color = "#888888"  // Change the grid line color (example: light gray)
+                        }
+                    },
+                    y = new
+                    {
+                        ticks = new
+                        {
+                            color = "#FFFFFF"
+                        },
+                        grid = new
+                        {
+                            color = "#888888"  // Change the grid line color (example: light gray)
+                        }
                     }
                 }
             }
@@ -101,7 +140,7 @@ public class IndexModel(ApplicationDbContext context) : PageModel
             data = new
             {
                 labels = healthInsights.Keys,
-                datasets = new[]
+                datasets = new[] 
                 {
                     new
                     {
@@ -110,6 +149,45 @@ public class IndexModel(ApplicationDbContext context) : PageModel
                         backgroundColor = "rgba(54, 162, 235, 0.2)",
                         borderColor = "rgba(54, 162, 235, 1)",
                         borderWidth = 1
+                    }
+                }
+            },
+            options = new
+            {
+                responsive = true,
+                plugins = new
+                {
+                    legend = new
+                    {
+                        labels = new
+                        {
+                            color = "#FFFFFF"
+                        }
+                    }
+                },
+                scales = new
+                {
+                    x = new
+                    {
+                        ticks = new
+                        {
+                            color = "#FFFFFF"
+                        },
+                        grid = new
+                        {
+                            color = "#888888"  // Change the grid line color (example: light gray)
+                        }
+                    },
+                    y = new
+                    {
+                        ticks = new
+                        {
+                            color = "#FFFFFF"
+                        },
+                        grid = new
+                        {
+                            color = "#888888"  // Change the grid line color (example: light gray)
+                        }
                     }
                 }
             }
@@ -121,7 +199,7 @@ public class IndexModel(ApplicationDbContext context) : PageModel
             data = new
             {
                 labels = deskHeightOverTime.Keys,
-                datasets = new[]
+                datasets = new[] 
                 {
                     new
                     {
@@ -132,7 +210,47 @@ public class IndexModel(ApplicationDbContext context) : PageModel
                         borderWidth = 1
                     }
                 }
+            },
+            options = new
+            {
+                responsive = true,
+                plugins = new
+                {
+                    legend = new
+                    {
+                        labels = new
+                        {
+                            color = "#FFFFFF"
+                        }
+                    }
+                },
+                scales = new
+                {
+                    x = new
+                    {
+                        ticks = new
+                        {
+                            color = "#FFFFFF"
+                        },
+                        grid = new
+                        {
+                            color = "#888888"  // Change the grid line color (example: light gray)
+                        }
+                    },
+                    y = new
+                    {
+                        ticks = new
+                        {
+                            color = "#FFFFFF"
+                        },
+                        grid = new
+                        {
+                            color = "#888888"  // Change the grid line color (example: light gray)
+                        }
+                    }
+                }
             }
         });
+
     }
 }
