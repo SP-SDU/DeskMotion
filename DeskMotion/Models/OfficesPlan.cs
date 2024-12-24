@@ -23,6 +23,5 @@ namespace DeskMotion.Models;
         public string BgCanvasData { get; set; } = string.Empty;
 
         [JsonIgnore]
-        public List<DeskMetadata> DeskMetadata { get; set; }
+        public List<DeskMetadata> DeskMetadata { get; set; } = default!;
 }
-

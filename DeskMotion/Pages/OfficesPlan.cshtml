@@ -207,16 +207,22 @@
 	}
 
 	// Save and load data
+
 	function saveCanvasData() {
 		const bgCanvasData = bgCanvas.toDataURL();
 		const fgCanvasData = JSON.stringify(objects);
 
+		console.log('Saving canvas data...');
+		console.log('Background Canvas Data:', bgCanvasData);
+		console.log('Foreground Canvas Data:', fgCanvasData);
+
 		fetch('/OfficesPlan?handler=SaveData', {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ BgCanvasData: bgCanvas.toDataURL(), FgCanvasData: JSON.stringify(objects) })
+			body: JSON.stringify({ BgCanvasData: bgCanvasData, FgCanvasData: fgCanvasData })
 		})
 			.then(response => {
+				console.log('Response received:', response);
 				if (!response.ok) {
 					throw new Error(`HTTP error! status: ${response.status}`);
 				}
@@ -232,22 +238,33 @@
 			});
 	}
 
-	function loadSaveData() {
-		fetch('/OfficesPlan?handler=SavedData')
-			.then(response => response.json())
-			.then(data => {
-				if (data.BgCanvasData) {
-					const img = new Image();
-					img.onload = () => bgCtx.drawImage(img, 0, 0);
-					img.src = data.BgCanvasData;
-				}
-				if (data.FgCanvasData) {
-					objects = JSON.parse(data.FgCanvasData);
-					redrawCanvas();
-				}
-			})
-			.catch(console.error);
-	}
+	document.getElementById('save').addEventListener('click', saveCanvasData);
+ 
+
+    function loadSaveData() {
+					fetch('/OfficesPlan?handler=SavedData')
+						.then(response => {
+							if (!response.ok) {
+								throw new Error(`HTTP error! status: ${response.status}`);
+							}
+							return response.json();
+						})
+						.then(data => {
+							if (data.BgCanvasData) {
+								const img = new Image();
+								img.onload = () => bgCtx.drawImage(img, 0, 0);
+								img.src = data.BgCanvasData;
+							}
+							if (data.FgCanvasData) {
+								objects = JSON.parse(data.FgCanvasData);
+								redrawCanvas();
+							}
+						})
+						.catch(error => {
+							console.error('Error:', error);
+							alert('An error occurred while loading data.');
+						});
+    }
 
 	document.getElementById('save').addEventListener('click', saveCanvasData);
 </script>

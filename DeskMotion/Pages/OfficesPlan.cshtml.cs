@@ -60,7 +60,7 @@ public class OfficesPlanModel : PageModel
     }
 
     // Handler for saving data (called by JavaScript)
-    public async Task<IActionResult> OnPostSaveDataAsync([FromBody] OfficesPlan planData)
+    public async Task<IActionResult> OnPostSaveDataAsync([FromBody] OfficesPlanDto planData)
     {
         if (planData == null || string.IsNullOrEmpty(planData.FgCanvasData) || string.IsNullOrEmpty(planData.BgCanvasData))
         {
@@ -87,4 +87,9 @@ public class OfficesPlanModel : PageModel
 
         return new JsonResult(new { success = true });
     }
+}
+public class OfficesPlanDto
+{
+    public string BgCanvasData { get; set; } = string.Empty;
+    public string FgCanvasData { get; set; } = string.Empty;
 }
