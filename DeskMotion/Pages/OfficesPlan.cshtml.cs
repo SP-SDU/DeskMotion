@@ -31,65 +31,49 @@ public class OfficesPlanModel : PageModel
     }
 
     [BindProperty]
-    public OfficesPlan? OfficesPlan { get; set; }
+    public OfficesPlan OfficesPlan { get; set; } = new OfficesPlan();
 
     public async Task<IActionResult> OnGetAsync()
     {
-        OfficesPlan = await _context.OfficesPlan.FirstOrDefaultAsync();
-
-        if (OfficesPlan == null)
+        var existingPlan = await _context.OfficesPlan.FirstOrDefaultAsync();
+        if (existingPlan != null)
         {
-            OfficesPlan = new OfficesPlan();
-            _context.OfficesPlan.Add(OfficesPlan);
-            await _context.SaveChangesAsync();
+            OfficesPlan = existingPlan;
         }
-
         return Page();
     }
 
-    // Handler for fetching saved data (called by JavaScript)
-    public async Task<IActionResult> OnGetSavedDataAsync()
+    public async Task<IActionResult> OnPostAsync()
     {
-        var plan = await _context.OfficesPlan.FirstOrDefaultAsync();
-        if (plan == null)
+        if (string.IsNullOrEmpty(OfficesPlan.BgCanvasData) || string.IsNullOrEmpty(OfficesPlan.FgCanvasData))
         {
-            return new JsonResult(new { success = false, message = "No data found" });
+            ModelState.AddModelError("", "Canvas data cannot be empty.");
+            return Page();
         }
 
-        return new JsonResult(plan);
-    }
-
-    // Handler for saving data (called by JavaScript)
-    public async Task<IActionResult> OnPostSaveDataAsync([FromBody] OfficesPlanDto planData)
-    {
-        if (planData == null || string.IsNullOrEmpty(planData.FgCanvasData) || string.IsNullOrEmpty(planData.BgCanvasData))
+        try
         {
-            return BadRequest(new { success = false, message = "Invalid or missing data." });
+            // Validate JSON
+            JsonDocument.Parse(OfficesPlan.FgCanvasData);
+        }
+        catch (JsonException)
+        {
+            ModelState.AddModelError("", "Invalid JSON format in FgCanvasData.");
+            return Page();
         }
 
         var existingPlan = await _context.OfficesPlan.FirstOrDefaultAsync();
         if (existingPlan != null)
         {
-            existingPlan.BgCanvasData = planData.BgCanvasData;
-            existingPlan.FgCanvasData = planData.FgCanvasData;
+            existingPlan.BgCanvasData = OfficesPlan.BgCanvasData;
+            existingPlan.FgCanvasData = OfficesPlan.FgCanvasData;
         }
         else
         {
-            var newPlan = new OfficesPlan
-            {
-                BgCanvasData = planData.BgCanvasData,
-                FgCanvasData = planData.FgCanvasData
-            };
-            _context.OfficesPlan.Add(newPlan);
+            _context.OfficesPlan.Add(OfficesPlan);
         }
 
         await _context.SaveChangesAsync();
-
-        return new JsonResult(new { success = true });
+        return Page();
     }
-}
-public class OfficesPlanDto
-{
-    public string BgCanvasData { get; set; } = string.Empty;
-    public string FgCanvasData { get; set; } = string.Empty;
 }

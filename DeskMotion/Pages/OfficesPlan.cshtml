@@ -59,12 +59,9 @@
 			}
 
 		@@media (max-width: 500px) {
-			#container
-
-		{
-			flex-direction: column;
-		}
-
+			#container {
+				flex-direction: column;
+			}
 		}
 	</style>
 </head>
@@ -76,8 +73,12 @@
 	</div>
 	<div id="iconBar">
 		<img id="deskIcon" src="images/PET.svg" draggable="true">
+		<form id="saveForm" method="post" asp-page-handler="SaveData">
+			<input type="hidden" id="BgCanvasDataInput" name="OfficesPlan.BgCanvasData" />
+			<input type="hidden" id="FgCanvasDataInput" name="OfficesPlan.FgCanvasData" />
+			<button type="submit" class="btn btn-danger">Save</button>
+		</form>
 		<button class="btn btn-danger" id="removeAllImg">Remove All</button>
-		<button class="btn btn-danger" id="save">Save</button>
 	</div>
 </div>
 
@@ -194,77 +195,53 @@
 	function redrawCanvas() {
 		fgCtx.clearRect(0, 0, fgCanvas.width, fgCanvas.height);
 		objects.forEach(obj => {
-			fgCtx.save();
-			fgCtx.translate(obj.x + obj.width / 2, obj.y + obj.height / 2);
-			fgCtx.rotate((obj.angle || 0) * Math.PI / 180);
-			fgCtx.drawImage(obj.img, -obj.width / 2, -obj.height / 2, obj.width, obj.height);
-			fgCtx.restore();
-			if (obj.name) {
-				fgCtx.fillStyle = 'black';
-				fgCtx.fillText(obj.name, obj.x, obj.y + obj.height + 10);
-			}
+			const img = new Image(); // Create a new Image object
+			img.onload = () => {
+				fgCtx.save();
+				fgCtx.translate(obj.x + obj.width / 2, obj.y + obj.height / 2);
+				fgCtx.rotate((obj.angle || 0) * Math.PI / 180);
+				fgCtx.drawImage(img, -obj.width / 2, -obj.height / 2, obj.width, obj.height);
+				fgCtx.restore();
+
+				if (obj.name) {
+					fgCtx.fillStyle = 'black';
+					fgCtx.fillText(obj.name, obj.x, obj.y + obj.height + 10);
+				}
+			};
+			img.src = obj.img; // Assign the stored image source to the Image object
 		});
 	}
 
-	// Save and load data
-
-	function saveCanvasData() {
+	// Update hidden inputs on form submit
+	document.getElementById('saveForm').addEventListener('submit', (event) => {
 		const bgCanvasData = bgCanvas.toDataURL();
 		const fgCanvasData = JSON.stringify(objects);
 
-		console.log('Saving canvas data...');
-		console.log('Background Canvas Data:', bgCanvasData);
-		console.log('Foreground Canvas Data:', fgCanvasData);
+		document.getElementById('BgCanvasDataInput').value = bgCanvasData;
+		document.getElementById('FgCanvasDataInput').value = fgCanvasData;
 
-		fetch('/OfficesPlan?handler=SaveData', {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ BgCanvasData: bgCanvasData, FgCanvasData: fgCanvasData })
-		})
-			.then(response => {
-				console.log('Response received:', response);
-				if (!response.ok) {
-					throw new Error(`HTTP error! status: ${response.status}`);
-				}
-				return response.json();
-			})
-			.then(data => {
-				console.log('Success:', data);
-				alert(data.success ? 'Data saved successfully!' : 'Save failed!');
-			})
-			.catch(error => {
-				console.error('Error:', error);
-				alert('An error occurred while saving data.');
-			});
-	}
+		console.log('Form Submitted with data:', { BgCanvasData: bgCanvasData, FgCanvasData: fgCanvasData });
+	});
 
-	document.getElementById('save').addEventListener('click', saveCanvasData);
- 
+	window.onload = function () {
+		const bgCanvasData = '@Html.Raw(Model.OfficesPlan?.BgCanvasData ?? "null")';
+		const fgCanvasData = '@Html.Raw(Model.OfficesPlan?.FgCanvasData ?? "null")';
 
-    function loadSaveData() {
-					fetch('/OfficesPlan?handler=SavedData')
-						.then(response => {
-							if (!response.ok) {
-								throw new Error(`HTTP error! status: ${response.status}`);
-							}
-							return response.json();
-						})
-						.then(data => {
-							if (data.BgCanvasData) {
-								const img = new Image();
-								img.onload = () => bgCtx.drawImage(img, 0, 0);
-								img.src = data.BgCanvasData;
-							}
-							if (data.FgCanvasData) {
-								objects = JSON.parse(data.FgCanvasData);
-								redrawCanvas();
-							}
-						})
-						.catch(error => {
-							console.error('Error:', error);
-							alert('An error occurred while loading data.');
-						});
-    }
+		// Load background canvas
+		if (bgCanvasData && bgCanvasData !== "null") {
+			const img = new Image();
+			img.onload = () => bgCtx.drawImage(img, 0, 0);
+			img.src = bgCanvasData;
+		}
 
-	document.getElementById('save').addEventListener('click', saveCanvasData);
+		// Load foreground canvas
+		if (fgCanvasData && fgCanvasData !== "null") {
+			try {
+				objects = JSON.parse(fgCanvasData);
+				redrawCanvas();
+			} catch (error) {
+				console.error("Error parsing FgCanvasData:", error);
+			}
+		}
+	};
 </script>
