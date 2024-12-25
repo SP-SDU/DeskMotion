@@ -9,8 +9,9 @@ html {
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #ffffff;
+  box-shadow: 0 0 0 0rem white, 0 0 0 0rem #ffffff;
 }
+  
 /* general button styling */
 
 .btn{
@@ -21,7 +22,6 @@ html {
   cursor: pointer;
   outline-offset: 4px;
   margin-bottom: 10px;
-
 }
 .btn:hover{
   background-color: #17aa2b !important;
@@ -46,6 +46,7 @@ html {
 
 body {
   margin-bottom: 60px;
+  background-color: #525252;
 }
 
 .nav-custom {
@@ -101,7 +102,6 @@ body {
 .table {
   width: 100%;
   border-collapse: collapse;
-  margin: 20px 0;
   font-size: 16px;
   box-shadow: 0 0 40px rgba(0, 0, 0, 0.1);
   background-color: #979594;
@@ -153,26 +153,41 @@ a {
 
 /* input */
 .form-control{
-  color: #258cfb;
+  background-color: #262626;
+  color: #ffffff;
+  margin-bottom: 20px;
+  border-color: #e2e2e2;
+  padding: 10px;
+  margin-right: 200px;
 }
 /* title of input in forms */
 .control-label{
+  background-color: #7d7a7a;
   color: #ffffff;
+  margin-bottom: 20px;
+  padding: 10px;
+  margin-right: 20px;
+  border-color:#262626;
 }
 .form-group {
   display: flex; /* Enable flexbox */
   align-items: center; /* Align items vertically */
   gap: 10px; /* Add spacing between items */
-  margin-bottom: 20px; /* Space between form groups */
+  margin-bottom: 30px; /* Space between form groups */
+}
+.row{
+  margin-bottom: 30px;
+
 }
 
-.row.m-4.content-body{
+.row.m-4{
   margin: 20px;
   padding: 30px;
   border: none !important;
   background-color: #525252;
   display: flex;
 }
+
 #deskUsageByLocationChart 
 {
   background-color: rgb(82 82 82)!important;
@@ -228,5 +243,50 @@ a {
 }
 .admin-link:hover {
   background-color: #2d9b2a; 
+}
+
+
+
+.col-md-4 {
+  margin-bottom: 30px;
+  width: 80%; /*changred something here*/
+}
+.details-container{
+  width: 70%;
+}
+.details-title{
+  width: 40%;
+  background-color: #7d7a7a;
+  color: #ffffff;
+  margin-bottom: 5px;
+  padding: 10px;
+  margin-right: 20px;
+  border-color:#262626;
+}
+.details-input{
+  width: 50%;
+  background-color: #262626;
+  color: #ffffff;
+  margin-bottom: 5px;
+  border-color: #e2e2e2;
+  padding: 10px;
+}
+input {
+  color: white;
+}
+input::placeholder {
+  color: white; /* Placeholder text color */
+}
+
+h1{
+  margin-bottom: 20px;
+  color: #35b93a;
+}
+h2, h3, h4{
+  margin-bottom: 10px !important;
+  color: white;
+}
+p{
+  margin-top: 10px;
 }
 

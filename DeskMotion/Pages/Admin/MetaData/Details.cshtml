@@ -7,31 +7,42 @@
 
 <h1>Details</h1>
 
-<div>
-    <h4>DeskMetadata</h4>
+<div class="details-container">
     <hr />
     <dl class="row">
-        <dt class="col-sm-2">
+        <dt class="details-title">
             @Html.DisplayNameFor(model => model.DeskMetadata.MacAddress)
         </dt>
-        <dd class="col-sm-10">
+        <dd class="details-input">
             @Html.DisplayFor(model => model.DeskMetadata.MacAddress)
         </dd>
-        <dt class="col-sm-2">
+        <dt class="details-title">
             @Html.DisplayNameFor(model => model.DeskMetadata.Location)
         </dt>
-        <dd class="col-sm-10">
+        <dd class="details-input">
             @Html.DisplayFor(model => model.DeskMetadata.Location)
         </dd>
-        <dt class="col-sm-2">
+        <dt class="details-title">
             @Html.DisplayNameFor(model => model.DeskMetadata.QRCodeData)
         </dt>
-        <dd class="col-sm-10">
+        <dd class="details-input">
             @Html.DisplayFor(model => model.DeskMetadata.QRCodeData)
         </dd>
     </dl>
 </div>
 <div>
-    <a asp-page="./Edit" asp-route-id="@Model.DeskMetadata.Id" class="action-link">Edit</a> |
-    <a asp-page="./Index" class="action-link">Back to List</a>
+    <a asp-page="./Edit" asp-route-id="@Model.DeskMetadata.Id" class="btn action-link"><span class="button-back">  Edit  </span></a> 
+    <a asp-page="Index" class="btn btn-primary action-link"><span class="button-back">Back to List</span></a>
 </div>
+
+<style>
+    .btn{
+    width: 150px;
+    margin-right: 20px;
+
+    }
+    .button-back{
+    width: 150px;
+    margin-right: 20px;
+    }
+</style>

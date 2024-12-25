@@ -6,7 +6,7 @@
 }
 
 <section class="container-fluid d-flex justify-content-center align-items-center" style="height: 75vh;">
-    <div class="card rounded-4 shadow p-5" style="max-width: 400px;">
+    <div class="container-login" style="max-width: 400px;">
         <h2 class="fw-bold text-uppercase text-center">Login</h2>
         <p class="text-center">Please enter your login and password!</p>
 
@@ -14,14 +14,14 @@
             <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
             <div class="form-floating mb-3">
-                <input asp-for="Input.Email" class="form-control form-control-lg" placeholder="name@example.com" autocomplete="username" aria-required="true" />
-                <label asp-for="Input.Email">Email</label>
+                <input asp-for="Input.Email" class="details-input" placeholder="name@example.com" autocomplete="username" aria-required="true" />
+                
                 <span asp-validation-for="Input.Email" class="text-danger"></span>
             </div>
 
             <div class="form-floating mb-3">
-                <input asp-for="Input.Password" type="password" class="form-control form-control-lg" placeholder="password" autocomplete="current-password" aria-required="true" />
-                <label asp-for="Input.Password">Password</label>
+                <input asp-for="Input.Password" type="password" class="details-input" placeholder="password" autocomplete="current-password" aria-required="true" />
+                
                 <span asp-validation-for="Input.Password" class="text-danger"></span>
             </div>
 
@@ -44,3 +44,22 @@
         </div>
     </div>
 </section>
+
+<style>
+    .container-login{
+        background-color: #646363;
+        color: #ffffff;
+        padding: 20px;
+        border-radius: 5px;
+        width: 35%;
+    }
+    .details-input{
+        display: flex !important;
+        justify-content: center !important;
+        width: 100%;
+    }
+    .details-input::placeholder{
+        opacity: 0.7;
+        color: #277f2a;
+    }
+</style>
