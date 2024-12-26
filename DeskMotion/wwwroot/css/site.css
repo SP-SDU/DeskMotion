@@ -158,7 +158,11 @@ a {
   margin-bottom: 20px;
   border-color: #e2e2e2;
   padding: 10px;
-  margin-right: 200px;
+}
+.checkmark {
+  display: flex;
+  align-items: center;
+  height: 100%;
 }
 /* title of input in forms */
 .control-label{
@@ -170,10 +174,10 @@ a {
   border-color:#262626;
 }
 .form-group {
-  display: flex; /* Enable flexbox */
-  align-items: center; /* Align items vertically */
-  gap: 10px; /* Add spacing between items */
-  margin-bottom: 30px; /* Space between form groups */
+  display: flex; 
+  align-items: center; 
+  gap: 10px; 
+  margin-bottom: 30px; 
 }
 .row{
   margin-bottom: 30px;
