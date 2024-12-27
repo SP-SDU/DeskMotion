@@ -5,75 +5,7 @@
 }
 
 <head>
-	<style>
-		#container {
-			display: flex;
-			flex-wrap: wrap;
-			margin-top: 2rem;
-			justify-content: center;
-			background-color: #555a7a;
-			color: #52f700;
-			border-color: black;
-			border-width: 30px;
-			border-style: solid;
-			border-radius: 10px;
-		}
-
-		#canvasContainer {
-			position: relative;
-			display: flex;
-			width: 800px;
-			height: 500px;
-		}
-
-		canvas {
-			position: absolute;
-			left: 0;
-			top: 0;
-		}
-
-		#backgroundCanvas {
-			z-index: 1;
-			border-color: black;
-			border-width: 2px;
-			border-style: solid;
-			border-radius: 10px;
-		}
-
-		#foregroundCanvas {
-			z-index: 2;
-		}
-
-		#iconBar {
-			display: flex;
-			flex-direction: column;
-			justify-content: center;
-			align-items: center;
-			width: 100px;
-			margin-left: 10px;
-		}
-
-			#iconBar img {
-				width: 100%;
-				height: 100%;
-                font: 500 18px sans-serif;
-			}
-
-		#dialog {
-			display: none;
-			position: absolute;
-			background-color: white;
-			border: 1px solid black;
-			padding: 10px;
-			z-index: 3;
-		}
-
-		@@media (max-width: 500px) {
-			#container {
-				flex-direction: column;
-			}
-		}
-	</style>
+	<link rel="stylesheet" href="~/css/officesPlan.css">
 </head>
 
 <div id="container">
@@ -82,19 +14,30 @@
 		<canvas id="foregroundCanvas" width="800" height="500"></canvas>
 	</div>
 	<div id="iconBar">
+		<!-- Editable Office Name -->
+		<h2 id="OfficeNameDisplay" contenteditable="true">@Model.OfficesPlan.OfficeName</h2>
 		<img id="deskIcon" src="images/PET.svg" draggable="true">
+		<label id="totalDesksLabel">Total Desks: 0</label>
 		<form id="saveForm" method="post">
 			<input type="hidden" id="BgCanvasDataInput" name="OfficesPlan.BgCanvasData" />
 			<input type="hidden" id="FgCanvasDataInput" name="OfficesPlan.FgCanvasData" />
-			<button type="submit" class="btn btn-danger">Save</button>
+			<input type="hidden" id="OfficeNameInput" name="OfficesPlan.OfficeName" />
+			<input type="hidden" id="TotalDesksInput" name="OfficesPlan.TotalDesks" />
+			<button type="submit">Save</button>
 		</form>
-		<button class="btn btn-danger" id="removeAllImg">Remove All</button>
+		<button id="removeAllImg">Remove</button>
 	</div>
 </div>
 
 <div id="dialog">
-	<input type="text" id="renameInput" placeholder="Enter new name">
-	<button id="renameSubmitBtn">Rename</button>
+	<select id="macAddressSelect">
+		<option value="">Select MAC Address</option>
+		@foreach (var mac in Model.AvailableMacAddresses)
+		{
+			<option value="@mac">@mac</option>
+		}
+	</select>
+	<button id="assignBtn">Assign MAC</button>
 	<button id="deleteBtn">Delete</button>
 	<button id="rotateBtn">Rotate</button>
 </div>
@@ -106,15 +49,16 @@
 	const bgCtx = bgCanvas.getContext("2d");
 	const deskIcon = document.getElementById('deskIcon');
 	const dialog = document.getElementById('dialog');
-	const renameInput = document.getElementById('renameInput');
-	let objects = []; // Array to store placed objects
+	const macAddressSelect = document.getElementById('macAddressSelect');
+	const officeNameDisplay = document.getElementById("OfficeNameDisplay");
+	const saveForm = document.getElementById("saveForm");
+	let objects = [];
 	let selectedObject = null;
 
-	// Initialize background
+	// Initialize canvas background
 	bgCtx.fillStyle = "lightgray";
 	bgCtx.fillRect(0, 0, bgCanvas.width, bgCanvas.height);
 
-	// Draw predefined blue rectangles
 	const blueRect1 = { x: 20, y: 50, width: 350, height: 400 };
 	const blueRect2 = { x: 400, y: 150, width: 380, height: 240 };
 	bgCtx.fillStyle = "#255ECF";
@@ -135,92 +79,76 @@
 		const x = e.offsetX - 40;
 		const y = e.offsetY - 40;
 
-		const newRect = {
-			x,
-			y,
-			width: 80,
-			height: 80,
-			img: img.src, // Store the image source URL
-			name: '',
-			angle: 0
-		};
+		const newRect = { x, y, width: 80, height: 80, img: img.src, macAddress: "", angle: 0 };
 
-		// Collision detection
-		let collision = false;
-		for (const obj of objects) {
-			if (checkCollision(newRect, obj)) {
-				collision = true;
-				break;
-			}
-		}
-
-		if (
-			!collision &&
-			x >= 0 &&
-			x + newRect.width <= fgCanvas.width &&
-			y >= 0 &&
-			y + newRect.height <= fgCanvas.height &&
-			(isWithinBlueRect(newRect, blueRect1) || isWithinBlueRect(newRect, blueRect2))
-		) {
+		if (isValidPlacement(newRect)) {
 			objects.push(newRect);
 			redrawCanvas();
 		} else {
-			alert("Can't put it here");
+			alert("Cannot place here!");
 		}
 	});
 
-	// Helper function to check collision
-	function checkCollision(rect1, rect2) {
-		return !(
-			rect1.x + rect1.width <= rect2.x ||
-			rect1.x >= rect2.x + rect2.width ||
-			rect1.y + rect1.height <= rect2.y ||
-			rect1.y >= rect2.y + rect2.height
-		);
+	function isValidPlacement(rect) {
+		return rect.x >= 0 && rect.x + rect.width <= fgCanvas.width &&
+			rect.y >= 0 && rect.y + rect.height <= fgCanvas.height &&
+			(isWithinBlueRect(rect, blueRect1) || isWithinBlueRect(rect, blueRect2));
 	}
 
-	// Helper function to verify if a rectangle is within blue rectangles
 	function isWithinBlueRect(rect, blueRect) {
-		return (
-			rect.x >= blueRect.x &&
-			rect.x + rect.width <= blueRect.x + blueRect.width &&
-			rect.y >= blueRect.y &&
-			rect.y + rect.height <= blueRect.y + blueRect.height
-		);
+		return rect.x >= blueRect.x && rect.x + rect.width <= blueRect.x + blueRect.width &&
+			rect.y >= blueRect.y && rect.y + rect.height <= blueRect.y + blueRect.height;
 	}
 
+	// Open dialog for selected desk
 	fgCanvas.addEventListener('click', (e) => {
 		const x = e.offsetX, y = e.offsetY;
-		selectedObject = objects.find(obj =>
-			x >= obj.x && x <= obj.x + obj.width && y >= obj.y && y <= obj.y + obj.height
-		);
+		selectedObject = objects.find(obj => x >= obj.x && x <= obj.x + obj.width && y >= obj.y && y <= obj.y + obj.height);
 
 		if (selectedObject) {
 			dialog.style.display = 'block';
 			dialog.style.left = `${e.pageX}px`;
 			dialog.style.top = `${e.pageY}px`;
-			renameInput.value = selectedObject.name;
+			macAddressSelect.value = selectedObject.macAddress || "";
 		} else {
 			dialog.style.display = 'none';
 		}
 	});
 
-	document.getElementById('renameSubmitBtn').addEventListener('click', () => {
+	// Assign MacAddress to selected desk
+	document.getElementById('assignBtn').addEventListener('click', () => {
 		if (selectedObject) {
-			selectedObject.name = renameInput.value;
+			const selectedMac = macAddressSelect.value;
+
+			if (!selectedMac) {
+				alert("Please select a MAC address.");
+				return;
+			}
+
+			macAddressSelect.querySelector(`option[value="${selectedMac}"]`).remove();
+			selectedObject.macAddress = selectedMac;
 			redrawCanvas();
-			dialog.style.display = 'none';
+			dialog.style.display = "none";
 		}
 	});
 
+	// Delete selected desk
 	document.getElementById('deleteBtn').addEventListener('click', () => {
 		if (selectedObject) {
+			if (selectedObject.macAddress) {
+				const option = document.createElement("option");
+				option.value = selectedObject.macAddress;
+				option.textContent = selectedObject.macAddress;
+				macAddressSelect.appendChild(option);
+			}
+
 			objects = objects.filter(obj => obj !== selectedObject);
 			redrawCanvas();
 			dialog.style.display = 'none';
 		}
 	});
 
+	// Rotate selected desk
 	document.getElementById('rotateBtn').addEventListener('click', () => {
 		if (selectedObject) {
 			selectedObject.angle = (selectedObject.angle + 90) % 360;
@@ -229,11 +157,13 @@
 		}
 	});
 
-	document.getElementById('removeAllImg').addEventListener('click', () => {
-		objects = [];
-		redrawCanvas();
-	});
+	// Update Total Desks
+	function updateTotalDesks() {
+		const totalDesksLabel = document.getElementById("totalDesksLabel");
+		totalDesksLabel.textContent = `Total Desks: ${objects.length}`;
+	}
 
+	// Redraw canvas
 	function redrawCanvas() {
 		fgCtx.clearRect(0, 0, fgCanvas.width, fgCanvas.height);
 		objects.forEach(obj => {
@@ -241,44 +171,50 @@
 			img.onload = () => {
 				fgCtx.save();
 				fgCtx.translate(obj.x + obj.width / 2, obj.y + obj.height / 2);
-				fgCtx.rotate((obj.angle || 0) * Math.PI / 180);
+				fgCtx.rotate(obj.angle * Math.PI / 180);
 				fgCtx.drawImage(img, -obj.width / 2, -obj.height / 2, obj.width, obj.height);
 				fgCtx.restore();
-				if (obj.name) {
+				if (obj.macAddress) {
 					fgCtx.fillStyle = 'black';
-					fgCtx.fillText(obj.name, obj.x, obj.y + obj.height + 10);
+					fgCtx.font = 'bold 12px Arial';
+					fgCtx.fillText(obj.macAddress, obj.x, obj.y + obj.height + 8);
 				}
 			};
 			img.src = obj.img;
 		});
+		updateTotalDesks();
 	}
 
-	// Populate canvas data on page load
+	// Save form
+	saveForm.addEventListener('submit', () => {
+		document.getElementById('BgCanvasDataInput').value = bgCanvas.toDataURL();
+		document.getElementById('FgCanvasDataInput').value = JSON.stringify(objects);
+		document.getElementById('OfficeNameInput').value = officeNameDisplay.textContent.trim();
+	});
+
+	// Page load
 	window.onload = () => {
 		const bgCanvasData = `@Html.Raw(Model.OfficesPlan.BgCanvasData)`;
 		const fgCanvasData = `@Html.Raw(Model.OfficesPlan.FgCanvasData)`;
 
-		// Load background canvas
 		if (bgCanvasData) {
 			const img = new Image();
 			img.onload = () => bgCtx.drawImage(img, 0, 0);
 			img.src = bgCanvasData;
 		}
 
-		// Load foreground canvas
 		if (fgCanvasData) {
 			try {
 				objects = JSON.parse(fgCanvasData);
+				const usedMacs = objects.map(obj => obj.macAddress).filter(mac => mac);
+				usedMacs.forEach(mac => {
+					macAddressSelect.querySelector(`option[value="${mac}"]`)?.remove();
+				});
 				redrawCanvas();
 			} catch (err) {
 				console.error("Error parsing FgCanvasData:", err);
 			}
 		}
+		updateTotalDesks();
 	};
-
-	// Update hidden inputs on form submit
-	document.getElementById('saveForm').addEventListener('submit', () => {
-		document.getElementById('BgCanvasDataInput').value = bgCanvas.toDataURL();
-		document.getElementById('FgCanvasDataInput').value = JSON.stringify(objects);
-	});
 </script>

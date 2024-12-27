@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DeskMotion.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241223161018_InitialCreate")]
+    [Migration("20241227100155_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -119,6 +119,13 @@ namespace DeskMotion.Migrations
                     b.Property<string>("FgCanvasData")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<string>("OfficeName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("TotalDesks")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 

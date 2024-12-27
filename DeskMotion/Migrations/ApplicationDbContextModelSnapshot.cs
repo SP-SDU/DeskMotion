@@ -117,6 +117,13 @@ namespace DeskMotion.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("OfficeName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("TotalDesks")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
                     b.ToTable("OfficesPlan");

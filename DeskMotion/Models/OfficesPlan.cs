@@ -19,9 +19,10 @@ namespace DeskMotion.Models;
     public class OfficesPlan
     {
         public Guid Id { get; set; } = Guid.NewGuid();
+        public string OfficeName { get; set; } = string.Empty;
         public string FgCanvasData { get; set; } = string.Empty;
         public string BgCanvasData { get; set; } = string.Empty;
+        public int TotalDesks { get; set; }
 
-        [JsonIgnore]
-        public List<DeskMetadata> DeskMetadata { get; set; } = default!;
-}
+        public List<DeskMetadata> DeskMetadata { get; set; } = [];
+    }

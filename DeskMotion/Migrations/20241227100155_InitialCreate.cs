@@ -102,8 +102,10 @@ namespace DeskMotion.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    OfficeName = table.Column<string>(type: "text", nullable: false),
                     FgCanvasData = table.Column<string>(type: "text", nullable: false),
-                    BgCanvasData = table.Column<string>(type: "text", nullable: false)
+                    BgCanvasData = table.Column<string>(type: "text", nullable: false),
+                    TotalDesks = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {

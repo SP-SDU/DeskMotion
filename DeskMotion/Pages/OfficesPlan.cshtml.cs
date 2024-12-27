@@ -33,32 +33,48 @@ public class OfficesPlanModel : PageModel
     [BindProperty]
     public OfficesPlan OfficesPlan { get; set; } = new OfficesPlan();
 
+    public List<string> AvailableMacAddresses { get; set; } = new List<string>();
+
     public async Task<IActionResult> OnGetAsync()
     {
+        // Fetch all MacAddresses from DeskMetadata
+        AvailableMacAddresses = await _context.DeskMetadata
+            .Where(dm => !string.IsNullOrEmpty(dm.MacAddress))
+            .Select(dm => dm.MacAddress)
+            .Distinct()
+            .ToListAsync();
+
+        // Load existing OfficesPlan data
         var existingPlan = await _context.OfficesPlan.FirstOrDefaultAsync();
         if (existingPlan != null)
         {
             OfficesPlan = existingPlan;
         }
+
         return Page();
     }
-
     public async Task<IActionResult> OnPostAsync()
     {
         if (string.IsNullOrEmpty(OfficesPlan.BgCanvasData) || string.IsNullOrEmpty(OfficesPlan.FgCanvasData))
         {
-            ModelState.AddModelError("", "Canvas data cannot be empty.");
+            ModelState.AddModelError(string.Empty, "Canvas data cannot be empty.");
+            return Page();
+        }
+
+        if (string.IsNullOrEmpty(OfficesPlan.OfficeName))
+        {
+            ModelState.AddModelError(string.Empty, "Office name cannot be empty.");
             return Page();
         }
 
         try
         {
-            // Validate JSON
+            // Validate JSON format
             JsonDocument.Parse(OfficesPlan.FgCanvasData);
         }
         catch (JsonException)
         {
-            ModelState.AddModelError("", "Invalid JSON format in FgCanvasData.");
+            ModelState.AddModelError(string.Empty, "Invalid JSON format in FgCanvasData.");
             return Page();
         }
 
@@ -67,6 +83,8 @@ public class OfficesPlanModel : PageModel
         {
             existingPlan.BgCanvasData = OfficesPlan.BgCanvasData;
             existingPlan.FgCanvasData = OfficesPlan.FgCanvasData;
+            existingPlan.TotalDesks = OfficesPlan.TotalDesks; // Save total desks
+            existingPlan.OfficeName = OfficesPlan.OfficeName; // Save office name
         }
         else
         {
