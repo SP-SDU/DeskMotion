@@ -1,34 +1,45 @@
 ﻿@page
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager
 @model DeskMotion.Pages.OfficesPlanModel
 @{
 	ViewData["Title"] = "Office Plan";
 }
-
+@{
+	var user = await UserManager.GetUserAsync(User);
+	var isAdmin = user != null && await UserManager.IsInRoleAsync(user, "Administrator");
+}
 <head>
 	<link rel="stylesheet" href="~/css/officesPlan.css">
 </head>
 
-<div id="container">
+<div id="container" class="@(isAdmin ? "" : "disabled-overlay")">
 	<div id="canvasContainer">
 		<canvas id="backgroundCanvas" width="800" height="500"></canvas>
 		<canvas id="foregroundCanvas" width="800" height="500"></canvas>
 	</div>
 	<div id="iconBar">
 		<!-- Editable Office Name -->
-		<h2 id="OfficeNameDisplay" contenteditable="true">@Model.OfficesPlan.OfficeName</h2>
-		<img id="deskIcon" src="images/PET.svg" draggable="true">
+		<h2 id="OfficeNameDisplay" contenteditable="@isAdmin">@Model.OfficesPlan.OfficeName</h2>
+		<img id="deskIcon" src="images/PET.svg" draggable="true" @(isAdmin ? "" : "style='pointer-events:none;'")>
 		<label id="totalDesksLabel">Total Desks: 0</label>
 		<form id="saveForm" method="post">
 			<input type="hidden" id="BgCanvasDataInput" name="OfficesPlan.BgCanvasData" />
 			<input type="hidden" id="FgCanvasDataInput" name="OfficesPlan.FgCanvasData" />
 			<input type="hidden" id="OfficeNameInput" name="OfficesPlan.OfficeName" />
 			<input type="hidden" id="TotalDesksInput" name="OfficesPlan.TotalDesks" />
-			<button type="submit">Save</button>
+			<button type="submit" @(isAdmin ? "" : "style='pointer-events:none;'")>Save</button>
 		</form>
-		<button id="removeAllImg">Remove</button>
+		<button id="removeAllImg" @(isAdmin ? "" : "style='pointer-events:none;'")>Remove</button>
 	</div>
 </div>
-
+@if (!isAdmin)
+{
+	<div class="overlay">
+		<p>You need administrative access to edit this page.</p>
+	</div>
+}
 <div id="dialog">
 	<select id="macAddressSelect">
 		<option value="">Select MAC Address</option>
