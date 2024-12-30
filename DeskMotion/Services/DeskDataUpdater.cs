@@ -18,59 +18,79 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DeskMotion.Services;
 
-public class DeskDataUpdater(DeskService deskService, IServiceProvider serviceProvider, ILogger<DeskDataUpdater> logger) : BackgroundService
+public class DeskDataUpdater(IServiceProvider serviceProvider, ILogger<DeskDataUpdater> logger) : BackgroundService
 {
+    private bool _isUpdating = false;
+    private readonly TimeSpan _delay = TimeSpan.FromMinutes(1);
+
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
+        logger.LogInformation("DeskDataUpdater started.");
+
         while (!stoppingToken.IsCancellationRequested)
         {
-            logger.LogInformation("Updating desk data...");
+            if (_isUpdating)
+            {
+                await Task.Delay(_delay, stoppingToken);
+                continue;
+            }
 
-            using var scope = serviceProvider.CreateScope();
-            var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            _isUpdating = true;
 
             try
             {
-                var deskIds = await deskService.GetDeskIdsAsync();
+                using var scope = serviceProvider.CreateScope();
+                var deskIdsRepository = scope.ServiceProvider.GetRequiredService<RestRepository<List<string>>>();
+                var deskIds = await deskIdsRepository.GetAsync("desks");
 
-                foreach (var deskId in deskIds)
-                {
-                    // Ensure metadata exists for the desk
-                    var metadata = await dbContext.DeskMetadata
-                        .FirstOrDefaultAsync(dm => dm.MacAddress == deskId, stoppingToken);
-
-                    if (metadata == null)
-                    {
-                        metadata = new DeskMetadata
-                        {
-                            MacAddress = deskId,
-                        };
-                        _ = dbContext.DeskMetadata.Add(metadata);
-                        _ = await dbContext.SaveChangesAsync(stoppingToken);
-                    }
-
-                    // Fetch the latest desk data
-                    var deskData = await deskService.GetDeskAsync(deskId);
-
-                    // Find and set the last record to not be the latest
-                    var currentLatest = await dbContext.Desks
-                        .FirstOrDefaultAsync(d => d.MacAddress == deskId && d.IsLatest, stoppingToken);
-
-                    if (currentLatest != null)
-                    {
-                        currentLatest.IsLatest = false;
-                    }
-
-                    _ = dbContext.Desks.Add(deskData);
-                    _ = await dbContext.SaveChangesAsync(stoppingToken);
-                }
+                var tasks = deskIds.Select(deskId => ProcessDeskAsync(deskId, stoppingToken));
+                await Task.WhenAll(tasks);
             }
             catch (Exception ex)
             {
                 logger.LogError(ex, "Error updating desk data");
             }
+            finally
+            {
+                _isUpdating = false;
+            }
 
-            await Task.Delay(TimeSpan.FromMinutes(5), stoppingToken);
+            await Task.Delay(_delay, stoppingToken);
         }
+
+        logger.LogInformation("DeskDataUpdater stopping.");
+    }
+
+    private async Task ProcessDeskAsync(string deskId, CancellationToken stoppingToken)
+    {
+        using var scope = serviceProvider.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        var deskRepository = scope.ServiceProvider.GetRequiredService<RestRepository<Desk>>();
+
+        // Ensure metadata exists
+        if (!await dbContext.DeskMetadata.AnyAsync(dm => dm.MacAddress == deskId, stoppingToken))
+        {
+            _ = dbContext.DeskMetadata.Add(new DeskMetadata { MacAddress = deskId });
+            _ = await dbContext.SaveChangesAsync(stoppingToken);
+        }
+
+        // Fetch desk data
+        var deskData = await deskRepository.GetAsync($"desks/{deskId}");
+        if (deskData == null) return;
+
+        deskData.MacAddress = deskId;
+        deskData.LastErrors ??= [];
+
+        // Update desk data
+        var currentLatest = await dbContext.Desks.FirstOrDefaultAsync(d => d.MacAddress == deskId && d.IsLatest, stoppingToken);
+        if (currentLatest != null)
+        {
+            currentLatest.IsLatest = false;
+            _ = dbContext.Desks.Update(currentLatest);
+        }
+
+        deskData.IsLatest = true;
+        _ = dbContext.Desks.Add(deskData);
+        _ = await dbContext.SaveChangesAsync(stoppingToken);
     }
 }

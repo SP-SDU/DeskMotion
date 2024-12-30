@@ -19,25 +19,36 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Moq;
+using Moq.Protected;
+using System.Net;
+using System.Net.Http.Json;
 
 namespace DeskMotion.Tests.Services;
 
 public class DeskDataUpdaterTests
 {
-    private readonly Mock<HttpClient> _httpClientMock;
-    private readonly Mock<DeskService> _deskServiceMock;
-    private readonly Mock<ILogger<DeskDataUpdater>> _loggerMock;
+    private readonly Mock<HttpMessageHandler> _httpMessageHandlerMock;
     private readonly IServiceProvider _serviceProvider;
+    private readonly ILogger<DeskDataUpdater> _logger;
 
     public DeskDataUpdaterTests()
     {
-        _httpClientMock = new Mock<HttpClient>();
-        _deskServiceMock = new Mock<DeskService>(_httpClientMock.Object);
-        _loggerMock = new Mock<ILogger<DeskDataUpdater>>();
+        _httpMessageHandlerMock = new Mock<HttpMessageHandler>();
+
+        var httpClient = new HttpClient(_httpMessageHandlerMock.Object)
+        {
+            BaseAddress = new Uri("http://localhost")
+        };
+
+        _logger = Mock.Of<ILogger<DeskDataUpdater>>();
 
         var services = new ServiceCollection();
-        _ = services.AddDbContext<ApplicationDbContext>(options =>
+        services.AddDbContext<ApplicationDbContext>(options =>
             options.UseInMemoryDatabase("TestDatabase"));
+        services.AddSingleton(new RestRepository<List<string>>(httpClient));
+        services.AddSingleton(new RestRepository<Desk>(httpClient));
+        services.AddSingleton(_logger);
+
         _serviceProvider = services.BuildServiceProvider();
     }
 
@@ -48,24 +59,48 @@ public class DeskDataUpdaterTests
         var deskIds = new List<string> { "desk1", "desk2" };
         var deskData = new Desk { MacAddress = "desk1", IsLatest = true };
 
-        _ = _deskServiceMock.Setup(ds => ds.GetDeskIdsAsync())
-            .ReturnsAsync(deskIds);
+        _httpMessageHandlerMock
+            .Protected()
+            .Setup<Task<HttpResponseMessage>>(
+                "SendAsync",
+                ItExpr.Is<HttpRequestMessage>(req => req.RequestUri!.ToString().EndsWith("desks")),
+                ItExpr.IsAny<CancellationToken>())
+            .ReturnsAsync(new HttpResponseMessage
+            {
+                StatusCode = HttpStatusCode.OK,
+                Content = JsonContent.Create(deskIds)
+            });
 
-        _ = _deskServiceMock.Setup(ds => ds.GetDeskAsync("desk1"))
-            .ReturnsAsync(deskData);
+        _httpMessageHandlerMock
+            .Protected()
+            .Setup<Task<HttpResponseMessage>>(
+                "SendAsync",
+                ItExpr.Is<HttpRequestMessage>(req => req.RequestUri!.ToString().EndsWith("desks/desk1")),
+                ItExpr.IsAny<CancellationToken>())
+            .ReturnsAsync(new HttpResponseMessage
+            {
+                StatusCode = HttpStatusCode.OK,
+                Content = JsonContent.Create(deskData)
+            });
 
-        _ = _deskServiceMock.Setup(ds => ds.GetDeskAsync("desk2"))
-            .ReturnsAsync(new Desk { MacAddress = "desk2", IsLatest = true });
+        _httpMessageHandlerMock
+            .Protected()
+            .Setup<Task<HttpResponseMessage>>(
+                "SendAsync",
+                ItExpr.Is<HttpRequestMessage>(req => req.RequestUri!.ToString().EndsWith("desks/desk2")),
+                ItExpr.IsAny<CancellationToken>())
+            .ReturnsAsync(new HttpResponseMessage
+            {
+                StatusCode = HttpStatusCode.OK,
+                Content = JsonContent.Create(new Desk { MacAddress = "desk2", IsLatest = true })
+            });
 
-        var deskDataUpdater = new DeskDataUpdater(
-            _deskServiceMock.Object,
-            _serviceProvider,
-            _loggerMock.Object);
+        var deskDataUpdater = new DeskDataUpdater(_serviceProvider, _logger);
 
         // Act
         using (var cancellationTokenSource = new CancellationTokenSource())
         {
-            cancellationTokenSource.CancelAfter(TimeSpan.FromSeconds(1));
+            cancellationTokenSource.CancelAfter(TimeSpan.FromSeconds(2));
             await deskDataUpdater.StartAsync(cancellationTokenSource.Token);
         }
 
@@ -85,13 +120,15 @@ public class DeskDataUpdaterTests
     public async Task ExecuteAsync_HandlesExceptionGracefully()
     {
         // Arrange
-        _ = _deskServiceMock.Setup(ds => ds.GetDeskIdsAsync())
+        _httpMessageHandlerMock
+            .Protected()
+            .Setup<Task<HttpResponseMessage>>(
+                "SendAsync",
+                ItExpr.IsAny<HttpRequestMessage>(),
+                ItExpr.IsAny<CancellationToken>())
             .ThrowsAsync(new Exception("Test Exception"));
 
-        var deskDataUpdater = new DeskDataUpdater(
-            _deskServiceMock.Object,
-            _serviceProvider,
-            _loggerMock.Object);
+        var deskDataUpdater = new DeskDataUpdater(_serviceProvider, _logger);
 
         // Act
         using (var cancellationTokenSource = new CancellationTokenSource())
@@ -101,7 +138,7 @@ public class DeskDataUpdaterTests
         }
 
         // Assert
-        _loggerMock.Verify(
+        Mock.Get(_logger).Verify(
             logger => logger.Log(
                 LogLevel.Error,
                 It.IsAny<EventId>(),

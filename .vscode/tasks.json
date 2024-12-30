@@ -14,26 +14,35 @@
             "problemMatcher": []
         },
         {
-            "type": "dotnet",
-            "task": "clean",
-            "group": "clean",
-            "problemMatcher": [],
-            "label": "dotnet: clean"
+            "label": "dotnet: clean",
+            "type": "process",
+            "command": "dotnet",
+            "args": [
+                "clean",
+                "${workspaceFolder}/DeskMotion.sln"
+            ],
+            "problemMatcher": "$msCompile"
         },
         {
-            "type": "dotnet",
-            "task": "build",
-            "group": "build",
-            "problemMatcher": [],
-            "label": "dotnet: build"
+            "label": "dotnet: build",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/DeskMotion.sln",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary;ForceNoAlign"
+            ],
+            "isBuildCommand": true,
+            "problemMatcher": "$msCompile"
         },
         {
             "label": "dotnet: format",
-            "type": "shell",
             "command": "dotnet",
+            "type": "process",
             "args": [
                 "format",
-                "DeskMotion.sln",
+                "${workspaceFolder}/DeskMotion.sln",
                 "--verbosity",
                 "diagnostic"
             ],
@@ -42,6 +51,32 @@
             "presentation": {
                 "reveal": "always"
             }
+        },
+        {
+            "label": "dotnet: test",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "test",
+                "${workspaceFolder}/DeskMotion.sln"
+            ],
+            "isTestCommand": true,
+            "problemMatcher": "$msCompile",
+            "presentation": {
+                "reveal": "always"
+            }
+        },
+        {
+            "label": "dotnet: publish",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "publish",
+                "${workspaceFolder}/DeskMotion.sln",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary;ForceNoAlign"
+            ],
+            "problemMatcher": "$msCompile"
         }
     ]
 }

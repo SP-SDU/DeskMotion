@@ -18,6 +18,7 @@ using DeskMotion.Services;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using System.IO.Compression;
+using System.Text.Json;
 
 namespace DeskMotion;
 
@@ -30,11 +31,14 @@ public class Program
 
         var builder = WebApplication.CreateBuilder(args);
 
-        // Add services to the container.
         var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+        var apiBaseUri = builder.Configuration["DeskApi:BaseUri"];
+
+        // Database Configuration
         builder.Services.AddDbContext<ApplicationDbContext>(options =>
             options.UseNpgsql(connectionString));
 
+        // Identity Configuration
         builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
             .AddRoles<Role>()
             .AddEntityFrameworkStores<ApplicationDbContext>();
@@ -54,32 +58,44 @@ public class Program
                 options.Conventions.AllowAnonymousToPage("/Setup");
                 options.Conventions.AuthorizeFolder("/Admin", "RequireAdministratorRole");
             });
+
         builder.Services.AddAuthorization(options =>
         {
             options.AddPolicy("RequireAdministratorRole", policy => policy.RequireRole("Administrator"));
         });
 
-        builder.Services.AddRazorPages();
-
-        var apiBaseUri = builder.Configuration["DeskApi:BaseUri"];
-
-        builder.Services.AddHttpClient("DeskApi", client =>
+        // API Client
+        builder.Services.AddHttpClient("DeskApiClient", client =>
         {
             client.BaseAddress = new Uri(apiBaseUri!);
-        });
-        builder.Services.AddTransient<DeskService>(sp =>
-        {
-            var httpClient = sp.GetRequiredService<IHttpClientFactory>().CreateClient("DeskApi");
-            return new DeskService(httpClient);
+            client.DefaultRequestHeaders.Add("Accept", "application/json");
         });
 
-        builder.Services.AddHostedService<DeskDataUpdater>(sp =>
+        var jsonOptions = new JsonSerializerOptions
         {
-            var deskService = sp.GetRequiredService<DeskService>();
-            var logger = sp.GetRequiredService<ILogger<DeskDataUpdater>>();
-            return new DeskDataUpdater(deskService, sp, logger);
+            PropertyNameCaseInsensitive = true,
+        };
+
+        builder.Services.AddScoped<RestRepository<List<string>>>(provider =>
+        {
+            var httpClientFactory = provider.GetRequiredService<IHttpClientFactory>();
+            var httpClient = httpClientFactory.CreateClient("DeskApiClient");
+            return new RestRepository<List<string>>(httpClient, jsonOptions);
         });
 
+        builder.Services.AddScoped<RestRepository<Desk>>(provider =>
+        {
+            var httpClientFactory = provider.GetRequiredService<IHttpClientFactory>();
+            var httpClient = httpClientFactory.CreateClient("DeskApiClient");
+            return new RestRepository<Desk>(httpClient, jsonOptions);
+        });
+
+        builder.Services.AddHostedService<DeskDataUpdater>();
+
+        // Register logging
+        builder.Services.AddLogging();
+
+        // Response Compression
         builder.Services.AddResponseCompression(options =>
         {
             options.EnableForHttps = true;
