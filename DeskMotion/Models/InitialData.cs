@@ -12,17 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using DeskMotion.Models;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
+namespace DeskMotion.Models;
 
-namespace DeskMotion.Data;
-
-public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<User, Role, Guid>(options)
+public class InitialData
 {
-    public DbSet<Desk> Desks => Set<Desk>();
-    public DbSet<DeskMetadata> DeskMetadata => Set<DeskMetadata>();
-    public DbSet<Reservation> Reservations => Set<Reservation>();
-    public DbSet<IssueReport> IssueReports => Set<IssueReport>();
-    public DbSet<InitialData> InitialData => Set<InitialData>();
+    public Guid Id { get; set; } = Guid.NewGuid();
+    public string OrganizationName { get; set; } = string.Empty;
 }

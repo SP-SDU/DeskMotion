@@ -66,6 +66,21 @@ namespace DeskMotion.Migrations
                     b.ToTable("DeskMetadata");
                 });
 
+            modelBuilder.Entity("DeskMotion.Models.InitialData", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("OrganizationName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("InitialData");
+                });
+
             modelBuilder.Entity("DeskMotion.Models.IssueReport", b =>
                 {
                     b.Property<Guid>("Id")

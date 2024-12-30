@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DeskMotion.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241210170816_InitialCreate")]
+    [Migration("20241230155036_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -67,6 +67,21 @@ namespace DeskMotion.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("DeskMetadata");
+                });
+
+            modelBuilder.Entity("DeskMotion.Models.InitialData", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("OrganizationName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("InitialData");
                 });
 
             modelBuilder.Entity("DeskMotion.Models.IssueReport", b =>
