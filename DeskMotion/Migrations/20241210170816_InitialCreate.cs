@@ -1,6 +1,20 @@
-﻿using System;
+// Copyright 2024 PET Group16
+//
+// Licensed under the Apache License, Version 2.0 (the "License"):
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     https://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using System;
 
 #nullable disable
 
@@ -92,18 +106,6 @@ namespace DeskMotion.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Desks", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "InitialData",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    OrganizationName = table.Column<string>(type: "text", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_InitialData", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -411,9 +413,6 @@ namespace DeskMotion.Migrations
 
             migrationBuilder.DropTable(
                 name: "DeskMetadata");
-
-            migrationBuilder.DropTable(
-                name: "InitialData");
 
             migrationBuilder.DropTable(
                 name: "IssueComment_Attachments");
