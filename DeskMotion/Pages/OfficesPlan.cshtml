@@ -1,0 +1,232 @@
+﻿@page
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager
+@model DeskMotion.Pages.OfficesPlanModel
+@{
+    ViewData["Title"] = "Office Plan";
+}
+@{
+    var user = await UserManager.GetUserAsync(User);
+    var isAdmin = user != null && await UserManager.IsInRoleAsync(user, "Administrator");
+}
+
+<head>
+    <link rel="stylesheet" href="~/css/officesPlan.css">
+</head>
+
+<div id="container" class="@(isAdmin ? "" : "disabled-overlay")">
+    <div id="canvasContainer">
+        <canvas id="backgroundCanvas" width="800" height="500"></canvas>
+        <canvas id="foregroundCanvas" width="800" height="500"></canvas>
+    </div>
+    <div id="iconBar">
+        <!-- Editable Office Name -->
+        <h2 id="OfficeNameDisplay" contenteditable="@isAdmin">@Model.OfficesPlan.OfficeName</h2>
+        <img id="deskIcon" src="images/PET.svg" draggable="true" @(isAdmin ? "" : "style='pointer-events:none;'")>
+        <label id="totalDesksLabel">Total Desks: 0</label>
+        <form id="saveForm" method="post">
+            <input type="hidden" id="BgCanvasDataInput" name="OfficesPlan.BgCanvasData" />
+            <input type="hidden" id="FgCanvasDataInput" name="OfficesPlan.FgCanvasData" />
+            <input type="hidden" id="OfficeNameInput" name="OfficesPlan.OfficeName" />
+            <input type="hidden" id="TotalDesksInput" name="OfficesPlan.TotalDesks" />
+            <button type="submit" @(isAdmin ? "" : "style='pointer-events:none;'")>Save</button>
+        </form>
+        <button id="removeAllImg" @(isAdmin ? "" : "style='pointer-events:none;'")>Remove</button>
+    </div>
+</div>
+@if (!isAdmin)
+{
+    <div class="overlay">
+        <p>You need administrative access to edit this page.</p>
+    </div>
+}
+<div id="dialog">
+    <select id="macAddressSelect">
+        <option value="">Select MAC Address</option>
+        @foreach (var mac in Model.AvailableMacAddresses)
+        {
+            <option value="@mac">@mac</option>
+        }
+    </select>
+    <button id="assignBtn">Assign MAC</button>
+    <button id="deleteBtn">Delete</button>
+    <button id="rotateBtn">Rotate</button>
+</div>
+
+<script>
+    const fgCanvas = document.getElementById('foregroundCanvas');
+    const fgCtx = fgCanvas.getContext('2d');
+    const bgCanvas = document.getElementById("backgroundCanvas");
+    const bgCtx = bgCanvas.getContext("2d");
+    const deskIcon = document.getElementById('deskIcon');
+    const dialog = document.getElementById('dialog');
+    const macAddressSelect = document.getElementById('macAddressSelect');
+    const officeNameDisplay = document.getElementById("OfficeNameDisplay");
+    const saveForm = document.getElementById("saveForm");
+    let objects = [];
+    let selectedObject = null;
+
+    // Initialize canvas background
+    bgCtx.fillStyle = "lightgray";
+    bgCtx.fillRect(0, 0, bgCanvas.width, bgCanvas.height);
+
+    const blueRect1 = { x: 20, y: 50, width: 350, height: 400 };
+    const blueRect2 = { x: 400, y: 150, width: 380, height: 240 };
+    bgCtx.fillStyle = "#255ECF";
+    bgCtx.fillRect(blueRect1.x, blueRect1.y, blueRect1.width, blueRect1.height);
+    bgCtx.fillRect(blueRect2.x, blueRect2.y, blueRect2.width, blueRect2.height);
+
+    // Drag and drop functionality
+    deskIcon.addEventListener('dragstart', (e) => {
+        e.dataTransfer.setData('text/plain', e.target.id);
+    });
+
+    fgCanvas.addEventListener('dragover', (e) => e.preventDefault());
+
+    fgCanvas.addEventListener('drop', (e) => {
+        e.preventDefault();
+        const id = e.dataTransfer.getData('text/plain');
+        const img = document.getElementById(id);
+        const x = e.offsetX - 40;
+        const y = e.offsetY - 40;
+
+        const newRect = { x, y, width: 80, height: 80, img: img.src, macAddress: "", angle: 0 };
+
+        if (isValidPlacement(newRect)) {
+            objects.push(newRect);
+            redrawCanvas();
+        } else {
+            alert("Cannot place here!");
+        }
+    });
+
+    function isValidPlacement(rect) {
+        return rect.x >= 0 && rect.x + rect.width <= fgCanvas.width &&
+            rect.y >= 0 && rect.y + rect.height <= fgCanvas.height &&
+            (isWithinBlueRect(rect, blueRect1) || isWithinBlueRect(rect, blueRect2));
+    }
+
+    function isWithinBlueRect(rect, blueRect) {
+        return rect.x >= blueRect.x && rect.x + rect.width <= blueRect.x + blueRect.width &&
+            rect.y >= blueRect.y && rect.y + rect.height <= blueRect.y + blueRect.height;
+    }
+
+    // Open dialog for selected desk
+    fgCanvas.addEventListener('click', (e) => {
+        const x = e.offsetX, y = e.offsetY;
+        selectedObject = objects.find(obj => x >= obj.x && x <= obj.x + obj.width && y >= obj.y && y <= obj.y + obj.height);
+
+        if (selectedObject) {
+            dialog.style.display = 'block';
+            dialog.style.left = `${e.pageX}px`;
+            dialog.style.top = `${e.pageY}px`;
+            macAddressSelect.value = selectedObject.macAddress || "";
+        } else {
+            dialog.style.display = 'none';
+        }
+    });
+
+    // Assign MacAddress to selected desk
+    document.getElementById('assignBtn').addEventListener('click', () => {
+        if (selectedObject) {
+            const selectedMac = macAddressSelect.value;
+
+            if (!selectedMac) {
+                alert("Please select a MAC address.");
+                return;
+            }
+
+            macAddressSelect.querySelector(`option[value="${selectedMac}"]`).remove();
+            selectedObject.macAddress = selectedMac;
+            redrawCanvas();
+            dialog.style.display = "none";
+        }
+    });
+
+    // Delete selected desk
+    document.getElementById('deleteBtn').addEventListener('click', () => {
+        if (selectedObject) {
+            if (selectedObject.macAddress) {
+                const option = document.createElement("option");
+                option.value = selectedObject.macAddress;
+                option.textContent = selectedObject.macAddress;
+                macAddressSelect.appendChild(option);
+            }
+
+            objects = objects.filter(obj => obj !== selectedObject);
+            redrawCanvas();
+            dialog.style.display = 'none';
+        }
+    });
+
+    // Rotate selected desk
+    document.getElementById('rotateBtn').addEventListener('click', () => {
+        if (selectedObject) {
+            selectedObject.angle = (selectedObject.angle + 90) % 360;
+            redrawCanvas();
+            dialog.style.display = 'none';
+        }
+    });
+
+    // Update Total Desks
+    function updateTotalDesks() {
+        const totalDesksLabel = document.getElementById("totalDesksLabel");
+        totalDesksLabel.textContent = `Total Desks: ${objects.length}`;
+    }
+
+    // Redraw canvas
+    function redrawCanvas() {
+        fgCtx.clearRect(0, 0, fgCanvas.width, fgCanvas.height);
+        objects.forEach(obj => {
+            const img = new Image();
+            img.onload = () => {
+                fgCtx.save();
+                fgCtx.translate(obj.x + obj.width / 2, obj.y + obj.height / 2);
+                fgCtx.rotate(obj.angle * Math.PI / 180);
+                fgCtx.drawImage(img, -obj.width / 2, -obj.height / 2, obj.width, obj.height);
+                fgCtx.restore();
+                if (obj.macAddress) {
+                    fgCtx.fillStyle = 'black';
+                    fgCtx.font = 'bold 12px Arial';
+                    fgCtx.fillText(obj.macAddress, obj.x, obj.y + obj.height + 8);
+                }
+            };
+            img.src = obj.img;
+        });
+        updateTotalDesks();
+    }
+
+    // Save form
+    saveForm.addEventListener('submit', () => {
+        document.getElementById('BgCanvasDataInput').value = bgCanvas.toDataURL();
+        document.getElementById('FgCanvasDataInput').value = JSON.stringify(objects);
+        document.getElementById('OfficeNameInput').value = officeNameDisplay.textContent.trim();
+    });
+
+    // Page load
+    window.onload = () => {
+        const bgCanvasData = `@Html.Raw(Model.OfficesPlan.BgCanvasData)`;
+        const fgCanvasData = `@Html.Raw(Model.OfficesPlan.FgCanvasData)`;
+
+        if (bgCanvasData) {
+            const img = new Image();
+            img.onload = () => bgCtx.drawImage(img, 0, 0);
+            img.src = bgCanvasData;
+        }
+
+        if (fgCanvasData) {
+            try {
+                objects = JSON.parse(fgCanvasData);
+                const usedMacs = objects.map(obj => obj.macAddress).filter(mac => mac);
+                usedMacs.forEach(mac => {
+                    macAddressSelect.querySelector(`option[value="${mac}"]`)?.remove();
+                });
+                redrawCanvas();
+            } catch (err) {
+                console.error("Error parsing FgCanvasData:", err);
+            }
+        }
+        updateTotalDesks();
+    };
+</script>

@@ -71,7 +71,7 @@ public class CreateModel : PageModel
 
         var user = new User
         {
-            UserName = IdentityUser!.UserName,
+            UserName = IdentityUser!.Email,
             Email = IdentityUser.Email,
             EmailConfirmed = true
         };

@@ -1,6 +1,20 @@
-﻿using System;
+// Copyright 2024 PET Group16
+//
+// Licensed under the Apache License, Version 2.0 (the "License"):
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     https://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using System;
 
 #nullable disable
 
@@ -56,20 +70,6 @@ namespace DeskMotion.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "DeskMetadata",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    MacAddress = table.Column<string>(type: "text", nullable: false),
-                    Location = table.Column<string>(type: "text", nullable: false),
-                    QRCodeData = table.Column<string>(type: "text", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_DeskMetadata", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Desks",
                 columns: table => new
                 {
@@ -121,6 +121,21 @@ namespace DeskMotion.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_IssueReports", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "OfficesPlan",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    OfficeName = table.Column<string>(type: "text", nullable: false),
+                    FgCanvasData = table.Column<string>(type: "text", nullable: false),
+                    BgCanvasData = table.Column<string>(type: "text", nullable: false),
+                    TotalDesks = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OfficesPlan", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -331,6 +346,26 @@ namespace DeskMotion.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "DeskMetadata",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    MacAddress = table.Column<string>(type: "text", nullable: false),
+                    Location = table.Column<string>(type: "text", nullable: false),
+                    QRCodeData = table.Column<string>(type: "text", nullable: false),
+                    OfficesPlanId = table.Column<Guid>(type: "uuid", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DeskMetadata", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_DeskMetadata_OfficesPlan_OfficesPlanId",
+                        column: x => x.OfficesPlanId,
+                        principalTable: "OfficesPlan",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "IssueComment_Attachments",
                 columns: table => new
                 {
@@ -389,6 +424,11 @@ namespace DeskMotion.Migrations
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DeskMetadata_OfficesPlanId",
+                table: "DeskMetadata",
+                column: "OfficesPlanId");
         }
 
         /// <inheritdoc />
@@ -435,6 +475,9 @@ namespace DeskMotion.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "OfficesPlan");
 
             migrationBuilder.DropTable(
                 name: "IssueComment");

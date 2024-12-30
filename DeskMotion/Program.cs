@@ -50,6 +50,11 @@ public class Program
             options.AccessDeniedPath = "/Account/AccessDenied";
         });
 
+        builder.Services.AddControllersWithViews().AddJsonOptions(options =>
+        {
+            options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+        });
+
         builder.Services.AddRazorPages(options =>
         {
             options.Conventions.AuthorizeFolder("/");

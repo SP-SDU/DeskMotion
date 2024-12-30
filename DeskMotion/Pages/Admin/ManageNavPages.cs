@@ -31,6 +31,7 @@ public static class ManageNavPages
     public static string Users => "Users/Index";
     public static string Roles => "Roles/Index";
     public static string ManageReports => "ManageReports/Index";
+    public static string OfficesPlan => "OfficesPlan/Index";
 
     public static string IndexNavClass(ViewContext viewContext) => PageNavClass(viewContext, Index);
     public static string DesksNavClass(ViewContext viewContext) => PageNavClass(viewContext, Desks);
@@ -39,6 +40,7 @@ public static class ManageNavPages
     public static string UsersNavClass(ViewContext viewContext) => PageNavClass(viewContext, Users);
     public static string RolesNavClass(ViewContext viewContext) => PageNavClass(viewContext, Roles);
     public static string ManageReportsNavClass(ViewContext viewContext) => PageNavClass(viewContext, ManageReports);
+    public static string OfficesPlanNavClass(ViewContext viewContext) => PageNavClass(viewContext, OfficesPlan);
 
     /// <summary>
     /// Determines the active navigation class for the specified page.

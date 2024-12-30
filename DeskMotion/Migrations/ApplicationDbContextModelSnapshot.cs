@@ -57,11 +57,16 @@ namespace DeskMotion.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<Guid?>("OfficesPlanId")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("QRCodeData")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("OfficesPlanId");
 
                     b.ToTable("DeskMetadata");
                 });
@@ -111,6 +116,32 @@ namespace DeskMotion.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("IssueReports");
+                });
+
+            modelBuilder.Entity("DeskMotion.Models.OfficesPlan", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("BgCanvasData")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("FgCanvasData")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("OfficeName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("TotalDesks")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("OfficesPlan");
                 });
 
             modelBuilder.Entity("DeskMotion.Models.Reservation", b =>
@@ -464,6 +495,13 @@ namespace DeskMotion.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("DeskMotion.Models.DeskMetadata", b =>
+                {
+                    b.HasOne("DeskMotion.Models.OfficesPlan", null)
+                        .WithMany("DeskMetadata")
+                        .HasForeignKey("OfficesPlanId");
+                });
+
             modelBuilder.Entity("DeskMotion.Models.IssueReport", b =>
                 {
                     b.OwnsMany("DeskMotion.Models.IssueComment", "Comments", b1 =>
@@ -645,6 +683,11 @@ namespace DeskMotion.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("DeskMotion.Models.OfficesPlan", b =>
+                {
+                    b.Navigation("DeskMetadata");
                 });
 #pragma warning restore 612, 618
         }

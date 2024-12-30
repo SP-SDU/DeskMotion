@@ -27,21 +27,24 @@
         <a class="nav-link @ManageNavPages.ManageReportsNavClass(ViewContext) nav-link-custom" id="manage-reports"
             asp-page="/Admin/ManageReports/Index">Manage Reports</a>
     </li>
+	<li class="nav-item nav-item-custom">
+		<a class="nav-link @ManageNavPages.OfficesPlanNavClass(ViewContext) nav-link-custom" id="office-plan"
+		   asp-page="/OfficesPlan">Office Plan</a>
+	</li>
 </ul>
-
 
 <style>
     .nav-custom {
         background-color: #a49f9b;
         font-size: 25px;
         font-weight: 700;
-        padding-bottom: 5px;
+        padding-bottom: 8px;
         font-family: 'Courier New', Courier, monospace;
     }
 
     .nav-item-custom {
         padding: 1px;
-        margin: 15px;
+        margin: 12px;
         border-radius: 8px;
         background-color: #68605d;
         box-shadow: 0 10px 0px 6px #837a72;
@@ -55,5 +58,6 @@
 
     .nav-link-custom {
         color: #000 !important;
+		padding: 0.3rem;
     }
 </style>
