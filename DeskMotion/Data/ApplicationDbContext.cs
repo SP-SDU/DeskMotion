@@ -25,4 +25,5 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<Reservation> Reservations => Set<Reservation>();
     public DbSet<IssueReport> IssueReports => Set<IssueReport>();
     public DbSet<OfficesPlan> OfficesPlan => Set<OfficesPlan>();
+    public DbSet<InitialData> InitialData => Set<InitialData>();
 }

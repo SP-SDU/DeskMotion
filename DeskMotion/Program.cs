@@ -27,7 +27,7 @@ public class Program
     public static void Main(string[] args)
     {
         Console.WriteLine("Delaying to ensure dependency services are ready...");
-        Thread.Sleep(2000);
+        Thread.Sleep(4000);
 
         var builder = WebApplication.CreateBuilder(args);
 
@@ -59,6 +59,7 @@ public class Program
         {
             options.Conventions.AuthorizeFolder("/");
             options.Conventions.AllowAnonymousToPage("/Account/Login");
+            options.Conventions.AllowAnonymousToPage("/Setup");
             options.Conventions.AuthorizeFolder("/Admin", "RequireAdministratorRole");
         });
 
@@ -124,7 +125,20 @@ public class Program
         if (app.Environment.IsDevelopment())
         {
             app.UseMigrationsEndPoint();
-            app.Initialize();
+            try
+            {
+                using var scope = app.Services.CreateScope();
+                var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+                if (context.Database.GetPendingMigrations().Any())
+                {
+                    context.Database.Migrate();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Migration error: {ex.Message}");
+            }
         }
         else
         {
@@ -132,6 +146,21 @@ public class Program
             // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
             app.UseHsts();
         }
+
+        app.Use(async (ctx, next) =>
+        {
+            using var scope = app.Services.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+            if (!dbContext.InitialData.Any() &&
+                !ctx.Request.Path.StartsWithSegments("/Setup", StringComparison.OrdinalIgnoreCase))
+            {
+                ctx.Response.Redirect("/Setup");
+                return;
+            }
+
+            await next();
+        });
 
         app.UseHttpsRedirection();
         app.UseStaticFiles();
