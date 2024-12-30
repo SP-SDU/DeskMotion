@@ -94,6 +94,13 @@ public class Program
             return new RestRepository<Desk>(httpClient, jsonOptions);
         });
 
+        builder.Services.AddScoped<RestRepository<int>>(provider =>
+        {
+            var httpClientFactory = provider.GetRequiredService<IHttpClientFactory>();
+            var httpClient = httpClientFactory.CreateClient("DeskApiClient");
+            return new RestRepository<int>(httpClient, jsonOptions);
+        });
+
         builder.Services.AddHostedService<DeskDataUpdater>();
 
         // Register logging

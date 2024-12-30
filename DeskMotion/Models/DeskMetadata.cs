@@ -23,4 +23,7 @@ public class DeskMetadata
     public string Location { get; set; } = string.Empty;
 
     public string QRCodeData { get; set; } = string.Empty;
+
+    public Guid? OwnerId { get; set; }
+    public User? Owner { get; set; }
 }

@@ -14,6 +14,7 @@
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
+            <!-- Desk Dropdown -->
             <div class="form-group">
                 <label asp-for="DeskMetadata.MacAddress" class="control-label"></label>
                 <select asp-for="DeskMetadata.MacAddress" class="form-control" asp-items="Model.AvailableDesks">
@@ -22,16 +23,30 @@
                 <span asp-validation-for="DeskMetadata.MacAddress" class="text-danger"></span>
             </div>
 
+            <!-- Location Field -->
             <div class="form-group">
                 <label asp-for="DeskMetadata.Location" class="control-label"></label>
                 <input asp-for="DeskMetadata.Location" class="form-control" />
                 <span asp-validation-for="DeskMetadata.Location" class="text-danger"></span>
             </div>
+
+            <!-- QR Code Data Field -->
             <div class="form-group">
                 <label asp-for="DeskMetadata.QRCodeData" class="control-label"></label>
                 <input asp-for="DeskMetadata.QRCodeData" class="form-control" />
                 <span asp-validation-for="DeskMetadata.QRCodeData" class="text-danger"></span>
             </div>
+
+            <!-- User Dropdown -->
+            <div class="form-group">
+                <label asp-for="DeskMetadata.OwnerId" class="control-label">Owner</label>
+                <select asp-for="DeskMetadata.OwnerId" class="form-control" asp-items="Model.AvailableUsers">
+                    <option value="">-- Select a User --</option>
+                </select>
+                <span asp-validation-for="DeskMetadata.OwnerId" class="text-danger"></span>
+            </div>
+
+            <!-- Submit Button -->
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary action-link" />
             </div>

@@ -12,7 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DeskMotion.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
+<<<<<<<< HEAD:DeskMotion/Migrations/20241230161124_InitialCreate.Designer.cs
     [Migration("20241230161124_InitialCreate")]
+========
+    [Migration("20241221142044_InitialCreate")]
+>>>>>>>> origin/feature/dashboard-chart-improvements:DeskMotion/Migrations/20241221142044_InitialCreate.Designer.cs
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -60,7 +64,11 @@ namespace DeskMotion.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+<<<<<<<< HEAD:DeskMotion/Migrations/20241230161124_InitialCreate.Designer.cs
                     b.Property<Guid?>("OfficesPlanId")
+========
+                    b.Property<Guid?>("OwnerId")
+>>>>>>>> origin/feature/dashboard-chart-improvements:DeskMotion/Migrations/20241221142044_InitialCreate.Designer.cs
                         .HasColumnType("uuid");
 
                     b.Property<string>("QRCodeData")
@@ -69,7 +77,11 @@ namespace DeskMotion.Migrations
 
                     b.HasKey("Id");
 
+<<<<<<<< HEAD:DeskMotion/Migrations/20241230161124_InitialCreate.Designer.cs
                     b.HasIndex("OfficesPlanId");
+========
+                    b.HasIndex("OwnerId");
+>>>>>>>> origin/feature/dashboard-chart-improvements:DeskMotion/Migrations/20241221142044_InitialCreate.Designer.cs
 
                     b.ToTable("DeskMetadata");
                 });
@@ -500,9 +512,17 @@ namespace DeskMotion.Migrations
 
             modelBuilder.Entity("DeskMotion.Models.DeskMetadata", b =>
                 {
+<<<<<<<< HEAD:DeskMotion/Migrations/20241230161124_InitialCreate.Designer.cs
                     b.HasOne("DeskMotion.Models.OfficesPlan", null)
                         .WithMany("DeskMetadata")
                         .HasForeignKey("OfficesPlanId");
+========
+                    b.HasOne("DeskMotion.Models.User", "Owner")
+                        .WithMany("Desks")
+                        .HasForeignKey("OwnerId");
+
+                    b.Navigation("Owner");
+>>>>>>>> origin/feature/dashboard-chart-improvements:DeskMotion/Migrations/20241221142044_InitialCreate.Designer.cs
                 });
 
             modelBuilder.Entity("DeskMotion.Models.IssueReport", b =>
@@ -688,9 +708,15 @@ namespace DeskMotion.Migrations
                         .IsRequired();
                 });
 
+<<<<<<<< HEAD:DeskMotion/Migrations/20241230161124_InitialCreate.Designer.cs
             modelBuilder.Entity("DeskMotion.Models.OfficesPlan", b =>
                 {
                     b.Navigation("DeskMetadata");
+========
+            modelBuilder.Entity("DeskMotion.Models.User", b =>
+                {
+                    b.Navigation("Desks");
+>>>>>>>> origin/feature/dashboard-chart-improvements:DeskMotion/Migrations/20241221142044_InitialCreate.Designer.cs
                 });
 #pragma warning restore 612, 618
         }

@@ -1,20 +1,6 @@
-// Copyright 2024 PET Group16
-//
-// Licensed under the Apache License, Version 2.0 (the "License"):
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     https://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
+﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using System;
 
 #nullable disable
 
@@ -260,6 +246,26 @@ namespace DeskMotion.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "DeskMetadata",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    MacAddress = table.Column<string>(type: "text", nullable: false),
+                    Location = table.Column<string>(type: "text", nullable: false),
+                    QRCodeData = table.Column<string>(type: "text", nullable: false),
+                    OwnerId = table.Column<Guid>(type: "uuid", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DeskMetadata", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_DeskMetadata_AspNetUsers_OwnerId",
+                        column: x => x.OwnerId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "LastError",
                 columns: table => new
                 {
@@ -426,9 +432,15 @@ namespace DeskMotion.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+<<<<<<<< HEAD:DeskMotion/Migrations/20241230161124_InitialCreate.cs
                 name: "IX_DeskMetadata_OfficesPlanId",
                 table: "DeskMetadata",
                 column: "OfficesPlanId");
+========
+                name: "IX_DeskMetadata_OwnerId",
+                table: "DeskMetadata",
+                column: "OwnerId");
+>>>>>>>> origin/feature/dashboard-chart-improvements:DeskMotion/Migrations/20241221142044_InitialCreate.cs
         }
 
         /// <inheritdoc />

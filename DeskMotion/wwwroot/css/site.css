@@ -64,3 +64,22 @@ body {
         background-color: #555a7a;
         color: #52f700;
     }
+
+/* Chart styles */
+.card-body {
+    position: relative;
+    padding: 1rem;
+}
+
+#healthInsightsChart {
+    max-width: 400px;
+    max-height: 400px;
+    margin: 0 auto;
+}
+
+#deskUsageByTimeChart,
+#deskHeightOverTimeChart,
+#standingSittingRatioChart {
+    width: 100%;
+    height: 300px;
+}
