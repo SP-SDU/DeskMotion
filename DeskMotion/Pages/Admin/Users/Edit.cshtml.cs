@@ -70,6 +70,7 @@ public class EditModel(ApplicationDbContext context, UserManager<User> userManag
             return NotFound();
         }
 
+        IdentityUser!.UserName = IdentityUser.Email;
         var userToUpdate = await userManager.Users.FirstOrDefaultAsync(u => u.Id == id);
 
         if (userToUpdate == null)
@@ -82,6 +83,7 @@ public class EditModel(ApplicationDbContext context, UserManager<User> userManag
             "IdentityUser",
             u => u.UserName, u => u.Email))
         {
+
             if (!string.IsNullOrEmpty(Password))
             {
                 var token = await userManager.GeneratePasswordResetTokenAsync(userToUpdate);

@@ -37,6 +37,8 @@ public class OfficesPlanModel : PageModel
 
     public async Task<IActionResult> OnGetAsync()
     {
+        OfficesPlan.OfficeName = "Default Office Name";
+
         // Fetch all MacAddresses from DeskMetadata
         AvailableMacAddresses = await _context.DeskMetadata
             .Where(dm => !string.IsNullOrEmpty(dm.MacAddress))

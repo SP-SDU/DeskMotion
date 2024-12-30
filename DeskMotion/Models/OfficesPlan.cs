@@ -16,13 +16,13 @@ using System.Text.Json.Serialization;
 
 namespace DeskMotion.Models;
 
-    public class OfficesPlan
-    {
-        public Guid Id { get; set; } = Guid.NewGuid();
-        public string OfficeName { get; set; } = string.Empty;
-        public string FgCanvasData { get; set; } = string.Empty;
-        public string BgCanvasData { get; set; } = string.Empty;
-        public int TotalDesks { get; set; }
+public class OfficesPlan
+{
+    public Guid Id { get; set; } = Guid.NewGuid();
+    public string OfficeName { get; set; } = string.Empty;
+    public string FgCanvasData { get; set; } = string.Empty;
+    public string BgCanvasData { get; set; } = string.Empty;
+    public int TotalDesks { get; set; }
 
-        public List<DeskMetadata> DeskMetadata { get; set; } = [];
-    }
+    public List<DeskMetadata> DeskMetadata { get; set; } = [];
+}
