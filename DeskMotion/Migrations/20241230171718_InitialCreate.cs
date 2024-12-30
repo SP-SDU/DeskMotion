@@ -246,26 +246,6 @@ namespace DeskMotion.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "DeskMetadata",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    MacAddress = table.Column<string>(type: "text", nullable: false),
-                    Location = table.Column<string>(type: "text", nullable: false),
-                    QRCodeData = table.Column<string>(type: "text", nullable: false),
-                    OwnerId = table.Column<Guid>(type: "uuid", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_DeskMetadata", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_DeskMetadata_AspNetUsers_OwnerId",
-                        column: x => x.OwnerId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
                 name: "LastError",
                 columns: table => new
                 {
@@ -359,11 +339,17 @@ namespace DeskMotion.Migrations
                     MacAddress = table.Column<string>(type: "text", nullable: false),
                     Location = table.Column<string>(type: "text", nullable: false),
                     QRCodeData = table.Column<string>(type: "text", nullable: false),
+                    OwnerId = table.Column<Guid>(type: "uuid", nullable: true),
                     OfficesPlanId = table.Column<Guid>(type: "uuid", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_DeskMetadata", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_DeskMetadata_AspNetUsers_OwnerId",
+                        column: x => x.OwnerId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_DeskMetadata_OfficesPlan_OfficesPlanId",
                         column: x => x.OfficesPlanId,
@@ -432,15 +418,14 @@ namespace DeskMotion.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-<<<<<<<< HEAD:DeskMotion/Migrations/20241230161124_InitialCreate.cs
                 name: "IX_DeskMetadata_OfficesPlanId",
                 table: "DeskMetadata",
                 column: "OfficesPlanId");
-========
+
+            migrationBuilder.CreateIndex(
                 name: "IX_DeskMetadata_OwnerId",
                 table: "DeskMetadata",
                 column: "OwnerId");
->>>>>>>> origin/feature/dashboard-chart-improvements:DeskMotion/Migrations/20241221142044_InitialCreate.cs
         }
 
         /// <inheritdoc />

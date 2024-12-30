@@ -60,6 +60,9 @@ namespace DeskMotion.Migrations
                     b.Property<Guid?>("OfficesPlanId")
                         .HasColumnType("uuid");
 
+                    b.Property<Guid?>("OwnerId")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("QRCodeData")
                         .IsRequired()
                         .HasColumnType("text");
@@ -67,6 +70,8 @@ namespace DeskMotion.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("OfficesPlanId");
+
+                    b.HasIndex("OwnerId");
 
                     b.ToTable("DeskMetadata");
                 });
@@ -500,6 +505,12 @@ namespace DeskMotion.Migrations
                     b.HasOne("DeskMotion.Models.OfficesPlan", null)
                         .WithMany("DeskMetadata")
                         .HasForeignKey("OfficesPlanId");
+
+                    b.HasOne("DeskMotion.Models.User", "Owner")
+                        .WithMany("Desks")
+                        .HasForeignKey("OwnerId");
+
+                    b.Navigation("Owner");
                 });
 
             modelBuilder.Entity("DeskMotion.Models.IssueReport", b =>
@@ -688,6 +699,11 @@ namespace DeskMotion.Migrations
             modelBuilder.Entity("DeskMotion.Models.OfficesPlan", b =>
                 {
                     b.Navigation("DeskMetadata");
+                });
+
+            modelBuilder.Entity("DeskMotion.Models.User", b =>
+                {
+                    b.Navigation("Desks");
                 });
 #pragma warning restore 612, 618
         }
