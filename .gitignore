@@ -403,3 +403,6 @@ FodyWeavers.xsd
 
 # Ignore secrets
 .env
+
+# Dev cert exception since it's needed for local development
+!certs/LocalhostDevCert.pfx

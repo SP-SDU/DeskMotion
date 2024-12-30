@@ -30,9 +30,16 @@ public static class DbInitializer
         var roleManager = services.GetRequiredService<RoleManager<Role>>();
 
         // Apply any pending migrations
-        if (context.Database.GetPendingMigrations().Any())
+        try
         {
-            context.Database.Migrate();
+            if (context.Database.GetPendingMigrations().Any())
+            {
+                context.Database.Migrate();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Migration error: {ex.Message}");
         }
 
         // Ensure roles are created

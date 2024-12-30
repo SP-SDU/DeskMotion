@@ -12,18 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 using Microsoft.AspNetCore.Identity;
-using System.ComponentModel.DataAnnotations;
 
 namespace DeskMotion.Models;
 
 public class User : IdentityUser<Guid>
 {
-    public string? FirstName { get; set; }
-    public string? LastName { get; set; }
-
-    [Required]
-    [DataType(DataType.DateTime)]
+    public string FirstName { get; set; } = string.Empty;
+    public string LastName { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }

@@ -1,0 +1,86 @@
+@page
+@model DeskMotion.Pages.Admin.IndexModel
+
+@{
+    ViewData["Title"] = "Admin Dashboard";
+    ViewData["ActivePage"] = ManageNavPages.Index;
+}
+
+<h1>Admin Dashboard</h1>
+
+<div class="row" >
+    <div class="col-md-3">
+        <div class="card text-white bg-primary mb-3">
+            <div class="card-header">Total Desk data records</div>
+            <div class="card-body">
+                <h5 class="card-title">@Model.TotalDesks</h5>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-success mb-3">
+            <div class="card-header">Total Desk metadata records</div>
+            <div class="card-body">
+                <h5 class="card-title">@Model.TotalMetadata</h5>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-info mb-3">
+            <div class="card-header">Total Users</div>
+            <div class="card-body">
+                <h5 class="card-title">@Model.TotalUsers</h5>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-warning mb-3">
+            <div class="card-header">Average Desk Usage Time</div>
+            <div class="card-body">
+                <h5 class="card-title">@Model.AverageDeskUsageTimeMinutes.ToString("F2") minutes</h5>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <h2>Desk Usage by Location</h2>
+        <canvas id="deskUsageByLocationChart"></canvas>
+    </div>
+    <div class="col-md-6">
+        <h2>User Registration Trends</h2>
+        <canvas id="userActivityChart"></canvas>
+    </div>
+</div>
+
+<div class="row">
+	<div class="col-md-6">
+        <h2>Health Insights</h2>
+        <canvas id="healthInsightsChart"></canvas>
+    </div>
+    <div class="col-md-6">
+        <h2>Desk Height Over Time</h2>
+        <canvas id="deskHeightOverTimeChart"></canvas>
+    </div>
+</div>
+
+
+        @section Scripts {
+            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+            <script>
+                // Helper function to generate charts
+                function generateChart(chartId, chartConfig) {
+                    var ctx = document.getElementById(chartId).getContext('2d');
+                    ctx.canvas.style.backgroundColor = '#fff';
+                    new Chart(ctx, chartConfig);
+                }
+
+                // Generate charts with server-provided configurations
+                generateChart('deskUsageByLocationChart', @Html.Raw(Model.DeskUsageByLocationChartConfig));
+                generateChart('userActivityChart', @Html.Raw(Model.UserActivityChartConfig));
+                generateChart('healthInsightsChart', @Html.Raw(Model.HealthInsightsChartConfig));
+                generateChart('deskHeightOverTimeChart', @Html.Raw(Model.DeskHeightOverTimeChartConfig));
+            </script>
+        }
+

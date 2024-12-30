@@ -1,0 +1,33 @@
+@page
+@model DeskMotion.Pages.Help.Issues.CreateModel
+@{
+    ViewData["Title"] = "Report an Issue";
+}
+
+<div class="container mt-5">
+    <h1>@ViewData["Title"]</h1>
+    <p class="text-muted">Submit an issue to our team for resolution.</p>
+
+    <form method="post" enctype="multipart/form-data">
+        <!-- Title -->
+        <div class="form-group mb-3">
+            <label for="Title" class="form-label">Title</label>
+            <input type="text" class="form-control" id="Title" name="IssueReport.Title" required />
+        </div>
+
+        <!-- Description -->
+        <div class="form-group mb-3">
+            <label for="Description" class="form-label">Description</label>
+            <textarea class="form-control" id="Description" name="IssueReport.Description" rows="5" required></textarea>
+        </div>
+
+        <!-- Attachments -->
+        <div class="form-group mb-3">
+            <label for="Attachments" class="form-label">Attachments (optional)</label>
+            <input type="file" id="Attachments" name="attachments" multiple class="form-control" />
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>

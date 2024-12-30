@@ -1,0 +1,33 @@
+﻿@page
+@model RoleToolsModel
+@{
+    ViewData["Title"] = "Role-Based Tools";
+    ViewData["ActivePage"] = ManageNavPages.RoleTools;
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary-subtle">
+                    <h4 class="mb-0">Role-Based Tools</h4>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted">Access tools and dashboards based on your roles.</p>
+                    <div class="d-grid gap-3">
+                        @if (Model.IsAdminRole)
+                        {
+                            <a asp-area="" asp-page="/Admin/Index" class="btn btn-outline-primary btn-lg">
+                                <i class="bi bi-gear-fill me-2"></i> Admin Dashboard
+                            </a>
+                        }
+                        else
+                        {
+                            <p class="text-muted">You do not have any role-based tools available.</p>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

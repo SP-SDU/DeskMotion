@@ -19,7 +19,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using System.Diagnostics;
 
-namespace DeskMotion.Tests;
+namespace DeskMotion.Tests.Pages;
 
 public class ErrorModelTests
 {

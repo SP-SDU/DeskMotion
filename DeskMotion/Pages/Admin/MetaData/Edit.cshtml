@@ -1,0 +1,42 @@
+﻿@page
+@model DeskMotion.Pages.Admin.Metadata.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>DeskMetadata</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="DeskMetadata.Id" />
+            <div class="form-group">
+                <label asp-for="DeskMetadata.MacAddress" class="control-label"></label>
+                <input asp-for="DeskMetadata.MacAddress" class="form-control" />
+                <span asp-validation-for="DeskMetadata.MacAddress" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DeskMetadata.Location" class="control-label"></label>
+                <input asp-for="DeskMetadata.Location" class="form-control" />
+                <span asp-validation-for="DeskMetadata.Location" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DeskMetadata.QRCodeData" class="control-label"></label>
+                <input asp-for="DeskMetadata.QRCodeData" class="form-control" />
+                <span asp-validation-for="DeskMetadata.QRCodeData" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary action-link" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index" class="action-link">Back to List</a>
+</div>
+
