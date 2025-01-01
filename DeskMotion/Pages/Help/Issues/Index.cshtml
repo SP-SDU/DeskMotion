@@ -8,7 +8,7 @@
     <h1>My Issue Reports</h1>
     <p class="lead">Below is a list of issue reports you have submitted.</p>
 
-    <a asp-page="./Create" class="btn btn-primary mb-4">Report an Issue</a>
+    <a asp-page="./Create" class="btn btn-primary"><span class="button-back">Report an Issue</span></a>
 
     @if (!Model.UserReports.Any())
     {
@@ -33,7 +33,8 @@
                         <td>@report.Status</td>
                         <td>@report.CreatedAt.ToString("g")</td>
                         <td>
-                            <a asp-page="./Details" asp-route-id="@report.Id" class="btn btn-primary btn-sm">View</a>
+                            <a asp-page="./Details" asp-route-id="@report.Id" class="btn btn-primary btn-sm"><span
+                                    class="button-back">View</span></a>
                         </td>
                     </tr>
                 }

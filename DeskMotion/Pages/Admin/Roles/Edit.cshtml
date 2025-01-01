@@ -9,12 +9,12 @@
 
 <form method="post">
     <div class="form-group">
-        <label asp-for="Role.Name" class="control-label">Name</label>
-        <input asp-for="Role.Name" class="form-control" />
+        <label asp-for="Role.Name" class="details-title">Name</label>
+        <input asp-for="Role.Name" class="details-input" />
         <span asp-validation-for="Role.Name" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <input type="submit" value="Save" class="btn btn-primary action-link" />
-        <a asp-page="Index" class="btn btn-secondary action-link">Back to List</a>
+        <button type="submit" class="btn btn-primary action-link"><span class="button-back"> Save </span></button>
+        <a asp-page="Index" class="btn btn-primary action-link"><span class="button-back">Back to List</span></a>
     </div>
 </form>

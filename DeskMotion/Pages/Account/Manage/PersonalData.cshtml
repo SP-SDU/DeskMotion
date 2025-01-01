@@ -9,15 +9,49 @@
 
 <div class="row">
     <div class="col-md-6">
-        <p>Your account contains personal data that you have given us. This page allows you to download or delete that data.</p>
+        <p>Your account contains personal data that you have given us. This page allows you to download or delete that
+            data.</p>
         <p>
             <strong>Deleting this data will permanently remove your account, and this cannot be recovered.</strong>
         </p>
         <form id="download-data" asp-page="DownloadPersonalData" method="post">
-            <button class="btn btn-primary" type="submit">Download</button>
+            <button class="btn btn-primary" type="submit"><span class="button-back">Download</span></button>
         </form>
         <p>
-            <a id="delete" asp-page="DeletePersonalData" class="btn btn-danger">Delete</a>
+            <a id="delete" asp-page="DeletePersonalData" class="btn-red"><span class="button-back-red">Delete</span></a>
         </p>
     </div>
 </div>
+
+<style>
+    .btn {
+        margin-top: 20px;
+        width: 150px;
+    }
+
+    .btn-red {
+        background-color: #9e3232;
+        border: none;
+        border-radius: 5px;
+        padding: 0px;
+        cursor: pointer;
+        outline-offset: 4px;
+        margin-bottom: 10px;
+        width: 150px;
+        text-align: center;
+    }
+
+    .button-back-red {
+        display: block;
+        border-radius: 5px;
+        padding: 10px;
+        background: hsl(0, 68%, 35%);
+        color: white;
+        text-align: center;
+        transform: translateY(-8px);
+    }
+
+    .btn-red:active .button-back-red {
+        transform: translateY(-4px);
+    }
+</style>

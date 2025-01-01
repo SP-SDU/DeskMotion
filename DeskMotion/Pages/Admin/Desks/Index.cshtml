@@ -6,9 +6,9 @@
     ViewData["ActivePage"] = ManageNavPages.Desks;
 }
 
-<h1>Index</h1>
+<h1>Desk Records</h1>
 
-<table class="table">
+<table class="table table-bordered">
     <thead>
         <tr>
             <th>
@@ -24,22 +24,23 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Desk) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.RecordedAt)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsLatest)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MacAddress)
-            </td>
-            <td>
-					<a asp-page="./Details" asp-route-id="@item.Id" class="action-link">Details</a> |
-					<a asp-page="./Delete" asp-route-id="@item.Id" class="action-link">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model.Desk)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RecordedAt)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsLatest)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MacAddress)
+                </td>
+                <td>
+                    <a asp-page="./Details" asp-route-id="@item.Id" class="action-link">Details</a> |
+                    <a asp-page="./Delete" asp-route-id="@item.Id" class="action-link">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

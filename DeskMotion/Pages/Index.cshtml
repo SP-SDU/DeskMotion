@@ -9,27 +9,29 @@
 }
 else
 {
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Mac Address</th>
-                <th>Location</th>
-                <th>QR Code Data</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var desk in Model.UserDesks)
-            {
+    <div class="bg-primary rounded">
+        <table class="table table-bordered">
+            <thead>
                 <tr>
-                    <td>@desk.MacAddress</td>
-                    <td>@desk.Location</td>
-                    <td>@desk.QRCodeData</td>
-                    <td>
-                        <a asp-page="./Details" asp-route-id="@desk.Id" class="btn btn-primary">View</a>
-                    </td>
+                    <th>Mac Address</th>
+                    <th>Location</th>
+                    <th>QR Code Data</th>
+                    <th>Actions</th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var desk in Model.UserDesks)
+                {
+                    <tr>
+                        <td>@desk.MacAddress</td>
+                        <td>@desk.Location</td>
+                        <td>@desk.QRCodeData</td>
+                        <td>
+                            <a asp-page="./Details" asp-route-id="@desk.Id" class="action-link">View</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 }

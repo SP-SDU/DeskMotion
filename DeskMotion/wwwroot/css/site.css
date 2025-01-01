@@ -1,28 +1,59 @@
 html {
-  font-size: 14px;
+    font-size: 14px;
+    position: relative;
+    min-height: 100%;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+.btn:focus,
+.btn:active:focus,
+.btn-link.nav-link:focus,
+.form-control:focus,
+.form-check-input:focus {
+    box-shadow: 0 0 0 0rem white, 0 0 0 0rem #ffffff;
 }
 
-html {
-  position: relative;
-  min-height: 100%;
+/* general button styling */
+.btn {
+    background-color: #35b93a;
+    border: none;
+    border-radius: 5px;
+    padding: 0px;
+    cursor: pointer;
+    outline-offset: 4px;
+    margin-bottom: 10px;
+}
+
+.btn:hover {
+    background-color: #17aa2b !important;
+}
+
+.btn:active .button-back {
+    transform: translateY(-4px);
+}
+
+.button-back {
+    display: block;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 1.25rem;
+    background: hsl(124, 66%, 36%);
+    color: white;
+    transform: translateY(-8px);
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+    /* background-color: #525252;  Don't like this as bg, since it conflicts with an existing grey making it invisible - Mathias */
 }
 
 .nav-custom {
-    background-color: #a49f9b;
+    background-color: #434343 !important;
     font-size: 25px;
     font-weight: 700;
     padding-bottom: 5px;
@@ -33,37 +64,187 @@ body {
     padding: 1px;
     margin: 15px;
     border-radius: 8px;
-    background-color: #68605d;
-    box-shadow: 0 10px 0px 6px #837a72;
-    transition: all 0.2s ease;
+    background-color: hsl(124, 66%, 36%) !important;
+    box-shadow: 0 10px 0px 6px #168401 !important;
+    transition: all 0.1s ease;
 }
 
-    .nav-item-custom:active {
-        box-shadow: 0 4px #666;
-        transform: translateY(6px);
-    }
+.nav-item-custom:active {
+    box-shadow: 0 4px #666;
+    transform: translateY(6px);
+}
 
-.nav-link-custom {
-    color: #000 !important;
+.nav-custom .nav-link-custom {
+    color: #ffffff !important;
+}
+
+.nav-pills .nav-link.active {
+    background-color: #1f9827 !important;
+}
+
+.nav-pills .nav-link {
+    color: #ffffff !important;
+    border: 1px solid rgb(104, 104, 104);
+    border-radius: 5px;
+    background-color: transparent;
+}
+
+.bg-primary-subtle {
+    background-color: #115d16 !important;
+}
+
+.nav-pills .nav-link:hover {
+    background-color: #525252;
+    /* Add a light hover background */
 }
 
 .action-link {
-    color: #52f700;
+    color: #ffffff;
 }
 
 .table {
-    border: 2px solid #52f700;
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 16px;
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.1);
+    background-color: #979594;
 }
 
-    .table th {
-        background-color: #555a7a;
-        color: #52f700;
-    }
+.table td,
+.table th {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 10px solid #525252 !important;
+}
 
-    .table td {
-        background-color: #555a7a;
-        color: #52f700;
-    }
+/* Header styling */
+.table thead th {
+    background-color: #35b93a;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: bold;
+}
+
+/* Table row hover effect */
+.table tbody tr:hover {
+    background-color: #7d7a7a;
+    cursor: pointer;
+}
+
+/* Action links */
+a {
+    color: #eaeaea;
+    text-decoration: none;
+    font-weight: bold;
+    margin-right: 15px;
+    display: inline-block;
+    padding: 5px 10px;
+    border: 1px solid transparent;
+    border-radius: 3px;
+    transition: all 0.3s ease;
+}
+
+.EditDelete:hover {
+    background-color: #4CAF50;
+    color: white;
+    border-color: #4CAF50;
+}
+
+/*forms styling for CRUD operations*/
+/* input */
+.form-control {
+    background-color: #262626;
+    color: #ffffff;
+    margin-bottom: 20px;
+    border-color: #e2e2e2;
+    padding: 10px;
+    margin-right: 200px;
+}
+
+/* title of input in forms */
+.control-label {
+    background-color: #7d7a7a;
+    color: #ffffff;
+    margin-bottom: 20px;
+    padding: 10px;
+    margin-right: 20px;
+    border-color: #262626;
+}
+
+.form-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+
+.row {
+    margin-bottom: 30px;
+}
+
+.row.m-4 {
+    margin: 20px;
+    padding: 30px;
+    border: none !important;
+    background-color: #525252;
+    display: flex;
+}
+
+.col-md-4 {
+    margin-bottom: 30px;
+    width: 80%;
+    /*changred something here*/
+}
+
+.details-container {
+    width: 70%;
+}
+
+.details-title {
+    width: 40%;
+    background-color: #7d7a7a;
+    color: #ffffff;
+    margin-bottom: 5px;
+    padding: 10px;
+    margin-right: 20px;
+    border-color: #262626;
+}
+
+.details-input {
+    width: 50%;
+    background-color: #262626;
+    color: #ffffff;
+    margin-bottom: 5px;
+    border-color: #e2e2e2;
+    padding: 10px;
+}
+
+input {
+    color: white;
+}
+
+input::placeholder {
+    color: white;
+    /* Placeholder text color */
+}
+
+h1 {
+    margin-bottom: 20px;
+    color: #35b93a;
+}
+
+h2,
+h3,
+h4 {
+    margin-bottom: 10px !important;
+    color: white;
+}
+
+p {
+    margin-top: 10px;
+}
 
 /* Chart styles */
 .card-body {
@@ -71,15 +252,78 @@ body {
     padding: 1rem;
 }
 
+#deskUsageByTimeChart,
+#deskHeightOverTimeChart,
+#standingSittingRatioChart,
+#standingSittingChart,
+#dailyUsageChart,
+#deskUsageByLocationChart,
+#userActivityChart,
 #healthInsightsChart {
-    max-width: 400px;
-    max-height: 400px;
-    margin: 0 auto;
+    background-color: #fff !important;
+    border-radius: 0.25rem;
 }
 
 #deskUsageByTimeChart,
-#deskHeightOverTimeChart,
-#standingSittingRatioChart {
+#standingSittingRatioChart,
+#standingSittingChart,
+#dailyUsageChart,
+#deskHeightOverTimeChart {
     width: 100%;
     height: 300px;
+}
+
+#deskUsageByLocationChart {
+    width: 350px !important;
+    height: 350px !important;
+}
+
+#healthInsightsChart {
+    max-width: 400px;
+    max-height: 400px;
+}
+
+.bg-primary {
+    background-color: rgb(82 82 82) !important;
+}
+
+.bg-success {
+    background-color: rgb(82 82 82) !important;
+}
+
+.bg-warning {
+    background-color: rgb(82 82 82) !important;
+}
+
+.card {
+    border-color: rgb(82 247 0) !important;
+}
+
+.bg-info {
+    background-color: rgb(82 82 82) !important;
+}
+
+.admin-link {
+    background-color: #35b93a;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    cursor: pointer;
+    outline-offset: 4px;
+    margin-bottom: 10px;
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    display: inline-block;
+    text-align: center;
+}
+
+.admin-link:hover {
+    background-color: #2d9b2a;
+}
+
+.checkmark {
+    display: flex;
+    align-items: center;
+    height: 100%;
 }

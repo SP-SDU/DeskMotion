@@ -47,29 +47,29 @@ public class IndexModel(ApplicationDbContext context) : PageModel
             .GroupBy(dm => dm.Location)
             .ToDictionaryAsync(g => g.Key, g => g.Count());
 
-        DeskUsageByLocationLabels = deskUsageByLocation.Keys.ToList();
-        DeskUsageByLocationData = deskUsageByLocation.Values.ToList();
+        DeskUsageByLocationLabels = [.. deskUsageByLocation.Keys];
+        DeskUsageByLocationData = [.. deskUsageByLocation.Values];
 
         var userActivity = await context.Users
             .GroupBy(u => u.CreatedAt.Date)
             .ToDictionaryAsync(g => g.Key.ToString("yyyy-MM-dd"), g => g.Count());
 
-        UserActivityLabels = userActivity.Keys.ToList();
-        UserActivityData = userActivity.Values.ToList();
+        UserActivityLabels = [.. userActivity.Keys];
+        UserActivityData = [.. userActivity.Values];
 
         var healthInsights = await context.Desks
             .Where(d => d.State != null)
             .GroupBy(d => d.State.IsPositionLost ? "Unhealthy" : "Healthy")
             .ToDictionaryAsync(g => g.Key, g => g.Count());
 
-        HealthInsightsLabels = healthInsights.Keys.ToList();
-        HealthInsightsData = healthInsights.Values.ToList();
+        HealthInsightsLabels = [.. healthInsights.Keys];
+        HealthInsightsData = [.. healthInsights.Values];
 
         var deskHeightOverTime = await context.Desks
             .GroupBy(d => d.RecordedAt.Date)
             .ToDictionaryAsync(g => g.Key.ToString("yyyy-MM-dd"), g => g.Average(d => d.State.Position_mm / 10.0));
 
-        DeskHeightOverTimeLabels = deskHeightOverTime.Keys.ToList();
-        DeskHeightOverTimeData = deskHeightOverTime.Values.ToList();
+        DeskHeightOverTimeLabels = [.. deskHeightOverTime.Keys];
+        DeskHeightOverTimeData = [.. deskHeightOverTime.Values];
     }
 }

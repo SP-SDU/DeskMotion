@@ -8,34 +8,43 @@
 
 <header>
     <h1>Users</h1>
-    <p class="text-lg-end">
-        <a asp-page="Create" class=" action-link">Create New</a>
+    <h2>Overview</h2>
+    <p>
+        <a asp-page="Create" class="btn action-link"><span class="button-back">Create New</span></a>
     </p>
 </header>
 
-<div class="container">
-    <table class="table">
-        <thead>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>User Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.IdentityUsers!)
+        {
             <tr>
-                <th>User Name</th>
-                <th>Email</th>
-                <th>Role</th>
-                <th>Actions</th>
+                <td>@item.UserName</td>
+                <td>@item.Email</td>
+                <td>@(Model.UserRoles.ContainsKey(item.Id) ? Model.UserRoles[item.Id] : "No Role")</td>
+                <td>
+                    <a asp-page="./Edit" asp-route-id="@item.Id" class=" action-link">Edit</a> |
+                    <a asp-page="./Delete" asp-route-id="@item.Id" class=" action-link">Delete</a>
+                </td>
             </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.IdentityUsers!)
-            {
-                <tr>
-                    <td>@item.UserName</td>
-                    <td>@item.Email</td>
-                    <td>@(Model.UserRoles.ContainsKey(item.Id) ? Model.UserRoles[item.Id] : "No Role")</td>
-                    <td>
-                        <a asp-page="./Edit" asp-route-id="@item.Id" class=" action-link">Edit</a>
-                        <a asp-page="./Delete" asp-route-id="@item.Id" class=" action-link">Delete</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-</div>
+        }
+    </tbody>
+</table>
+
+<style>
+    p {
+        margin-top: 10px;
+    }
+
+    h2 {
+        margin-bottom: 10px;
+    }
+</style>

@@ -18,7 +18,8 @@
             {
                 <div class="alert alert-danger">
                     <strong>You have no recovery codes left.</strong>
-                    <p>You must <a asp-page="./GenerateRecoveryCodes">generate a new set of recovery codes</a> before you can log in with a recovery code.</p>
+                    <p>You must <a asp-page="./GenerateRecoveryCodes">generate a new set of recovery codes</a> before you can log in
+                        with a recovery code.</p>
                 </div>
             }
             else if (Model.RecoveryCodesLeft == 1)
@@ -49,7 +50,8 @@
         <h4>Authenticator app</h4>
         @if (!Model.HasAuthenticator)
         {
-            <a id="enable-authenticator" asp-page="./EnableAuthenticator" class="btn btn-primary">Add authenticator app</a>
+            <a id="enable-authenticator" asp-page="./EnableAuthenticator" class="btn btn-primary"><span class="button-back">Add
+                    authenticator app</span></a>
         }
         else
         {
@@ -65,3 +67,9 @@
         </div>
     }
 }
+
+<style>
+    .btn {
+        margin-top: 20px;
+    }
+</style>
