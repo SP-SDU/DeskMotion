@@ -14,14 +14,14 @@
             <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
             <div class="form-floating mb-3">
-                <input asp-for="Input.Email" class="details-input" placeholder="name@example.com" autocomplete="username" aria-required="true" />
-                
+                <input asp-for="Input.Email" class="details-input" placeholder="name@example.com"
+                    autocomplete="username" aria-required="true" />
                 <span asp-validation-for="Input.Email" class="text-danger"></span>
             </div>
 
             <div class="form-floating mb-3">
-                <input asp-for="Input.Password" type="password" class="details-input" placeholder="password" autocomplete="current-password" aria-required="true" />
-                
+                <input asp-for="Input.Password" type="password" class="details-input" placeholder="password"
+                    autocomplete="current-password" aria-required="true" />
                 <span asp-validation-for="Input.Password" class="text-danger"></span>
             </div>
 
@@ -30,15 +30,16 @@
                 <label asp-for="Input.RememberMe" class="form-check-label">Remember me</label>
             </div>
 
-            <button type="submit" class="btn btn-outline-light btn-lg w-100"><span class="button-back">Log in</span></button>
+            <button type="submit" class="btn btn-outline-light btn-lg w-100"><span class="button-back">Log
+                    in</span></button>
         </form>
 
         <div class="text-center mt-4">
-            <a id="forgot-password" asp-page="./ForgotPassword" >Forgot password?</a>
+            <a id="forgot-password" asp-page="./ForgotPassword">Forgot password?</a>
         </div>
-        
+
         <div class="text-center mt-2">
-            <p class="mb-0">Don't have an account? 
+            <p class="mb-0">Don't have an account?
                 <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl" class="fw-bold">Sign Up</a>
             </p>
         </div>
@@ -46,19 +47,21 @@
 </section>
 
 <style>
-    .container-login{
-        background-color: #646363;
+    .container-login {
+        background-color: #4d4a48;
         color: #ffffff;
         padding: 20px;
-        border-radius: 5px;
+        border-radius: 10px;
         width: 35%;
     }
-    .details-input{
+
+    .details-input {
         display: flex !important;
         justify-content: center !important;
         width: 100%;
     }
-    .details-input::placeholder{
+
+    .details-input::placeholder {
         opacity: 0.7;
         color: #277f2a;
     }

@@ -12,13 +12,14 @@
         <!-- Title -->
         <div class="form-group">
             <label for="Title" class="details-title">Title</label>
-            <input type="text" class="details-input" id="Title" name="IssueReport.Title" required />
+            <input type="text" class="details-input" id="Title" name="IssueReport.Title" required="required" />
         </div>
 
         <!-- Description -->
         <div class="form-group mb-3">
             <label for="Description" class="details-title">Description</label>
-            <textarea class="details-input" id="Description" name="IssueReport.Description" rows="5" required></textarea>
+            <textarea class="details-input" id="Description" name="IssueReport.Description" rows="5"
+                required="required"></textarea>
         </div>
 
         <!-- Attachments -->
@@ -33,12 +34,14 @@
 </div>
 
 <style>
-    .form-group{
-        display: flex; 
-  flex-direction: column; /* Stack children vertically */
-  align-items: stretch;
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        /* Stack children vertically */
+        align-items: stretch;
     }
-    .details-title{
+
+    .details-title {
         align-self: flex-start;
         width: 50%;
     }

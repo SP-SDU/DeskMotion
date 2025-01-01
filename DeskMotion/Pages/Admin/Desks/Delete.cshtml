@@ -8,8 +8,7 @@
 <h1>Delete</h1>
 
 <h3>Are you sure you want to delete this?</h3>
-<div>
-    <h4>Desk</h4>
+<div class="details-container">
     <hr />
     <dl class="row">
         <dt class="details-title">
@@ -31,7 +30,7 @@
             @Html.DisplayFor(model => model.Desk.MacAddress)
         </dd>
     </dl>
-    
+
     <form method="post">
         <input type="hidden" asp-for="Desk.Id" />
         <button type="submit" class="btn btn-danger action-link"><span class="button-back">Delete</span></button>
@@ -39,4 +38,14 @@
     </form>
 </div>
 
+<style>
+    .btn {
+        width: 150px;
+        margin-right: 20px;
+    }
 
+    .button-back {
+        width: 150px;
+        margin-right: 20px;
+    }
+</style>

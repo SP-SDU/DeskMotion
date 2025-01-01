@@ -10,7 +10,7 @@
 <h4>New Reservation</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="details-container">
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
@@ -39,22 +39,23 @@
             </div>
 
             <div class="form-group">
-                <button type="submit" class="btn btn-primary action-link"><span class="button-back">Create</span></button>
-                <a asp-page="Index" class="btn btn-primary action-link"><span class="button-back">Back to List</span></a>
+                <button type="submit" class="btn btn-primary action-link"><span
+                        class="button-back">Create</span></button>
+                <a asp-page="Index" class="btn btn-primary action-link"><span class="button-back">Back to
+                        List</span></a>
             </div>
         </form>
     </div>
 </div>
 
 <style>
-    .btn{
-    width: 150px;
-    margin-right: 20px;
-
+    .btn {
+        width: 150px;
+        margin-right: 20px;
     }
-    .button-back{
-    width: 150px;
-    margin-right: 20px;
+
+    .button-back {
+        width: 150px;
+        margin-right: 20px;
     }
 </style>
-

@@ -46,19 +46,16 @@
 <div class="row">
     <div class="col-md-6">
         <h2>Desk Usage by Location</h2>
-        <canvas id="deskUsageByLocationChart"
-                data-chart-type="pie"
-                data-chart-labels='@Html.Raw(Json.Serialize(Model.DeskUsageByLocationLabels))'
-                data-chart-data='@Html.Raw(Json.Serialize(Model.DeskUsageByLocationData))'>
+        <canvas id="deskUsageByLocationChart" data-chart-type="pie"
+            data-chart-labels='@Html.Raw(Json.Serialize(Model.DeskUsageByLocationLabels))'
+            data-chart-data='@Html.Raw(Json.Serialize(Model.DeskUsageByLocationData))'>
         </canvas>
     </div>
     <div class="col-md-6">
         <h2>User Registration Trends</h2>
-        <canvas id="userActivityChart"
-                data-chart-type="line"
-                data-chart-label-text="User Registrations"
-                data-chart-labels='@Html.Raw(Json.Serialize(Model.UserActivityLabels))'
-                data-chart-data='@Html.Raw(Json.Serialize(Model.UserActivityData))'>
+        <canvas id="userActivityChart" data-chart-type="line" data-chart-label-text="User Registrations"
+            data-chart-labels='@Html.Raw(Json.Serialize(Model.UserActivityLabels))'
+            data-chart-data='@Html.Raw(Json.Serialize(Model.UserActivityData))'>
         </canvas>
     </div>
 </div>
@@ -66,20 +63,16 @@
 <div class="row">
     <div class="col-md-6">
         <h2>Health Insights</h2>
-        <canvas id="healthInsightsChart"
-                data-chart-type="bar"
-                data-chart-label-text="Health Status"
-                data-chart-labels='@Html.Raw(Json.Serialize(Model.HealthInsightsLabels))'
-                data-chart-data='@Html.Raw(Json.Serialize(Model.HealthInsightsData))'>
+        <canvas id="healthInsightsChart" data-chart-type="bar" data-chart-label-text="Health Status"
+            data-chart-labels='@Html.Raw(Json.Serialize(Model.HealthInsightsLabels))'
+            data-chart-data='@Html.Raw(Json.Serialize(Model.HealthInsightsData))'>
         </canvas>
     </div>
     <div class="col-md-6">
         <h2>Desk Height Over Time</h2>
-        <canvas id="deskHeightOverTimeChart"
-                data-chart-type="line"
-                data-chart-label-text="Desk Height (cm)"
-                data-chart-labels='@Html.Raw(Json.Serialize(Model.DeskHeightOverTimeLabels))'
-                data-chart-data='@Html.Raw(Json.Serialize(Model.DeskHeightOverTimeData))'>
+        <canvas id="deskHeightOverTimeChart" data-chart-type="line" data-chart-label-text="Desk Height (cm)"
+            data-chart-labels='@Html.Raw(Json.Serialize(Model.DeskHeightOverTimeLabels))'
+            data-chart-data='@Html.Raw(Json.Serialize(Model.DeskHeightOverTimeData))'>
         </canvas>
     </div>
 </div>

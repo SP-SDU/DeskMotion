@@ -28,9 +28,10 @@
             <div class="card-body">
                 <form method="post">
                     <div class="d-flex align-items-center gap-3">
-                        <button class="btn btn-primary" name="positionMm" value="1200">Move Up</button>
-                        <button class="btn btn-primary" name="positionMm" value="500">Move Down</button>
-                        <button class="btn btn-danger" name="positionMm" value="0">Stop</button>
+                        <button name="positionMm" value="1200" class="btn action-link"><span class="button-back">Move
+                                Up</span></button>
+                        <button name="positionMm" value="500" class="btn action-link"><span class="button-back">Move
+                                Down</span></button>
                     </div>
                 </form>
             </div>
@@ -42,7 +43,7 @@
     <div class="col-md-12">
         <div class="card mb-3">
             <div class="card-header bg-info text-white">Desk State</div>
-            <div class="card-body">
+            <div class="card-body bg-primary">
                 <table class="table table-bordered">
                     <thead>
                         <tr>
@@ -81,19 +82,16 @@
 <div class="row">
     <div class="col-md-6">
         <h2>Daily Usage Pattern</h2>
-        <canvas id="dailyUsageChart"
-                data-chart-type="line"
-                data-chart-label-text="Daily Desk Usage"
-                data-chart-labels='@Html.Raw(Json.Serialize(Model.DailyUsageLabels))'
-                data-chart-data='@Html.Raw(Json.Serialize(Model.DailyUsageData))'>
+        <canvas id="dailyUsageChart" data-chart-type="line" data-chart-label-text="Daily Desk Usage"
+            data-chart-labels='@Html.Raw(Json.Serialize(Model.DailyUsageLabels))'
+            data-chart-data='@Html.Raw(Json.Serialize(Model.DailyUsageData))'>
         </canvas>
     </div>
     <div class="col-md-6">
         <h2>Standing vs Sitting Time</h2>
-        <canvas id="standingSittingChart"
-                data-chart-type="pie"
-                data-chart-labels='@Html.Raw(Json.Serialize(Model.StandingSittingLabels))'
-                data-chart-data='@Html.Raw(Json.Serialize(Model.StandingSittingData))'>
+        <canvas id="standingSittingChart" data-chart-type="pie"
+            data-chart-labels='@Html.Raw(Json.Serialize(Model.StandingSittingLabels))'
+            data-chart-data='@Html.Raw(Json.Serialize(Model.StandingSittingData))'>
         </canvas>
     </div>
 </div>
@@ -108,7 +106,19 @@
     </div>
 }
 
-<a asp-page="./Index" class="btn btn-secondary mt-3">Back to List</a>
+<a asp-page="Index" class="btn btn-primary action-link"><span class="button-back">Back to List</span></a>
+
+<style>
+    .btn {
+        width: 150px;
+        margin-right: 20px;
+    }
+
+    .button-back {
+        width: 150px;
+        margin-right: 20px;
+    }
+</style>
 
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
