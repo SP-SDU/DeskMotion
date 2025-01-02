@@ -8,31 +8,32 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card shadow">
-                <div class="card-header">
+                <div class="card-header" style="background-color: #4d4a48;">
                     <h2 class="card-title mb-0">Initial Setup</h2>
                 </div>
-                <div class="card-body">
+                <div class="card-body" style="background-color: #4d4a48;">
                     <form method="post">
                         <div class="mb-3">
-                            <label asp-for="OrganizationName" class="form-label"></label>
-                            <input asp-for="OrganizationName" class="form-control" />
+                            <label asp-for="OrganizationName" class="details-title"></label>
+                            <input asp-for="OrganizationName" class="details-input" />
                             <span asp-validation-for="OrganizationName" class="text-danger"></span>
                         </div>
 
                         <div class="mb-3">
-                            <label asp-for="AdminEmail" class="form-label"></label>
-                            <input asp-for="AdminEmail" class="form-control" />
+                            <label asp-for="AdminEmail" class="details-title"></label>
+                            <input asp-for="AdminEmail" class="details-input" />
                             <span asp-validation-for="AdminEmail" class="text-danger"></span>
                         </div>
 
                         <div class="mb-3">
-                            <label asp-for="AdminPassword" class="form-label"></label>
-                            <input asp-for="AdminPassword" class="form-control" type="password" />
+                            <label asp-for="AdminPassword" class="details-title"></label>
+                            <input asp-for="AdminPassword" class="details-input" type="password" />
                             <span asp-validation-for="AdminPassword" class="text-danger"></span>
                         </div>
 
                         <div class="text-end">
-                            <button type="submit" class="btn btn-primary">Complete Setup</button>
+                            <button type="submit" class="btn btn-primary"><span class="button-back">Complete
+                                    Setup</span></button>
                         </div>
                     </form>
                 </div>
@@ -40,3 +41,53 @@
         </div>
     </div>
 </div>
+
+<style>
+    /* site.css styling not working on this page, not enough time to find out why */
+    .button-back {
+        display: block;
+        border-radius: 5px;
+        padding: 10px;
+        font-size: 1.25rem;
+        background: hsl(124, 66%, 36%);
+        color: white;
+        transform: translateY(-8px);
+    }
+
+    .btn {
+        background-color: #35b93a;
+        border: none;
+        border-radius: 5px;
+        padding: 0px;
+        cursor: pointer;
+        outline-offset: 4px;
+        margin-bottom: 10px;
+    }
+
+    .btn:hover {
+        background-color: #17aa2b !important;
+    }
+
+    .btn:active .button-back {
+        transform: translateY(-4px);
+    }
+
+    .details-title {
+        width: 40%;
+        background-color: #7d7a7a;
+        color: #ffffff;
+        margin-bottom: 5px;
+        padding: 10px;
+        margin-right: 20px;
+        border-color: #262626;
+    }
+
+    .details-input {
+        width: 50%;
+        background-color: #262626;
+        color: #ffffff;
+        margin-bottom: 5px;
+        border-color: #e2e2e2;
+        padding: 10px;
+    }
+</style>

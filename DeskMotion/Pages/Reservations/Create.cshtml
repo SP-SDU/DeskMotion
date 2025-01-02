@@ -15,7 +15,8 @@
 
                     <div class="form-group mb-3">
                         <label asp-for="Reservation.DeskMetadataId" class="form-label">Select Desk</label>
-                        <select asp-for="Reservation.DeskMetadataId" class="form-select" asp-items="Model.AvailableDesks"></select>
+                        <select asp-for="Reservation.DeskMetadataId" class="form-select"
+                            asp-items="Model.AvailableDesks"></select>
                         <span asp-validation-for="Reservation.DeskMetadataId" class="text-danger"></span>
                     </div>
 
@@ -40,7 +41,3 @@
         </div>
     </div>
 </div>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
