@@ -4,45 +4,163 @@
 @inject UserManager<User> UserManager
 @model DeskMotion.Pages.OfficesPlanModel
 @{
-    ViewData["Title"] = "Office Plan";
+	ViewData["Title"] = "Office Plan";
+	var user = await UserManager.GetUserAsync(User);
+	var isAdmin = user != null && await UserManager.IsInRoleAsync(user, "Administrator");
 }
-@{
-    var user = await UserManager.GetUserAsync(User);
-    var isAdmin = user != null && await UserManager.IsInRoleAsync(user, "Administrator");
-}
+
+<style>
+	p {
+		text-align: center;
+		font: 25px bold;
+		margin-bottom: 0;
+	}
+
+	#container {
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+		margin-top: 1rem;
+		justify-content: center;
+		align-items: center;
+		background-color: #434343;
+		border-color: black;
+		border-width: 5px;
+		border-style: solid;
+		border-radius: 10px;
+		gap: 10px;
+	}
+
+	.row {
+		flex: 1 1;
+		padding: 10px;
+	}
+
+	#canvasContainer {
+		position: relative;
+		display: flex;
+		width: 800px;
+		height: 500px;
+	}
+
+	canvas {
+		position: absolute;
+		left: 0;
+		top: 0;
+		width: 100%;
+		height: 100%;
+	}
+
+	#backgroundCanvas {
+		z-index: 1;
+		border-color: black;
+		border-width: 2px;
+		border-style: solid;
+		border-radius: 10px;
+	}
+
+	#foregroundCanvas {
+		z-index: 2;
+	}
+
+	#iconBar {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		text-align: center;
+		width: 100px;
+		margin-left: 20px;
+	}
+
+		#iconBar label {
+			margin-bottom: 10px;
+			font-size: 16px;
+		}
+
+		#iconBar img {
+			width: 100%;
+			height: 80px;
+		}
+
+		#iconBar a {
+			margin: 2px;
+		}
+
+	#OfficeNameDisplay {
+		outline: 1px solid white;
+		border-color: aliceblue;
+		border-radius: 5px;
+		text-align: center;
+	}
+
+	#dialog {
+		display: none;
+		width: 160px;
+		position: absolute;
+		background-color: white;
+		border: 1px solid gray;
+		padding: 10px;
+		z-index: 3;
+		flex-direction: column;
+		border-radius: 10px;
+		text-align: center;
+	}
+
+		#dialog select,
+		#dialog button {
+			margin: 5px 0;
+			width: 100%;
+			border-radius: 5px;
+		}
+
+		#dialog button {
+			background-color: darkgreen;
+			color: white;
+		}
+</style>
 
 <head>
-    <link rel="stylesheet" href="~/css/officesPlan.css">
+@*     <link rel="stylesheet" href="~/css/officesPlan.css"> *@
+@* 	<script>
+		const isAdmin = @isAdmin.ToString().ToLower();
+		const fgCanvasData = `@Html.Raw(Model.OfficesPlan.FgCanvasData)`;
+		const bgCanvasData = `@Html.Raw(Model.OfficesPlan.BgCanvasData)`;
+	</script>
+	<script src="~/js/officesPlan.js" defer></script> *@
 </head>
 
-<div id="container" class="@(isAdmin ? "" : "disabled-overlay")">
+@if (!isAdmin)
+{
+	<p>You need administrative access to edit this page.</p>
+}
+<div id="container">
     <div id="canvasContainer">
         <canvas id="backgroundCanvas" width="800" height="500"></canvas>
         <canvas id="foregroundCanvas" width="800" height="500"></canvas>
     </div>
     <div id="iconBar">
-        <!-- Editable Office Name -->
-        <h2 id="OfficeNameDisplay" contenteditable="@isAdmin">@Model.OfficesPlan.OfficeName</h2>
-        <img id="deskIcon" src="images/PET.svg" draggable="true" @(isAdmin ? "" : "style='pointer-events:none;'")>
+		<label id="OfficeName">Plan Name</label>
+        <h2 id="OfficeNameDisplay" contenteditable="@(isAdmin ? "true" : "false")">@Model.OfficesPlan.OfficeName</h2>
+		<img id="deskIcon" src="images/PET.svg" draggable="@(isAdmin ? "true" : "false")">
         <label id="totalDesksLabel">Total Desks: 0</label>
-        <form id="saveForm" method="post">
+		<form method="post" onsubmit="handleFormSubmit(event)">
             <input type="hidden" id="BgCanvasDataInput" name="OfficesPlan.BgCanvasData" />
             <input type="hidden" id="FgCanvasDataInput" name="OfficesPlan.FgCanvasData" />
             <input type="hidden" id="OfficeNameInput" name="OfficesPlan.OfficeName" />
             <input type="hidden" id="TotalDesksInput" name="OfficesPlan.TotalDesks" />
-            <button type="submit" @(isAdmin ? "" : "style='pointer-events:none;'")>Save</button>
+			<button type="submit" class="btn btn-primary action-link" style="display:@(isAdmin ? "" : "none")">
+				<span class="button-back">Save</span></button>
         </form>
-        <button id="removeAllImg" @(isAdmin ? "" : "style='pointer-events:none;'")>Remove</button>
+		<button id="removeAllImg" class="btn btn-primary action-link" style="display:@(isAdmin ? "" : "none")">
+			<span class="button-back">Remove</span></button>
+		<a class="btn btn-primary action-link" href="@(isAdmin ? Url.Page("/Admin/Index") : Url.Page("/Index"))">
+			<span class="button-back">Home</span></a>
     </div>
 </div>
-@if (!isAdmin)
-{
-    <div class="overlay">
-        <p>You need administrative access to edit this page.</p>
-    </div>
-}
+
 <div id="dialog">
-    <select id="macAddressSelect">
+    <select id="macAddressSelect" >
         <option value="">Select MAC Address</option>
         @foreach (var mac in Model.AvailableMacAddresses)
         {
@@ -63,7 +181,7 @@
     const dialog = document.getElementById('dialog');
     const macAddressSelect = document.getElementById('macAddressSelect');
     const officeNameDisplay = document.getElementById("OfficeNameDisplay");
-    const saveForm = document.getElementById("saveForm");
+	const isAdmin = @isAdmin.ToString().ToLower();
     let objects = [];
     let selectedObject = null;
 
@@ -117,7 +235,7 @@
         const x = e.offsetX, y = e.offsetY;
         selectedObject = objects.find(obj => x >= obj.x && x <= obj.x + obj.width && y >= obj.y && y <= obj.y + obj.height);
 
-        if (selectedObject) {
+		if (selectedObject && isAdmin) {
             dialog.style.display = 'block';
             dialog.style.left = `${e.pageX}px`;
             dialog.style.top = `${e.pageY}px`;
@@ -128,37 +246,54 @@
     });
 
     // Assign MacAddress to selected desk
-    document.getElementById('assignBtn').addEventListener('click', () => {
-        if (selectedObject) {
-            const selectedMac = macAddressSelect.value;
+	document.getElementById('assignBtn').addEventListener('click', () => {
+	if (selectedObject) {
+		const selectedMac = macAddressSelect.value;
 
-            if (!selectedMac) {
-                alert("Please select a MAC address.");
-                return;
-            }
+		if (!selectedMac) {
+			alert("Please select a MAC address.");
+			return;
+		}
 
-            macAddressSelect.querySelector(`option[value="${selectedMac}"]`).remove();
-            selectedObject.macAddress = selectedMac;
-            redrawCanvas();
-            dialog.style.display = "none";
-        }
-    });
+		// Return the previously assigned MacAddress to the dropdown (if any)
+		if (selectedObject.macAddress) {
+			const previousOption = document.createElement("option");
+			previousOption.value = selectedObject.macAddress;
+			previousOption.textContent = selectedObject.macAddress;
+
+			// Avoid duplicates by checking if the option already exists
+			if (!macAddressSelect.querySelector(`option[value="${selectedObject.macAddress}"]`)) {
+				macAddressSelect.appendChild(previousOption);
+			}
+		}
+
+		// Assign the new MacAddress and remove it from the dropdown
+		selectedObject.macAddress = selectedMac;
+		macAddressSelect.querySelector(`option[value="${selectedMac}"]`).remove();
+
+		redrawCanvas();
+		dialog.style.display = "none";
+	}});
 
     // Delete selected desk
-    document.getElementById('deleteBtn').addEventListener('click', () => {
-        if (selectedObject) {
-            if (selectedObject.macAddress) {
-                const option = document.createElement("option");
-                option.value = selectedObject.macAddress;
-                option.textContent = selectedObject.macAddress;
-                macAddressSelect.appendChild(option);
-            }
+	document.getElementById('deleteBtn').addEventListener('click', () => {
+		if (selectedObject) {
+			if (selectedObject.macAddress) {
+				const option = document.createElement("option");
+				option.value = selectedObject.macAddress;
+				option.textContent = selectedObject.macAddress;
 
-            objects = objects.filter(obj => obj !== selectedObject);
-            redrawCanvas();
-            dialog.style.display = 'none';
-        }
-    });
+				// Avoid duplicates by checking if the option already exists
+				if (!macAddressSelect.querySelector(`option[value="${selectedObject.macAddress}"]`)) {
+					macAddressSelect.appendChild(option);
+				}
+			}
+
+			objects = objects.filter(obj => obj !== selectedObject);
+			redrawCanvas();
+			dialog.style.display = 'none';
+		}
+	});
 
     // Rotate selected desk
     document.getElementById('rotateBtn').addEventListener('click', () => {
@@ -175,6 +310,26 @@
         totalDesksLabel.textContent = `Total Desks: ${objects.length}`;
     }
 
+	// Remove all desks
+	document.getElementById('removeAllImg').addEventListener('click', () => {
+		objects.forEach(obj => {
+			if (obj.macAddress) {
+				const option = document.createElement("option");
+				option.value = obj.macAddress;
+				option.textContent = obj.macAddress;
+
+				// Avoid duplicates by checking if the option already exists
+				if (!macAddressSelect.querySelector(`option[value="${obj.macAddress}"]`)) {
+					macAddressSelect.appendChild(option);
+				}
+			}
+		});
+
+		objects = [];
+		redrawCanvas();
+		dialog.style.display = 'none';
+	});
+
     // Redraw canvas
     function redrawCanvas() {
         fgCtx.clearRect(0, 0, fgCanvas.width, fgCanvas.height);
@@ -187,9 +342,9 @@
                 fgCtx.drawImage(img, -obj.width / 2, -obj.height / 2, obj.width, obj.height);
                 fgCtx.restore();
                 if (obj.macAddress) {
-                    fgCtx.fillStyle = 'black';
-                    fgCtx.font = 'bold 12px Arial';
-                    fgCtx.fillText(obj.macAddress, obj.x, obj.y + obj.height + 8);
+                    fgCtx.fillStyle = 'white';
+                    fgCtx.font = 'bold 13px Arial';
+                    fgCtx.fillText(obj.macAddress, obj.x - 8, obj.y + obj.height + 8);
                 }
             };
             img.src = obj.img;
@@ -198,11 +353,33 @@
     }
 
     // Save form
-    saveForm.addEventListener('submit', () => {
-        document.getElementById('BgCanvasDataInput').value = bgCanvas.toDataURL();
-        document.getElementById('FgCanvasDataInput').value = JSON.stringify(objects);
-        document.getElementById('OfficeNameInput').value = officeNameDisplay.textContent.trim();
-    });
+	function handleFormSubmit(event) {
+			event.preventDefault();
+			const form = event.target;
+
+			// Set the hidden inputs
+			document.getElementById('BgCanvasDataInput').value = bgCanvas.toDataURL();
+			document.getElementById('FgCanvasDataInput').value = JSON.stringify(objects);
+			document.getElementById('OfficeNameInput').value = officeNameDisplay.textContent.trim();
+
+			// Create a FormData object from the form
+			const formData = new FormData(form);
+
+			// Send the form data using fetch
+			fetch(form.action, {
+				method: 'POST',
+				body: formData
+			}).then(response => {
+				if (response.ok) {
+					// Redirect to the same page to avoid form resubmission
+					window.location.href = window.location.href;
+				} else {
+					console.error('Form submission failed:', response.statusText);
+				}
+			}).catch(error => {
+				console.error('Form submission error:', error);
+			});
+		}
 
     // Page load
     window.onload = () => {
@@ -229,4 +406,5 @@
         }
         updateTotalDesks();
     };
+
 </script>
