@@ -1,127 +1,108 @@
+p {
+    text-align: center;
+    font: 25px bold;
+    margin-bottom: 0;
+}
+
 #container {
-	display: flex;
-	flex-wrap: wrap;
-	margin-top: 2rem;
-	justify-content: center;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+    justify-content: center;
     align-items: center;
-	background-color: #555a7a;
-	color: #52f700;
-	border-color: black;
-	border-width: 30px;
-	border-style: solid;
-	border-radius: 10px;
+    background-color: #434343;
+    border-color: black;
+    border-width: 5px;
+    border-style: solid;
+    border-radius: 10px;
+    gap: 10px;
+}
+
+.row {
+    flex: 1 1;
+    padding: 10px;
 }
 
 #canvasContainer {
-	position: relative;
-	display: flex;
-	width: 800px;
-	height: 500px;
+    position: relative;
+    display: flex;
+    width: 800px;
+    height: 500px;
 }
 
 canvas {
-	position: absolute;
-	left: 0;
-	top: 0;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
 }
 
 #backgroundCanvas {
-	z-index: 1;
-	border-color: black;
-	border-width: 2px;
-	border-style: solid;
-	border-radius: 10px;
+    z-index: 1;
+    border-color: black;
+    border-width: 2px;
+    border-style: solid;
+    border-radius: 10px;
 }
 
 #foregroundCanvas {
-	z-index: 2;
+    z-index: 2;
 }
 
 #iconBar {
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-	width: 100px;
-	margin-left: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 100px;
+    margin-left: 20px;
 }
 
-#iconBar img {
-	width: 100%;
-	height: 80px;
-}
-
-#iconBar button {
-    padding: 1px;
-    margin: 12px;
-    color: black;
-    width: 80px;
-    border-radius: 8px;
-    background-color: #68605d;
-    box-shadow: 0 10px 0px 6px #837a72;
-    transition: all 0.1s ease;
-}
-
-    #iconBar button:active {
-        box-shadow: 0 4px #666;
-        transform: translateY(6px);
+    #iconBar label {
+        margin-bottom: 10px;
+        font-size: 16px;
     }
 
-@media (max-width: 500px) {
-    #container {
-        flex-direction: column;
+    #iconBar img {
+        width: 100%;
+        height: 80px;
     }
-}
+
+    #iconBar a {
+        margin: 2px;
+    }
 
 #OfficeNameDisplay {
-    outline: 1px solid #52f700;
+    outline: 1px solid white;
+    border-color: aliceblue;
     border-radius: 5px;
     text-align: center;
 }
 
 #dialog {
-	display: none;
-	width: 200px;
-	position: absolute;
-	background-color: white;
-	border: 1px solid gray;
-	padding: 10px;
-	z-index: 3;
-	flex-direction: column;
-	border-radius: 10px;
-}
-
-#dialog select,
-#dialog button {
-	margin: 5px 0;
-	width: 100%;
-}
-
-#dialog button {
-	background-color: darkgreen;
-	color: white;
-}
-
-.disabled-overlay {
-    pointer-events: none;
-    opacity: 0.6;
-}
-
-.overlay {
+    display: none;
+    width: 160px;
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0);
-    color: rgba(255, 255, 255, 0.2);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 1.5em;
-    z-index: 9999;
+    background-color: white;
+    border: 1px solid gray;
+    padding: 10px;
+    z-index: 3;
+    flex-direction: column;
+    border-radius: 10px;
+    text-align: center;
 }
-    .overlay p {
-        margin-bottom: 20%;
-        z-index:10000
+
+    #dialog select,
+    #dialog button {
+        margin: 5px 0;
+        width: 100%;
+        border-radius: 5px;
+    }
+
+    #dialog button {
+        background-color: darkgreen;
+        color: white;
     }
