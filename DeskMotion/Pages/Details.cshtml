@@ -28,10 +28,16 @@
             <div class="card-body">
                 <form method="post">
                     <div class="d-flex align-items-center gap-3">
-                        <button name="positionMm" value="1200" class="btn action-link"><span class="button-back">Move
-                                Up</span></button>
-                        <button name="positionMm" value="500" class="btn action-link"><span class="button-back">Move
-                                Down</span></button>
+                        <button name="positionMm" value="1200" onclick="sendRequest()" class="btn action-link">
+                            <span class="button-back">
+                                Move Up
+                            </span>
+                         </button>
+                        <button name="positionMm" value="500" onclick="sendRequest()" class="btn action-link">
+                            <span class="button-back">
+                                Move Down
+                            </span>
+                        </button>
                     </div>
                 </form>
             </div>
@@ -124,3 +130,12 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
     <script src="~/js/graphs.min.js"></script>
 }
+
+<script>
+    function sendRequest() {
+        fetch('http://192.168.1.100', {  
+            method: 'GET'
+        }).then(response => console.log('Request sent'))
+            .catch(error => console.error('Error:', error));
+    }
+</script>
